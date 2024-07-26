@@ -12,7 +12,7 @@ You might have heard of https://openjdk.org/projects/leyden/[Project Leyden]: an
 
 When casually namedropping "I'm looking into Project Leyden" with some fellow Java developers these days, I would usually spot some off guard thinking: "Leyden..?", to then offer a hasty save "Ah, right, the project to improve startup times".
 
-Which is not wrong, as indeed startup times improvements are one of its goals, yet we believe the other stated goals of the project offer even greated potential for our favourite platform, and its users.
+Which is not wrong, as indeed startup times improvements are one of its goals, yet we believe the other stated goals of the project offer even greater potential for our favourite platform, and its users.
 
 == What is Leyden?
 
@@ -25,19 +25,19 @@ The primary goal of this Project is to improve the startup time, time to peak pe
 -- Project Leyden, first thing on its project page
 ____
 
-Leyden is a general umbrella project to address slow startup and large footprint. To keep costs down, in all forms such as energy efficiency, required hardware resources, and indeed money, it's indeed useful to keep bootstrap times reasonably low, but it's even more effective to reduce the time to peak performance, such as the time it takes for the JVM to "warm up", and reducing the footprint of our applications, such as total memory, has very direct impact.
+Leyden is a general umbrella project to address slow startup and large footprint. To keep costs down, in all forms such as energy consumption, required hardware resources, and indeed money, it's indeed useful to keep bootstrap times reasonably low, but it's even more effective to reduce the time to peak performance, such as the time it takes for the JVM to "warm up", and reducing the footprint of our applications, such as total memory, has very direct impact.
 
-Note that the project is evolving rapidly: some of the things explained in this article may change since the time of being written. If you plan on getting involved at a more technical level, follow the development in Jira and the https://mail.openjdk.org/mailman/listinfo/leyden-dev[Leyden mailing list].
+Note that the project is evolving rapidly: some of the things explained in this article are evolving while this is written. If you plan on getting involved at a more technical level, follow the development in Jira and the https://mail.openjdk.org/mailman/listinfo/leyden-dev[Leyden mailing list].
 
 === Why it’s interesting to Quarkus
 
-From a Quarkus perspective, we've done a fairly good job on all such metrics but we're constantly on the lookout to improve. That's why Project Leyden got our attention. We're already working with our collagues from the OpenJDK team at Red Hat, who are directly involved in implementing Leyden with the wider OpenJDK group: this blog post today is a collaboration among teams.
+From a Quarkus perspective, we've done a fair job on all such metrics but we're constantly on the lookout to improve. That's why Project Leyden got our attention. We're already working with our collagues from the OpenJDK team at Red Hat, who are directly involved in implementing Leyden with the wider OpenJDK group: this blog post today is a collaboration among engineers from different teams.
 
-Although Quarkus is already doing a lot of work on the Ahead of Time phase to speed up warmup and response time, the enhancements that Leyden is bringing to the table are more related to how the JVM behaves. Complementing both approaches, the advantages we can expect from the combination of Quarkus and Leyden are beyond anything you can find with either of them separated.
+Although Quarkus is already doing a lot of work during the Ahead of Time phase to speed up warmup and response time, the enhancements that Leyden is bringing to the table are more related to how the JVM behaves. Complementing both approaches, the advantages we can expect from the combination of Quarkus and Leyden are beyond anything you can find with either of them separated.
 
 Since the potential for such technological collaboration is strong, the Quarkus and OpenJDK teams are working together on various prototypes and anyone in the Quarkus community would be very welcome to join as well.
 
-== How does the JVM work?
+== Refresher on JVM's bootstrap process
 
 To better understand the scope of the potential improvements, we need to take a step back and discuss how the JVM works today, especially how our application is started and iteratively evolves from interpreting our bytecode to its highest performance mode: running native code which is highly optimized, adapted to the particular hardware, the configuration of the day, and the specific workloads it's been asked to perform. No other runtime is able to match the JVM on this.
 
@@ -47,7 +47,7 @@ A key feature of bytecode is portability, encoding the structure of Java classes
 
 Execution of a method normally involves interpreting the operations in the method bytecode, although a runtime may also choose to compile method bytecode to equivalent machine code and execute the latter directly. 
 
-Most notably, the unit of bytecode is a class file, which models a single class. The Java runtime provides a host of utility and runtime management classes, as class files embedded in either system jars or jmod files. Applications supplement this with their own class files, usually by appending jars to the classpath or module path.
+The unit of bytecode is a class file, which models a single class. The Java runtime provides a host of utility and runtime management classes, as class files embedded in either system jars or jmod files. Applications supplement this with their own class files, usually by appending jars to the classpath or module path.
 
 Bytecode is provided class-at-a-time to allow the runtime to load classes _lazily_: i.e. the runtime will only lookup, verify and consume a class file when that class's definition is required to proceed with execution. 
 
@@ -63,41 +63,48 @@ Graal Native Image lies at one extreme, everything is done AOT, and the traditio
 
 image::AoT_vs_JiT.svg[Compilation work diagram,float="right",align="center"]
  
-The JVM gets feed the bytecode to run the application, usually in a JAR file format. When the JVM executes a new bytecode, the JVM will check, method by method, if it is already compiled. While processing this bytecode, it may happen that other methods are invoked, or some class field gets read or written, that hasn't been processed before. When this happens, the JVM doesn't just attempt to load the relevant class. It checks in the bytecode for a matching field or method of the correct type and attaches linkage information to the loaded class in memory. 
+The JVM gets the bytecode to run the application, usually from a JAR file format. When the JVM executes a new bytecode, the JVM will check, method by method, if it is already compiled.
+While processing this bytecode, it may happen that other methods are invoked, or some class field gets read or written, that hasn't been processed before.
+When this happens, the JVM doesn't just attempt to load the relevant class. It checks in the bytecode for a matching field or method of the correct type and attaches linkage information to the loaded class in memory.
 
 This linkage makes sure that any subsequent execution can proceed efficiently without the need to repeat the lookup the next time. This is why, after some warm up time, the application runs faster: it has everything needed already linked and compiled.
 
 == Profiling and Training Runs
 
-This laziness approach results in the exact same bytecode being loaded and parsed for many classes every run, the exact same linkage being established every run, the exact same compilation, profiling and recompilation being attempted at every run. This can noticeably slow down JDK startup, application startup and application warm up (time to peak running).
+This lazy approach results in the exact same bytecode being loaded and parsed for many classes every run, the exact same linkage being established every run, the exact same compilation, profiling and recompilation being attempted at every run. This can noticeably slow down JDK startup, application startup and application warm up (time to peak running).
 
-We could speed up startup and, more crucially, warm up time if we do some of these lazy actions at an earlier stage. Compiling code for peak performance also requires quite some resources, so performing this work ahead of time can also save precious CPU cycles during the application bootstrap, and can manifest in substantial memory savings as well.
+We could speed up startup and, more crucially, warm up time if we do some of these lazy actions at an earlier stage.
 
-But there are some limitations on what we can optimise before runtime just by looking at the source code. For example, extensive use of reflection prevents the compiler from predicting which symbols will be loaded, linked, and most used at runtime.
+Compiling code for peak performance also requires quite some resources, so performing this work ahead of time can also save precious CPU cycles during the application bootstrap, and can manifest in substantial memory savings as well.
+
+But there are some limitations on what we can optimise before runtime just by examining the source code. For example, extensive use of reflection prevents the compiler from predicting which symbols will be loaded, linked, and most used at runtime.
 
 === Class Data Sharing (CDS)
 
 Indeed, this is not a wholly new idea as far as the OpenJDK runtime is concerned. OpenJDK has supported a mixed AOT/JIT class loading model for years with CDS. The observation that led to https://docs.oracle.com/en/java/javase/21/vm/class-data-sharing.html[Class Data Sharing (CDS)] being proposed was that most applications load the same classes every time they run, both JDK classes during JDK bootstrap and application classes during application startup and warmup.
 
-Loading requires locating a class bytecode file, possibly calling out to a Java ClassLoader, parsing the bytecode then building a JVM-internal model of the class. This internal model unpacks the information packed into the bytecode into a format that enables fast interpreted or compiled execution. If this loading work could be done once and the results efficiently reused on subsequent runs, then that would save time during startup and warm up.
+Loading requires locating a class bytecode file, possibly calling out to a Java ClassLoader, parsing the bytecode then building a JVM-internal model of the class.
+This internal model unpacks the information packed into the bytecode into a format that enables fast interpreted or compiled execution. If this loading work could be done once and the results efficiently reused on subsequent runs, then that would save time during startup and warm up.
 
-Initially CDS optimized this process for a large set of core JDK classes. It worked by running up the JVM and dumping a class model for all classes loaded during startup into an archive file laid out in memory format. The resulting JDK module, class, field, and method graph can then be quickly remapped into memory next time the JVM runs. 
+Initially CDS optimized this process for a large set of core JDK classes. It worked by running the JVM and dumping a class model for all classes loaded during startup into an archive file laid out in memory format. The resulting JDK module, class, field, and method graph can then be quickly remapped into memory next time the JVM runs. 
 
 Loading a class that is present in the archive involves a simple lookup in the AOT class model. Loading a class not present in the archive requires the normal JIT steps of bytecode lookup, parsing and unpacking. Subsequent improvements to CDS allowed application classes also to be stored in the CDS archive at the end of a short application training run.
 
-A CDS archive for JDK classes has been built into the JVM from JDK17 onwards, halving JDK startup time. This same mixed model AOT/JIT model provides significant improvements to application startup and warmup times, depending on how well the training run exercises application code. So, selective JIT vs AOT operation is not some new thing.
+A CDS archive for JDK classes has been built into the JVM from JDK17 onwards, reducing JDK startup time. This same mixed model AOT/JIT model provides significant improvements to application startup and warmup times, depending on how well the training run exercises application code. So, selective JIT vs AOT operation is not some new thing.
 
 The goal of Project Leyden is extending the AOT vs JIT trade-off from class loading (as done by CDS) to other JIT operations in the JVM, the lazy linking that normally happens during interpreted execution and the lazy compilation and recompilation that happens when methods have been executed enough times to justify the cost of compilation.
 
 === Loading and Linking in Detail
 
-The loading and linkage of classes is an important step in the warm up of the application because it involves searching through the whole classpath for all classes and objects referenced by the bytecode the JVM is going to run. By default, this is done as a lazy operation because loading and linking all existing classes in the classpath would not only require a bigger memory footprint, but also a bigger warm up time.  This is why the JVM only compile and link the bytecode that is going to be used. 
+The loading and linkage of classes is an important step in the warm up of the application because it involves searching through the whole classpath for all classes and objects referenced by the bytecode the JVM is going to run. By default, this is done as a lazy operation because loading and linking all existing classes in the classpath would not only require a bigger memory footprint, but also a bigger warm up time. This is why the JVM only compiles and links the bytecode that is going to be used.
 
-This is a process that Quarkus already speeds up by, among other strategies, making the set of classes included in the classpath smaller, so the searching for matches is faster. But it is still a heavy operation that is difficult to execute ahead of time, before we know what is going to be run and how.
+This is a process that Quarkus already speeds up by, among other strategies, aggressively reducing the set of classes included in the classpath, so the search for matches is faster. But it is still a heavy operation that is difficult to execute ahead of time, before we know what is going to be run and how.
 
-Leyden is bringing some of this linking to AOT by using the CDS trained pre-linked classes archive. The next work in progress caching the Leyden team is working on is saving and restoring code. 
+Leyden is moving some of such linking processes to AOT by using the CDS trained pre-linked classes archive.
+The work in progress the Leyden team is working on next regarding caching is saving and restoring compiled code.
 
-Remember that the training run enables some of the loading/linking/compilation to be done AOT but that anything not trained for will still be done in the normal JIT way. This is not one size fits all solution but a mix and match approach.
+Remember that the training run enables some of the loading/linking/compilation to be done AOT but that anything not trained for will still be performed via the regular JIT process: the AOT approach is not required to be applied comprehensively, so that the JVM can fallback to the regular loading system for the use cases which can not benefit from AOT processing.
+
 
 === How does Loading and Linking work?
 
