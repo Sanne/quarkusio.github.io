@@ -41,90 +41,63 @@ Since the potential for such technological collaboration is strong, the Quarkus 
 
 To better understand the scope of the potential improvements, we need to take a step back and discuss how the JVM works today, especially how our application is started and iteratively evolves from interpreting our bytecode to its highest performance mode: running native code which is highly optimized, adapted to the particular hardware, the configuration of the day, and the specific workloads it's been asked to perform. No other runtime is able to match the JVM on this.
 
-By default, as it boots, Java is a lazy interpreted language. A Java runtime does not directly run Java source code. The content of our JAR file is not executable machine code, but Java bytecode generated from Java source code using the javac compiler. 
+As we all know, a Java runtime does not directly run Java source code. The content of our JAR file is not executable machine code, but Java bytecode generated from Java source code using the javac compiler.
 
-A key feature of bytecode is portability, encoding the structure of Java classes and operation of their methods in a machine and operating-system independent format. A Java runtime obeys the type information in the bytecode when laying out Java objects. 
+A key feature of bytecode is portability, encoding the structure of Java classes and operation of their methods in a machine and operating-system independent format. A Java runtime obeys the type information in the bytecode when laying out Java objects. Execution of a method normally involves interpreting the operations in the method bytecode, although a runtime may also choose to compile method bytecode to equivalent, native machine code and execute the latter directly. 
 
-Execution of a method normally involves interpreting the operations in the method bytecode, although a runtime may also choose to compile method bytecode to equivalent machine code and execute the latter directly. 
+The unit of delivery for bytecode is a class file, which models a single class. The Java runtime itself provides a host of utility and runtime management classes, as class files embedded in either system jars or jmod files. Applications supplement this with their own class files, usually by appending jars to the classpath or module path.
 
-The unit of bytecode is a class file, which models a single class. The Java runtime provides a host of utility and runtime management classes, as class files embedded in either system jars or jmod files. Applications supplement this with their own class files, usually by appending jars to the classpath or module path.
-
-Bytecode is provided class-at-a-time to allow the runtime to load classes _lazily_: i.e. the runtime will only lookup, verify and consume a class file when that class's definition is required to proceed with execution. 
-
-Lazy loading is what allows Java to be a dynamic language -- i.e. one where the code that is included in the program can be decided at runtime. That might include loading classes from jars selected at runtime or, possibly, loaded from the network. Alternatively, it might include generating class bytecode at runtime, as is done with proxy classes or service provider auxiliary classes.
-
-What is less well known is that many other operations performed by the JVM are done lazily during runtime or 'Just In Time'. 
+Bytecode is delivered class-at-a-time to allow the runtime to load classes _lazily_: i.e. the runtime will only lookup, verify and consume a class file when that class's definition is required to proceed with execution. Lazy loading is what allows Java to be a dynamic language -- i.e. one where the code that is included in the program can be decided at runtime. That might include loading classes from jars identified at runtime, possibly loaded via the network. Alternatively, it might include generating class bytecode at runtime, as is done with proxy classes or service provider auxiliary classes.
 
 === Just in Time (JIT) and Ahead of Time (AOT)
 
-An alternative to doing things 'Just in Time' (JIT) is to do them 'Ahead Of Time' (AOT). For example, Graal's Native Image runtime loads the bytecode of every single class needed by an application, including JDK runtime classes, 'Ahead Of Time' i.e. at image build time. It uses the type and method information encoded in that bytecode to 'Ahead Of Time' compile a complete program that includes code for every method that might possibly be executed by the application. 
+Another name to describe Java's lazy loading is 'Just in Time (JIT). JIT is a well known term used to describe the operation of Java's runtime compilers. What is less well known is that it has a much wider use. Many other operations performed by the JVM are done lazily at runtime or 'Just In Time'.
 
-Graal Native Image lies at one extreme, everything is done AOT, and the traditional Java runtime model lies at the other extreme, everything is done JIT. However, it is actually possible to mix and match AOT and JIT models of execution in one runtime: that is a goal of the first EA release of project Leyden.
+An alternative to doing things 'Just in Time' (JIT) is to do them 'Ahead Of Time' (AOT). For example, Graal's Native Image runtime loads and analyses the bytecode of every single class needed by an application, including JDK runtime classes, 'Ahead Of Time' i.e. at image build time. It uses the type and method information encoded in that bytecode to 'Ahead Of Time' compile a complete program that includes code for every method that might possibly be executed by the application. 
+
+Graal Native Image lies at one extreme, everything is done AOT, and the traditional Java runtime model lies at the other extreme, as much as possible is done JIT. However, it is actually possible to mix and match AOT and JIT models of execution in one runtime: re-balancing that AOT vs JIT mix is the goal of the first EA release of project Leyden.
 
 image::AoT_vs_JiT.svg[Compilation work diagram,float="right",align="center"]
  
-The JVM gets the bytecode to run the application, usually from a JAR file format. When the JVM executes a new bytecode, the JVM will check, method by method, if it is already compiled.
-While processing this bytecode, it may happen that other methods are invoked, or some class field gets read or written, that hasn't been processed before.
-When this happens, the JVM doesn't just attempt to load the relevant class. It checks in the bytecode for a matching field or method of the correct type and attaches linkage information to the loaded class in memory.
+=== Class Data Sharing (CDS) as a step to AOT Caching
 
-This linkage makes sure that any subsequent execution can proceed efficiently without the need to repeat the lookup the next time. This is why, after some warm up time, the application runs faster: it has everything needed already linked and compiled.
+Indeed, this is not a wholly new idea as far as the OpenJDK runtime is concerned. OpenJDK has supported a hybrid AOT/JIT class loading model for years with CDS. The observation that led to https://docs.oracle.com/en/java/javase/21/vm/class-data-sharing.html[Class Data Sharing (CDS)] being proposed was that most applications load the same classes every time they run, both JDK classes during JDK bootstrap and application classes during application startup and warmup.
 
-== Profiling and Training Runs
+Loading requires locating a class bytecode file, possibly calling out to a Java ClassLoader, parsing the bytecode then building a JVM-internal model of the class. This internal model unpacks the information packed into the bytecode into a format that enables fast interpreted or compiled execution. If this loading work could be done once and the resulting class model efficiently reused on subsequent runs, then that would save time during startup and warm up.
 
-This lazy approach results in the exact same bytecode being loaded and parsed for many classes every run, the exact same linkage being established every run, the exact same compilation, profiling and recompilation being attempted at every run. This can noticeably slow down JDK startup, application startup and application warm up (time to peak running).
+Initially CDS optimized loading for a large set of core JDK classes. It worked by booting the JVM and dumping the class model for all classes loaded during startup into an archive file laid out in memory format. The resulting JDK module, class, field, and method graph can then be quickly remapped into memory next time the JVM runs. Loading a class that is present in the archive involves a simple lookup in the AOT class model. Loading a class not present in the archive requires the normal JIT steps of bytecode lookup, parsing and unpacking i.e. CDS implements a hybrid JIT/AOT execution model.
 
-We could speed up startup and, more crucially, warm up time if we do some of these lazy actions at an earlier stage.
-
-Compiling code for peak performance also requires quite some resources, so performing this work ahead of time can also save precious CPU cycles during the application bootstrap, and can manifest in substantial memory savings as well.
-
-But there are some limitations on what we can optimise before runtime just by examining the source code. For example, extensive use of reflection prevents the compiler from predicting which symbols will be loaded, linked, and most used at runtime.
-
-=== Class Data Sharing (CDS)
-
-Indeed, this is not a wholly new idea as far as the OpenJDK runtime is concerned. OpenJDK has supported a mixed AOT/JIT class loading model for years with CDS. The observation that led to https://docs.oracle.com/en/java/javase/21/vm/class-data-sharing.html[Class Data Sharing (CDS)] being proposed was that most applications load the same classes every time they run, both JDK classes during JDK bootstrap and application classes during application startup and warmup.
-
-Loading requires locating a class bytecode file, possibly calling out to a Java ClassLoader, parsing the bytecode then building a JVM-internal model of the class.
-This internal model unpacks the information packed into the bytecode into a format that enables fast interpreted or compiled execution. If this loading work could be done once and the results efficiently reused on subsequent runs, then that would save time during startup and warm up.
-
-Initially CDS optimized this process for a large set of core JDK classes. It worked by running the JVM and dumping a class model for all classes loaded during startup into an archive file laid out in memory format. The resulting JDK module, class, field, and method graph can then be quickly remapped into memory next time the JVM runs. 
-
-Loading a class that is present in the archive involves a simple lookup in the AOT class model. Loading a class not present in the archive requires the normal JIT steps of bytecode lookup, parsing and unpacking. Subsequent improvements to CDS allowed application classes also to be stored in the CDS archive at the end of a short application training run.
-
-A CDS archive for JDK classes has been built into the JVM from JDK17 onwards, reducing JDK startup time. This same mixed model AOT/JIT model provides significant improvements to application startup and warmup times, depending on how well the training run exercises application code. So, selective JIT vs AOT operation is not some new thing.
+A default CDS archive for JDK runtime classes has been shipped with every JVM release since JDK17, halving JDK startup time. Improvements were made to CDS to allow application classes to be include in a CDS archive after executing a short application training run. The resulting mixed AOT/JIT operation can provide significant improvements to application startup and warmup times, depending on how well the training run exercises application code. So, selective JIT/AOT operation is not some new thing.
 
 The goal of Project Leyden is extending the AOT vs JIT trade-off from class loading (as done by CDS) to other JIT operations in the JVM, the lazy linking that normally happens during interpreted execution and the lazy compilation and recompilation that happens when methods have been executed enough times to justify the cost of compilation.
 
-=== Loading and Linking in Detail
 
-The loading and linkage of classes is an important step in the warm up of the application because it involves searching through the whole classpath for all classes and objects referenced by the bytecode the JVM is going to run. By default, this is done as a lazy operation because loading and linking all existing classes in the classpath would not only require a bigger memory footprint, but also a bigger warm up time. This is why the JVM only compiles and links the bytecode that is going to be used.
+== AOT vs JIT Linkage
+
+Linking of classes is another operation that the JVM does lazily. When class bytecode is processed the class is directly linked to its owning module and its owned methods and fields. JIT linkage connects elements of each independent, linked class sub-graph into a fully connected graph where elements from different (class or module) files cross-reference each other.
+
+Clearly, loading and linking proceed recursively. As one example, every class (except Object) needs to be linked to its super class. Super linkage cannot complete without ensuring the super class is loaded. Indeed, if the super's bytecode cannot be found or is not valid (say it identifies an interface not a class) then a linkage error may occur. Likewise, a static field get/put or a new operation the bytecode of some method can only be linked after loading of the target class for the get/put or new.
+
+Linking is sometimes, but not always, done lazily. Indeed, it is necessary to dosome linkage lazily in order to allow loading also to be lazy, otherwise the whole class graph would end up being linked as soon as the main routine was entered. Super linkage is always done eagerly at the point where the subclass has just been loaded. That is because it is not possible to use a subclass to create instances or execute methods without knowing how the superclass is defined. By contrast, field and method linkage is done lazily. In these cases linkage happens as a side-effect of execution. When a method executes a field get/put or method invoke bytecode for the first time the target field or method is looked up via its owner class, loading it if necessary. The field type or method signature is checked for consistency and details of where to find the field or how to call the method are cached, allowing the next execution of the bytecode to bypass the linkage step.
+
+As with lazy loading, this lazy approach results in almost the exact same linkage being established on every run. The time spent stopping and restarting execution to lazily connect the class graph comprises a noticeable percentage of JDK startup, application startup and application warm up (time to peak running). We could speed up startup and, more crucially, warm up time if we could pre-compute this linkage and avoid the need to establish it at runtime.
+
+=== Synergy with Quarkus
+
+Loading and linking of classes is an important step in the warm up of the application because it involves searching through the whole classpath for all classes and objects referenced by the bytecode the JVM is going to run. By default, this is done as a lazy operation because loading and linking all existing classes in the classpath would not only require a bigger memory footprint, but also a bigger warm up time. This is why the JVM only compiles and links the bytecode that is going to be used.
 
 This is a process that Quarkus already speeds up by, among other strategies, aggressively reducing the set of classes included in the classpath, so the search for matches is faster. But it is still a heavy operation that is difficult to execute ahead of time, before we know what is going to be run and how.
 
-Leyden is moving some of such linking processes to AOT by using the CDS trained pre-linked classes archive.
-The work in progress the Leyden team is working on next regarding caching is saving and restoring compiled code.
+The first improvement Leyden is offering to improve startup time is to upgrade te AOT model originally develped as part of the CDS project to encompass not just pre-loading of classes but also pre-linking, as described in JEP Ahead-of-Time Class Linking (https://openjdk.org/jeps/8315737). An AOT archive can be generated during a training run that bootstraps the JVM and, optionally, executes application-specific code. As with CDS the AOT archive stores a class graph for all classes loaded during the training run in a format that allows it to be quickly remapped on a subsequent run. The stored graph also includes any linkage information established by code executed during the training run. Pre-cached links avoid the need to stop and start execution to perform linkage on subsequent runs.
 
-Remember that the training run enables some of the loading/linking/compilation to be done AOT but that anything not trained for will still be performed via the regular JIT process: the AOT approach is not required to be applied comprehensively, so that the JVM can fallback to the regular loading system for the use cases which can not benefit from AOT processing.
+Remember that the training run enables some of the loading and linking to be done AOT but that anything not trained for will still be performed via the regular JIT process: the AOT approach is not required to be applied comprehensively, so that the JVM can fallback to the regular loading system for the use cases which can not benefit from AOT processing.
 
 
-=== How does Loading and Linking work?
+=== JIT vs AOT Compilation
 
-In the JVM, loading and linking are two independent steps which may or may not happen together:
+Another well-known lazy operation the JVM performs is JIT (runtime) compilation. Method bytecode is normally interpreted, but the JVM will lazily translate bytecode to equivalent machine code. It performs this compilation task selectively, only bothering to compile methods that have been invoked quite a few times. 
 
- . When a class is loaded for the first time, the JVM models internally each class. This includes its methods and its fields. This model gets loaded in memory, where other classes and objects can have access to it.
-
-. Then the JVM resolves references from some loaded class (or its method bytecode) to other classes (and their methods and fields) or to constant (String or Class) objects on the heap. In the bytecode, these references are done by symbolic name i.e. UTF8 strings. But in the internal model used to execute the code, those links have to be established explicitly, using memory pointers to actual memory positions.
-
-So, that means link resolution involves traversing the class base, potentially requiring the load of a referenced class, or the creation of a referenced String or Class object on the heap memory. This second step mostly happens when bytecode gets executed. 
-
-In a few cases it happens as a side effect of the load. For example, super classes are loaded and linked immediately when the class gets loaded. The results are cached in an internal model of the constant pool, replacing a symbol entry (UTF8 String) with a pointer and updating the tag for the entry. 
-
-At the same time, all details of where a field is located or how to enter a method (interpreter or compiled entry address) are cached in the constant pool cache. These latter details are needed in order to access fields or call methods from the interpreter. They are also used as inputs to the compiler when it tries to compile a method.
-
-=== Runtime Optimisation
-
-Another lazy operation the JVM performs is JIT (runtime) compilation. Method bytecode is normally interpreted, but the JVM will lazily translate bytecode to equivalent machine code. It performs this compilation task selectively, only bothering to compile methods that have been invoked quite a few times. 
-
-JiT will also lazily upgrade compiled code after it has been executed very many times, using a different 'tier' or level of compilation:
+JIT compilation is also 'adaptive' i.e. the JVM will also lazily upgrade compiled code after it has been executed very many times, using a different 'tier' or level of compilation:
 
  . An initial tier 1 compile runs quickly, generating code that is only lightly optimised using profile information gathered during interpretation. 
  . A tier 2 recompile will instrument the code to track more details about control flow. 
@@ -133,19 +106,26 @@ JiT will also lazily upgrade compiled code after it has been executed very many 
 
 This final stage of compilation can take a very long time so compilation above tier 1 only happens for a small subset of very frequently executed methods.
 
+*** Do we also need to mention deopt and reopt here? I think we need a brief mention ***
+
 Peak optimization is reached when most of the code running is compiled at the highest tier.
 
-Leyden premain addresses the startup problem by caching loaded class info, class linkage, and compilation profile during a training run so it can reuse them to actively populate, link, and compile code in a production run. Leyden is extending CDS to add the extra stuff to the mix.
+Compiling code for peak performance also requires quite some resources, so performing this work ahead of time can also save precious CPU cycles during the application bootstrap, and can manifest in substantial memory savings as well.
+
+But there are some limitations on what we can optimise before runtime just by examining the bytecode. For example, extensive use of reflection prevents the compiler from predicting which symbols will be loaded, linked, and most used at runtime.
+
+The Leyden project has already sucessfully prototyped shifting the work of method compilation from JIT to AOT. Execution and compilation of methods is tracked during the training run. At the end of the run any associated profiling information and compiled code for the method are saved to the AOT archive, allowing them to be quickly mapped back into memory and reused when the application is next run.
+
+As with AOT loading and linking, the training run enables some of the work of profiling and compiling to be done AOT but allows anything not trained still to be compiled via the regular JIT compilation process. Note that method code does not need to have been compiled at the highest tier in order to be saved. Also, when code compiled at a lower tier is restored it can still be recompiled at a higher level. It can also be deoptimized and re-optimized to adapt to different runtime conditions, just as with code compiled in the current runtime. So, the use of AOT compilation is fully integrated into OpenJDK's adpative, dynamic compilation and recompilation model.
 
 == Current status of Project Leyden
 
-There are already experimental https://jdk.java.net/leyden/[early-access builds of Leyden] that can be tested based on https://openjdk.org/jeps/8315737[this draft JEP about Ahead-of-Time Class Linking]. With the https://www.youtube.com/watch?v=lnth19Kf-x0[Leyden Project], the training run idea has been extended to a wider range of data structures, creating the Cache Data Store(CDS). Now the training data contains:
+There are already experimental https://jdk.java.net/leyden/[early-access builds of Leyden] that can be tested based on https://openjdk.org/jeps/8315737[this draft JEP about Ahead-of-Time Class Linking]. With the https://www.youtube.com/watch?v=lnth19Kf-x0[Leyden Project] *** this link is oto out of date -- maybe use the 20204 leyden talk***, the training run idea has been extended to a wider range of data structures embedded in the new AOT cache. Now the training data contains:
 
  - Class file events with historical data (Classes loaded and linked, Compilations)
- - Resolution of API points and indy (stored in constant pool images in the CDS archive). If you have lambdas in your code, they are captured here.
+ - Resolution of API points and indy (stored in constant pool images in the AOT archive). If you have lambdas in your code, they are captured here.
+ - Pre-created constant objects in the Java heap (String and Class<?> constants)
  - Execution profiles and some compiled native code (all tiers)
-
-This new CDS implementation not only tracks which classes to load, but it also saves the interrelationships that link classes together. During runtime, the JVM will know the estimated final size of a class, allowing it to calculate in AoT time locations of fields and methods. This is useful because we can prepare other classes that call those fields and methods with the appropriate pointer instead of having to wait until runtime and make the HotSpot calculate the memory pointer on the fly.
 
 === Some known limitations
 
@@ -161,7 +141,7 @@ However Quarkus in “fast-jar” mode, which is the default packaging mode, wil
 
 The focus on these first early releases has been on bootstrap times. There are measurable, significant startup time improvements, due to AoT loading and linking. In some cases, these improvements on startup time have worsened the memory footprint of some applications. That’s an already known issue that is being worked on, and the expected outcome is to improve memory footprint as well, so we would suggest not worrying too much about total memory consumption at this stage.
 
-Since the CDS archives include machine specific optimisations such as the native code generated by the C2 compiler, the training run and the production run must be done on the same type of hardware and JDK versions; it also requires using the same JAR-based classpaths and the same command line options. 
+Since the AOT archives include machine specific optimisations such as the native code generated by the C2 compiler, the training run and the production run must be done on the same type of hardware and JDK versions; it also requires using the same JAR-based classpaths and the same command line options. 
 
 Although you can use a different Main class for running the application, maybe a test class that simulates real usage.
 
@@ -169,11 +149,11 @@ Although you can use a different Main class for running the application, maybe a
 
 There’s still work to be done regarding classes that can’t be loaded and linked in AoT with the current implementation. For example, classes loaded using a user-defined class loader. There’s also room to improve the way the training runs are made, maybe allowing the user to tweak the results to influence decisions.
 
-Currently, the https://bugs.openjdk.org/browse/JDK-8326035[Z Garbage Collector] does not support CDS object archiving. There is an active effort to make sure all Garbage Collectors are compatible with these enhancements.
+Currently, the https://bugs.openjdk.org/browse/JDK-8326035[Z Garbage Collector] does not support AOT object archiving. There is an active effort to make sure all Garbage Collectors are compatible with these enhancements.
 
 There are also other things planned in the roadmap for Leyden, like adding condensers. https://openjdk.org/projects/leyden/notes/03-toward-condensers[Condensers] will be composable transformers of the source code in AoT that modify the source code optimising it. Each developer will be able to define a pipeline of condensers that improves their source code before compiling it into Bytecode; this is very interesting to the Quarkus team but condensers aren’t available yet
 
-The OpenJDK team is working on adding a more complete code cache to the CDS to avoid that first compilation for trained data, by just loading the compiled code directly from the cache; our colleagues from Red Hat’s OpenJDK team are directly involved in implementing this. This could include, among others, auxiliary code used to interface compiled code to runtime, interpreter or other compiled runtimes.
+The OpenJDK team is working on adding more complete code save and restore to the AOT cache to avoid that first compilation for trained data, by just loading the compiled code directly from the cache; our colleagues from Red Hat’s OpenJDK team are directly involved in implementing this. This could include, among others, auxiliary code used to interface compiled code to runtime, interpreter or other compiled runtimes.
 
 == How to play with it 
 
@@ -211,11 +191,11 @@ Since it’s early days for the Leyden project, there are some known limitations
 
 === Force the use of G1GC
 
-To benefit from the natively compiled code in CDS archives, the garbage collector used at runtime needs to match the same garbage collector used when you recorded the CDS archives. 
+To benefit from the natively compiled code in AOT archives, the garbage collector used at runtime needs to match the same garbage collector used when you recorded the AOT archives. 
 
 Remember that the JVM’s default choice of garbage collector is based on ergonomics; normally this is nice but it can cause some confusion in this case; for example if you build on a large server it will pick G1GC by default, but then when you run the application on a server with constrained memory it would, by default, pick SerialGC.
 
-To avoid this it’s best to pick a garbage collector explicitly; and since several CDS related optimisations today only apply to G1, let’s enforce the use of G1GC.
+To avoid this it’s best to pick a garbage collector explicitly; and since several AOT related optimisations today only apply to G1, let’s enforce the use of G1GC.
 
 Force using G1GC:
 
@@ -224,11 +204,11 @@ Force using G1GC:
 -XX:+UseG1GC
 ----
 
-N.B. you need to use this consistently on both the process generating the CDS archives and the runtime.
+N.B. you need to use this consistently on both the process generating the AOT archives and the runtime.
 
 === Force the G1 Region sizes
 
-As identified and reported by the Quarkus team to our colleagues working on Project Leyden, beyond enforcing a specific garbage collector one should also ensure that the code stored in CDS archives is being generated with the same heap region sizes as what’s going to be used at runtime, or one risks segmentation faults caused by it wrongly identifying regions.
+As identified and reported by the Quarkus team to our colleagues working on Project Leyden, beyond enforcing a specific garbage collector one should also ensure that the code stored in AOT archives is being generated with the same heap region sizes as what’s going to be used at runtime, or one risks segmentation faults caused by it wrongly identifying regions.
 See https://bugs.openjdk.org/browse/JDK-8335440 for details, or simply set:
 
 Configure G1HeapRegionSize explicitly:
@@ -238,7 +218,7 @@ Configure G1HeapRegionSize explicitly:
 -XX:G1HeapRegionSize=1048576
 ----
 
-N.B. you need to use this consistently on both the process generating the CDS archives and the runtime.
+N.B. you need to use this consistently on both the process generating the AOT archives and the runtime.
 
 === Failure to terminate in containers
 
