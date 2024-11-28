@@ -11,8 +11,33 @@
   <title>Reading properties from Spring Cloud Config Server - main - Quarkus</title>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <meta http-equiv="Content-Security-Policy" content="default-src https://dpm.demdex.net https://route-default-test-mscherer-matamo.apps.ospo-osci.z3b1.p1.openshiftapps.com/ https://search.quarkus.io; script-src 'self' 'unsafe-eval'  'sha256-ANpuoVzuSex6VhqpYgsG25OHWVA1I+F6aGU04LoI+5s=' 'sha256-ipy9P/3rZZW06mTLAR0EnXvxSNcnfSDPLDuh3kzbB1w=' 'sha256-+5qDxnbsqhFKZIIfofMhmVgNChsVrKoHUdaQ2EMs9aU=' js.bizographics.com https://www.redhat.com https://static.redhat.com assets.adobedtm.com jsonip.com https://ajax.googleapis.com https://use.fontawesome.com https://app.mailjet.com http://www.youtube.com http://www.googleadservices.com https://googleads.g.doubleclick.net https://dpm.demdex.net https://giscus.app https://route-default-test-mscherer-matamo.apps.ospo-osci.z3b1.p1.openshiftapps.com/; style-src 'self' https://fonts.googleapis.com https://use.fontawesome.com; img-src 'self'
-  https://route-default-test-mscherer-matamo.apps.ospo-osci.z3b1.p1.openshiftapps.com/ * data:; media-src 'self'; frame-src  https://www.youtube.com https://embed.restream.io https://app.mailjet.com http://xy0p2.mjt.lu https://mj.quarkus.io https://giscus.app; base-uri 'none'; object-src 'none'; form-action 'none'; font-src 'self' https://use.fontawesome.com https://fonts.gstatic.com;" />
+  <meta http-equiv="Content-Security-Policy" content="
+  connect-src 'self' https://dpm.demdex.net https://adobedc.demdex.net https://route-default-test-mscherer-matamo.apps.ospo-osci.z3b1.p1.openshiftapps.com/ https://search.quarkus.io https://smetrics.redhat.com; 
+  script-src 'self' 'unsafe-inline' 'unsafe-eval'
+      
+      https://assets.adobedtm.com
+      js.bizographics.com
+      https://www.redhat.com
+      https://static.redhat.com
+      https://app.requestly.io/
+      jsonip.com
+      https://ajax.googleapis.com
+      https://use.fontawesome.com
+      http://www.youtube.com
+      http://www.googleadservices.com
+      https://googleads.g.doubleclick.net
+      https://giscus.app
+      https://route-default-test-mscherer-matamo.apps.ospo-osci.z3b1.p1.openshiftapps.com/
+      https://app.mailjet.com;
+
+  style-src 'self' https://fonts.googleapis.com https://use.fontawesome.com; 
+  img-src 'self' * data:; 
+  media-src 'self'; 
+  frame-src https://redhat.demdex.net https://www.youtube.com https://embed.restream.io https://app.mailjet.com http://xy0p2.mjt.lu https://mj.quarkus.io https://giscus.app; 
+  base-uri 'none'; 
+  object-src 'none'; 
+  form-action 'none'; 
+  font-src 'self' https://use.fontawesome.com https://fonts.gstatic.com;" />
   <script id="adobe_dtm" src="https://www.redhat.com/dtm.js" type="text/javascript"></script>
   <script src="/assets/javascript/highlight.pack.js" type="text/javascript"></script>
   <META HTTP-EQUIV='X-XSS-Protection' CONTENT="1; mode=block">
@@ -76,10 +101,12 @@
         <ul class="submenu">
           <li><a href="/about" class="">WHAT IS QUARKUS?</a></li>
           <li><a href="/container-first" class="">CONTAINER FIRST</a></li>
-          <li><a href="/continuum" class="">REACTIVE</a></li>
-          <li><a href="/developer-joy" class="">DEVELOPER JOY</a></li>
-          <li><a href="/kubernetes-native" class="">KUBERNETES NATIVE</a></li>
+          <li><a href="/continuum" class="">VERSATILITY</a></li>
           <li><a href="/standards" class="">STANDARDS</a></li>
+          <li><a href="/kubernetes-native" class="">KUBERNETES NATIVE</a></li>
+          <li><a href="/performance" class="">PERFORMANCE</a></li>
+          <li><a href="/developer-joy" class="">DEVELOPER JOY</a></li>
+          
         </ul>
       </li>
       <li class="dropdown">
@@ -107,6 +134,7 @@
           <li><a href="/support/" class="">SUPPORT</a></li>
           <li><a href="/blog" class="">BLOG</a></li>
           <li><a href="/discussion" class="">DISCUSSION</a></li>
+          <li><a href="/working-groups" class="">WORKING GROUPS</a></li>
           <li><a href="/insights" class="">PODCAST</a></li>
           <li><a href="/events" class="">EVENTS</a></li>
           <li><a href="/newsletter" class="">NEWSLETTER</a></li>
@@ -143,6 +171,7 @@
 
 
 
+
 <section class="full-width-version-bg flexfilterbar guides">
   <div class="guideflexcontainer">
     <div class="docslink">
@@ -160,7 +189,11 @@
         
         
         
-        <option value="latest" >3.13.0 - Latest</option>
+        <option value="latest" >3.17.0 - Latest</option>
+        
+        
+        
+        <option value="3.15" >3.15</option>
         
         
         
@@ -177,10 +210,6 @@
         
         
         <option value="2.13" >2.13</option>
-        
-        
-        
-        <option value="2.7" >2.7</option>
         </select>
     </div>
   </div>
@@ -190,7 +219,7 @@
   <div class="grid-wrapper">
     <div class="grid__item width-8-12 width-12-12-m">
       
-      <a class="editlink" href="https://github.com/quarkusio/quarkus/edit/main/docs/src/main/asciidoc/_versions/main/guides/spring-cloud-config-client.adoc">Edit this Page</a>
+      <a class="editlink" href="https://github.com/quarkusio/quarkus/edit/main/docs/src/main/asciidoc/spring-cloud-config-client.adoc">Edit this Page</a>
       
       <h1 class="text-caps">Reading properties from Spring Cloud Config Server </h1>
       <div id="preamble">
@@ -218,7 +247,7 @@
 <p>JDK 17+ installed with <code>JAVA_HOME</code> configured appropriately</p>
 </li>
 <li>
-<p>Apache Maven 3.9.8</p>
+<p>Apache Maven 3.9.9</p>
 </li>
 <li>
 <p>Optionally the <a href="cli-tooling">Quarkus CLI</a> if you want to use it</p>
@@ -528,13 +557,14 @@ so be sure to set the Gradle property to the application name you want the Sprin
 </colgroup>
 <tbody>
 <tr>
-<th class="tableblock halign-left valign-top"><p class="tableblock"><a id="quarkus-spring-cloud-config-client_configuration"></a><a href="#quarkus-spring-cloud-config-client_configuration">Configuration property</a></p></th>
+<th class="tableblock halign-left valign-top"><p class="tableblock"><span class="header-title">Configuration property</span></p></th>
 <th class="tableblock halign-left valign-middle"><p class="tableblock">Type</p></th>
 <th class="tableblock halign-left valign-middle"><p class="tableblock">Default</p></th>
 </tr>
 <tr class="row-collapsible row-collapsed row-with-desc odd">
 <td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
-<p><a id="quarkus-spring-cloud-config-client_quarkus-spring-cloud-config-enabled"></a><code><a href="#quarkus-spring-cloud-config-client_quarkus-spring-cloud-config-enabled">quarkus.spring-cloud-config.enabled</a></code></p>
+<p><a id="quarkus-spring-cloud-config-client_quarkus-spring-cloud-config-enabled"></a> <span class="property-path"><a href="#quarkus-spring-cloud-config-client_quarkus-spring-cloud-config-enabled"><code>quarkus.spring-cloud-config.enabled</code></a></span>
+<button class="btn-copy fa fa-clipboard inline-btn-copy" data-clipboard-action="copy" data-clipboard-text='quarkus.spring-cloud-config.enabled' title="Copy to clipboard" do-not-collapse="true"></button></p>
 </div>
 <div id="conf-collapsible-desc-1" class="openblock description description-collapsed">
 <div class="content">
@@ -542,7 +572,7 @@ so be sure to set the Gradle property to the application name you want the Sprin
 <p>If enabled, will try to read the configuration from a Spring Cloud Config Server</p>
 </div>
 <div class="paragraph">
-<p>Environment variable: <code id="env-var-47708">QUARKUS_SPRING_CLOUD_CONFIG_ENABLED</code><button class="btn-copy fa fa-clipboard inline-btn-copy" data-clipboard-action="copy" data-clipboard-target="#env-var-47708" title="Copy to clipboard" do-not-collapse="true"></button></p>
+<p>Environment variable: <code id="env-var-55706">QUARKUS_SPRING_CLOUD_CONFIG_ENABLED</code><button class="btn-copy fa fa-clipboard inline-btn-copy" data-clipboard-action="copy" data-clipboard-target="#env-var-55706" title="Copy to clipboard" do-not-collapse="true"></button></p>
 </div>
 </div>
 </div>
@@ -554,7 +584,8 @@ so be sure to set the Gradle property to the application name you want the Sprin
 </tr>
 <tr class="row-collapsible row-collapsed row-with-desc">
 <td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
-<p><a id="quarkus-spring-cloud-config-client_quarkus-spring-cloud-config-fail-fast"></a><code><a href="#quarkus-spring-cloud-config-client_quarkus-spring-cloud-config-fail-fast">quarkus.spring-cloud-config.fail-fast</a></code></p>
+<p><a id="quarkus-spring-cloud-config-client_quarkus-spring-cloud-config-fail-fast"></a> <span class="property-path"><a href="#quarkus-spring-cloud-config-client_quarkus-spring-cloud-config-fail-fast"><code>quarkus.spring-cloud-config.fail-fast</code></a></span>
+<button class="btn-copy fa fa-clipboard inline-btn-copy" data-clipboard-action="copy" data-clipboard-text='quarkus.spring-cloud-config.fail-fast' title="Copy to clipboard" do-not-collapse="true"></button></p>
 </div>
 <div id="conf-collapsible-desc-2" class="openblock description description-collapsed">
 <div class="content">
@@ -562,7 +593,7 @@ so be sure to set the Gradle property to the application name you want the Sprin
 <p>If set to true, the application will not stand up if it cannot obtain configuration from the Config Server</p>
 </div>
 <div class="paragraph">
-<p>Environment variable: <code id="env-var-47709">QUARKUS_SPRING_CLOUD_CONFIG_FAIL_FAST</code><button class="btn-copy fa fa-clipboard inline-btn-copy" data-clipboard-action="copy" data-clipboard-target="#env-var-47709" title="Copy to clipboard" do-not-collapse="true"></button></p>
+<p>Environment variable: <code id="env-var-55707">QUARKUS_SPRING_CLOUD_CONFIG_FAIL_FAST</code><button class="btn-copy fa fa-clipboard inline-btn-copy" data-clipboard-action="copy" data-clipboard-target="#env-var-55707" title="Copy to clipboard" do-not-collapse="true"></button></p>
 </div>
 </div>
 </div>
@@ -574,7 +605,8 @@ so be sure to set the Gradle property to the application name you want the Sprin
 </tr>
 <tr class="row-collapsible row-collapsed row-with-desc odd">
 <td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
-<p><a id="quarkus-spring-cloud-config-client_quarkus-spring-cloud-config-url"></a><code><a href="#quarkus-spring-cloud-config-client_quarkus-spring-cloud-config-url">quarkus.spring-cloud-config.url</a></code></p>
+<p><a id="quarkus-spring-cloud-config-client_quarkus-spring-cloud-config-url"></a> <span class="property-path"><a href="#quarkus-spring-cloud-config-client_quarkus-spring-cloud-config-url"><code>quarkus.spring-cloud-config.url</code></a></span>
+<button class="btn-copy fa fa-clipboard inline-btn-copy" data-clipboard-action="copy" data-clipboard-text='quarkus.spring-cloud-config.url' title="Copy to clipboard" do-not-collapse="true"></button></p>
 </div>
 <div id="conf-collapsible-desc-3" class="openblock description description-collapsed">
 <div class="content">
@@ -582,7 +614,7 @@ so be sure to set the Gradle property to the application name you want the Sprin
 <p>The Base URI where the Spring Cloud Config Server is available</p>
 </div>
 <div class="paragraph">
-<p>Environment variable: <code id="env-var-47710">QUARKUS_SPRING_CLOUD_CONFIG_URL</code><button class="btn-copy fa fa-clipboard inline-btn-copy" data-clipboard-action="copy" data-clipboard-target="#env-var-47710" title="Copy to clipboard" do-not-collapse="true"></button></p>
+<p>Environment variable: <code id="env-var-55708">QUARKUS_SPRING_CLOUD_CONFIG_URL</code><button class="btn-copy fa fa-clipboard inline-btn-copy" data-clipboard-action="copy" data-clipboard-target="#env-var-55708" title="Copy to clipboard" do-not-collapse="true"></button></p>
 </div>
 </div>
 </div>
@@ -594,7 +626,8 @@ so be sure to set the Gradle property to the application name you want the Sprin
 </tr>
 <tr class="row-collapsible row-collapsed row-with-desc">
 <td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
-<p><a id="quarkus-spring-cloud-config-client_quarkus-spring-cloud-config-name"></a><code><a href="#quarkus-spring-cloud-config-client_quarkus-spring-cloud-config-name">quarkus.spring-cloud-config.name</a></code></p>
+<p><a id="quarkus-spring-cloud-config-client_quarkus-spring-cloud-config-name"></a> <span class="property-path"><a href="#quarkus-spring-cloud-config-client_quarkus-spring-cloud-config-name"><code>quarkus.spring-cloud-config.name</code></a></span>
+<button class="btn-copy fa fa-clipboard inline-btn-copy" data-clipboard-action="copy" data-clipboard-text='quarkus.spring-cloud-config.name' title="Copy to clipboard" do-not-collapse="true"></button></p>
 </div>
 <div id="conf-collapsible-desc-4" class="openblock description description-collapsed">
 <div class="content">
@@ -602,7 +635,7 @@ so be sure to set the Gradle property to the application name you want the Sprin
 <p>Name of the application on Spring Cloud Config server. Could be a list of names to load multiple files (value separated by a comma)</p>
 </div>
 <div class="paragraph">
-<p>Environment variable: <code id="env-var-47711">QUARKUS_SPRING_CLOUD_CONFIG_NAME</code><button class="btn-copy fa fa-clipboard inline-btn-copy" data-clipboard-action="copy" data-clipboard-target="#env-var-47711" title="Copy to clipboard" do-not-collapse="true"></button></p>
+<p>Environment variable: <code id="env-var-55709">QUARKUS_SPRING_CLOUD_CONFIG_NAME</code><button class="btn-copy fa fa-clipboard inline-btn-copy" data-clipboard-action="copy" data-clipboard-target="#env-var-55709" title="Copy to clipboard" do-not-collapse="true"></button></p>
 </div>
 </div>
 </div>
@@ -614,7 +647,8 @@ so be sure to set the Gradle property to the application name you want the Sprin
 </tr>
 <tr class="row-collapsible row-collapsed row-with-desc odd">
 <td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
-<p><a id="quarkus-spring-cloud-config-client_quarkus-spring-cloud-config-label"></a><code><a href="#quarkus-spring-cloud-config-client_quarkus-spring-cloud-config-label">quarkus.spring-cloud-config.label</a></code></p>
+<p><a id="quarkus-spring-cloud-config-client_quarkus-spring-cloud-config-label"></a> <span class="property-path"><a href="#quarkus-spring-cloud-config-client_quarkus-spring-cloud-config-label"><code>quarkus.spring-cloud-config.label</code></a></span>
+<button class="btn-copy fa fa-clipboard inline-btn-copy" data-clipboard-action="copy" data-clipboard-text='quarkus.spring-cloud-config.label' title="Copy to clipboard" do-not-collapse="true"></button></p>
 </div>
 <div id="conf-collapsible-desc-5" class="openblock description description-collapsed">
 <div class="content">
@@ -622,7 +656,7 @@ so be sure to set the Gradle property to the application name you want the Sprin
 <p>The label to be used to pull remote configuration properties. The default is set on the Spring Cloud Config Server (generally "master" when the server uses a Git backend).</p>
 </div>
 <div class="paragraph">
-<p>Environment variable: <code id="env-var-47712">QUARKUS_SPRING_CLOUD_CONFIG_LABEL</code><button class="btn-copy fa fa-clipboard inline-btn-copy" data-clipboard-action="copy" data-clipboard-target="#env-var-47712" title="Copy to clipboard" do-not-collapse="true"></button></p>
+<p>Environment variable: <code id="env-var-55710">QUARKUS_SPRING_CLOUD_CONFIG_LABEL</code><button class="btn-copy fa fa-clipboard inline-btn-copy" data-clipboard-action="copy" data-clipboard-target="#env-var-55710" title="Copy to clipboard" do-not-collapse="true"></button></p>
 </div>
 </div>
 </div>
@@ -634,7 +668,8 @@ so be sure to set the Gradle property to the application name you want the Sprin
 </tr>
 <tr class="row-collapsible row-collapsed row-with-desc">
 <td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
-<p><a id="quarkus-spring-cloud-config-client_quarkus-spring-cloud-config-connection-timeout"></a><code><a href="#quarkus-spring-cloud-config-client_quarkus-spring-cloud-config-connection-timeout">quarkus.spring-cloud-config.connection-timeout</a></code></p>
+<p><a id="quarkus-spring-cloud-config-client_quarkus-spring-cloud-config-connection-timeout"></a> <span class="property-path"><a href="#quarkus-spring-cloud-config-client_quarkus-spring-cloud-config-connection-timeout"><code>quarkus.spring-cloud-config.connection-timeout</code></a></span>
+<button class="btn-copy fa fa-clipboard inline-btn-copy" data-clipboard-action="copy" data-clipboard-text='quarkus.spring-cloud-config.connection-timeout' title="Copy to clipboard" do-not-collapse="true"></button></p>
 </div>
 <div id="conf-collapsible-desc-6" class="openblock description description-collapsed">
 <div class="content">
@@ -645,20 +680,20 @@ so be sure to set the Gradle property to the application name you want the Sprin
 <p>Specify <code>0</code> to wait indefinitely.</p>
 </div>
 <div class="paragraph">
-<p>Environment variable: <code id="env-var-47713">QUARKUS_SPRING_CLOUD_CONFIG_CONNECTION_TIMEOUT</code><button class="btn-copy fa fa-clipboard inline-btn-copy" data-clipboard-action="copy" data-clipboard-target="#env-var-47713" title="Copy to clipboard" do-not-collapse="true"></button></p>
+<p>Environment variable: <code id="env-var-55711">QUARKUS_SPRING_CLOUD_CONFIG_CONNECTION_TIMEOUT</code><button class="btn-copy fa fa-clipboard inline-btn-copy" data-clipboard-action="copy" data-clipboard-target="#env-var-55711" title="Copy to clipboard" do-not-collapse="true"></button></p>
 </div>
 </div>
 </div>
 <div class="paragraph description-decoration">
 <p><i class="fa fa-chevron-down"></i><span>Show more</span></p>
 </div></div></td>
-<td class="tableblock halign-left valign-middle"><p class="tableblock"><a href="https://docs.oracle.com/javase/8/docs/api/java/time/Duration.html">Duration</a>
-  <a href="#duration-note-anchor-{summaryTableId}"><span class="icon"><i class="fa fa-question-circle" title="More information about the Duration format"></i></span></a></p></td>
+<td class="tableblock halign-left valign-middle"><p class="tableblock"><a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/time/Duration.html">Duration</a> <a href="#duration-note-anchor-quarkus-spring-cloud-config-client_quarkus-spring-cloud-config"><span class="icon"><i class="fa fa-question-circle" title="More information about the Duration format"></i></span></a></p></td>
 <td class="tableblock halign-left valign-middle"><p class="tableblock"><code>10S</code></p></td>
 </tr>
 <tr class="row-collapsible row-collapsed row-with-desc odd">
 <td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
-<p><a id="quarkus-spring-cloud-config-client_quarkus-spring-cloud-config-read-timeout"></a><code><a href="#quarkus-spring-cloud-config-client_quarkus-spring-cloud-config-read-timeout">quarkus.spring-cloud-config.read-timeout</a></code></p>
+<p><a id="quarkus-spring-cloud-config-client_quarkus-spring-cloud-config-read-timeout"></a> <span class="property-path"><a href="#quarkus-spring-cloud-config-client_quarkus-spring-cloud-config-read-timeout"><code>quarkus.spring-cloud-config.read-timeout</code></a></span>
+<button class="btn-copy fa fa-clipboard inline-btn-copy" data-clipboard-action="copy" data-clipboard-text='quarkus.spring-cloud-config.read-timeout' title="Copy to clipboard" do-not-collapse="true"></button></p>
 </div>
 <div id="conf-collapsible-desc-7" class="openblock description description-collapsed">
 <div class="content">
@@ -669,20 +704,20 @@ so be sure to set the Gradle property to the application name you want the Sprin
 <p>Specify <code>0</code> to wait indefinitely.</p>
 </div>
 <div class="paragraph">
-<p>Environment variable: <code id="env-var-47714">QUARKUS_SPRING_CLOUD_CONFIG_READ_TIMEOUT</code><button class="btn-copy fa fa-clipboard inline-btn-copy" data-clipboard-action="copy" data-clipboard-target="#env-var-47714" title="Copy to clipboard" do-not-collapse="true"></button></p>
+<p>Environment variable: <code id="env-var-55712">QUARKUS_SPRING_CLOUD_CONFIG_READ_TIMEOUT</code><button class="btn-copy fa fa-clipboard inline-btn-copy" data-clipboard-action="copy" data-clipboard-target="#env-var-55712" title="Copy to clipboard" do-not-collapse="true"></button></p>
 </div>
 </div>
 </div>
 <div class="paragraph description-decoration">
 <p><i class="fa fa-chevron-down"></i><span>Show more</span></p>
 </div></div></td>
-<td class="tableblock halign-left valign-middle"><p class="tableblock"><a href="https://docs.oracle.com/javase/8/docs/api/java/time/Duration.html">Duration</a>
-  <a href="#duration-note-anchor-{summaryTableId}"><span class="icon"><i class="fa fa-question-circle" title="More information about the Duration format"></i></span></a></p></td>
+<td class="tableblock halign-left valign-middle"><p class="tableblock"><a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/time/Duration.html">Duration</a> <a href="#duration-note-anchor-quarkus-spring-cloud-config-client_quarkus-spring-cloud-config"><span class="icon"><i class="fa fa-question-circle" title="More information about the Duration format"></i></span></a></p></td>
 <td class="tableblock halign-left valign-middle"><p class="tableblock"><code>60S</code></p></td>
 </tr>
 <tr class="row-collapsible row-collapsed row-with-desc">
 <td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
-<p><a id="quarkus-spring-cloud-config-client_quarkus-spring-cloud-config-username"></a><code><a href="#quarkus-spring-cloud-config-client_quarkus-spring-cloud-config-username">quarkus.spring-cloud-config.username</a></code></p>
+<p><a id="quarkus-spring-cloud-config-client_quarkus-spring-cloud-config-username"></a> <span class="property-path"><a href="#quarkus-spring-cloud-config-client_quarkus-spring-cloud-config-username"><code>quarkus.spring-cloud-config.username</code></a></span>
+<button class="btn-copy fa fa-clipboard inline-btn-copy" data-clipboard-action="copy" data-clipboard-text='quarkus.spring-cloud-config.username' title="Copy to clipboard" do-not-collapse="true"></button></p>
 </div>
 <div id="conf-collapsible-desc-8" class="openblock description description-collapsed">
 <div class="content">
@@ -690,7 +725,7 @@ so be sure to set the Gradle property to the application name you want the Sprin
 <p>The username to be used if the Config Server has BASIC Auth enabled</p>
 </div>
 <div class="paragraph">
-<p>Environment variable: <code id="env-var-47715">QUARKUS_SPRING_CLOUD_CONFIG_USERNAME</code><button class="btn-copy fa fa-clipboard inline-btn-copy" data-clipboard-action="copy" data-clipboard-target="#env-var-47715" title="Copy to clipboard" do-not-collapse="true"></button></p>
+<p>Environment variable: <code id="env-var-55713">QUARKUS_SPRING_CLOUD_CONFIG_USERNAME</code><button class="btn-copy fa fa-clipboard inline-btn-copy" data-clipboard-action="copy" data-clipboard-target="#env-var-55713" title="Copy to clipboard" do-not-collapse="true"></button></p>
 </div>
 </div>
 </div>
@@ -702,7 +737,8 @@ so be sure to set the Gradle property to the application name you want the Sprin
 </tr>
 <tr class="row-collapsible row-collapsed row-with-desc odd">
 <td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
-<p><a id="quarkus-spring-cloud-config-client_quarkus-spring-cloud-config-password"></a><code><a href="#quarkus-spring-cloud-config-client_quarkus-spring-cloud-config-password">quarkus.spring-cloud-config.password</a></code></p>
+<p><a id="quarkus-spring-cloud-config-client_quarkus-spring-cloud-config-password"></a> <span class="property-path"><a href="#quarkus-spring-cloud-config-client_quarkus-spring-cloud-config-password"><code>quarkus.spring-cloud-config.password</code></a></span>
+<button class="btn-copy fa fa-clipboard inline-btn-copy" data-clipboard-action="copy" data-clipboard-text='quarkus.spring-cloud-config.password' title="Copy to clipboard" do-not-collapse="true"></button></p>
 </div>
 <div id="conf-collapsible-desc-9" class="openblock description description-collapsed">
 <div class="content">
@@ -710,7 +746,7 @@ so be sure to set the Gradle property to the application name you want the Sprin
 <p>The password to be used if the Config Server has BASIC Auth enabled</p>
 </div>
 <div class="paragraph">
-<p>Environment variable: <code id="env-var-47716">QUARKUS_SPRING_CLOUD_CONFIG_PASSWORD</code><button class="btn-copy fa fa-clipboard inline-btn-copy" data-clipboard-action="copy" data-clipboard-target="#env-var-47716" title="Copy to clipboard" do-not-collapse="true"></button></p>
+<p>Environment variable: <code id="env-var-55714">QUARKUS_SPRING_CLOUD_CONFIG_PASSWORD</code><button class="btn-copy fa fa-clipboard inline-btn-copy" data-clipboard-action="copy" data-clipboard-target="#env-var-55714" title="Copy to clipboard" do-not-collapse="true"></button></p>
 </div>
 </div>
 </div>
@@ -722,7 +758,8 @@ so be sure to set the Gradle property to the application name you want the Sprin
 </tr>
 <tr class="row-collapsible row-collapsed row-with-desc">
 <td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
-<p><a id="quarkus-spring-cloud-config-client_quarkus-spring-cloud-config-trust-store"></a><code><a href="#quarkus-spring-cloud-config-client_quarkus-spring-cloud-config-trust-store">quarkus.spring-cloud-config.trust-store</a></code></p>
+<p><a id="quarkus-spring-cloud-config-client_quarkus-spring-cloud-config-trust-store"></a> <span class="property-path"><a href="#quarkus-spring-cloud-config-client_quarkus-spring-cloud-config-trust-store"><code>quarkus.spring-cloud-config.trust-store</code></a></span>
+<button class="btn-copy fa fa-clipboard inline-btn-copy" data-clipboard-action="copy" data-clipboard-text='quarkus.spring-cloud-config.trust-store' title="Copy to clipboard" do-not-collapse="true"></button></p>
 </div>
 <div id="conf-collapsible-desc-10" class="openblock description description-collapsed">
 <div class="content">
@@ -730,7 +767,7 @@ so be sure to set the Gradle property to the application name you want the Sprin
 <p>TrustStore to be used containing the SSL certificate used by the Config server Can be either a classpath resource or a file system path</p>
 </div>
 <div class="paragraph">
-<p>Environment variable: <code id="env-var-47717">QUARKUS_SPRING_CLOUD_CONFIG_TRUST_STORE</code><button class="btn-copy fa fa-clipboard inline-btn-copy" data-clipboard-action="copy" data-clipboard-target="#env-var-47717" title="Copy to clipboard" do-not-collapse="true"></button></p>
+<p>Environment variable: <code id="env-var-55715">QUARKUS_SPRING_CLOUD_CONFIG_TRUST_STORE</code><button class="btn-copy fa fa-clipboard inline-btn-copy" data-clipboard-action="copy" data-clipboard-target="#env-var-55715" title="Copy to clipboard" do-not-collapse="true"></button></p>
 </div>
 </div>
 </div>
@@ -742,7 +779,8 @@ so be sure to set the Gradle property to the application name you want the Sprin
 </tr>
 <tr class="row-collapsible row-collapsed row-with-desc odd">
 <td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
-<p><a id="quarkus-spring-cloud-config-client_quarkus-spring-cloud-config-trust-store-password"></a><code><a href="#quarkus-spring-cloud-config-client_quarkus-spring-cloud-config-trust-store-password">quarkus.spring-cloud-config.trust-store-password</a></code></p>
+<p><a id="quarkus-spring-cloud-config-client_quarkus-spring-cloud-config-trust-store-password"></a> <span class="property-path"><a href="#quarkus-spring-cloud-config-client_quarkus-spring-cloud-config-trust-store-password"><code>quarkus.spring-cloud-config.trust-store-password</code></a></span>
+<button class="btn-copy fa fa-clipboard inline-btn-copy" data-clipboard-action="copy" data-clipboard-text='quarkus.spring-cloud-config.trust-store-password' title="Copy to clipboard" do-not-collapse="true"></button></p>
 </div>
 <div id="conf-collapsible-desc-11" class="openblock description description-collapsed">
 <div class="content">
@@ -750,7 +788,7 @@ so be sure to set the Gradle property to the application name you want the Sprin
 <p>Password of TrustStore to be used containing the SSL certificate used by the Config server</p>
 </div>
 <div class="paragraph">
-<p>Environment variable: <code id="env-var-47718">QUARKUS_SPRING_CLOUD_CONFIG_TRUST_STORE_PASSWORD</code><button class="btn-copy fa fa-clipboard inline-btn-copy" data-clipboard-action="copy" data-clipboard-target="#env-var-47718" title="Copy to clipboard" do-not-collapse="true"></button></p>
+<p>Environment variable: <code id="env-var-55716">QUARKUS_SPRING_CLOUD_CONFIG_TRUST_STORE_PASSWORD</code><button class="btn-copy fa fa-clipboard inline-btn-copy" data-clipboard-action="copy" data-clipboard-target="#env-var-55716" title="Copy to clipboard" do-not-collapse="true"></button></p>
 </div>
 </div>
 </div>
@@ -762,7 +800,8 @@ so be sure to set the Gradle property to the application name you want the Sprin
 </tr>
 <tr class="row-collapsible row-collapsed row-with-desc">
 <td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
-<p><a id="quarkus-spring-cloud-config-client_quarkus-spring-cloud-config-key-store"></a><code><a href="#quarkus-spring-cloud-config-client_quarkus-spring-cloud-config-key-store">quarkus.spring-cloud-config.key-store</a></code></p>
+<p><a id="quarkus-spring-cloud-config-client_quarkus-spring-cloud-config-key-store"></a> <span class="property-path"><a href="#quarkus-spring-cloud-config-client_quarkus-spring-cloud-config-key-store"><code>quarkus.spring-cloud-config.key-store</code></a></span>
+<button class="btn-copy fa fa-clipboard inline-btn-copy" data-clipboard-action="copy" data-clipboard-text='quarkus.spring-cloud-config.key-store' title="Copy to clipboard" do-not-collapse="true"></button></p>
 </div>
 <div id="conf-collapsible-desc-12" class="openblock description description-collapsed">
 <div class="content">
@@ -770,7 +809,7 @@ so be sure to set the Gradle property to the application name you want the Sprin
 <p>KeyStore to be used containing the SSL certificate for authentication with the Config server Can be either a classpath resource or a file system path</p>
 </div>
 <div class="paragraph">
-<p>Environment variable: <code id="env-var-47719">QUARKUS_SPRING_CLOUD_CONFIG_KEY_STORE</code><button class="btn-copy fa fa-clipboard inline-btn-copy" data-clipboard-action="copy" data-clipboard-target="#env-var-47719" title="Copy to clipboard" do-not-collapse="true"></button></p>
+<p>Environment variable: <code id="env-var-55717">QUARKUS_SPRING_CLOUD_CONFIG_KEY_STORE</code><button class="btn-copy fa fa-clipboard inline-btn-copy" data-clipboard-action="copy" data-clipboard-target="#env-var-55717" title="Copy to clipboard" do-not-collapse="true"></button></p>
 </div>
 </div>
 </div>
@@ -782,7 +821,8 @@ so be sure to set the Gradle property to the application name you want the Sprin
 </tr>
 <tr class="row-collapsible row-collapsed row-with-desc odd">
 <td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
-<p><a id="quarkus-spring-cloud-config-client_quarkus-spring-cloud-config-key-store-password"></a><code><a href="#quarkus-spring-cloud-config-client_quarkus-spring-cloud-config-key-store-password">quarkus.spring-cloud-config.key-store-password</a></code></p>
+<p><a id="quarkus-spring-cloud-config-client_quarkus-spring-cloud-config-key-store-password"></a> <span class="property-path"><a href="#quarkus-spring-cloud-config-client_quarkus-spring-cloud-config-key-store-password"><code>quarkus.spring-cloud-config.key-store-password</code></a></span>
+<button class="btn-copy fa fa-clipboard inline-btn-copy" data-clipboard-action="copy" data-clipboard-text='quarkus.spring-cloud-config.key-store-password' title="Copy to clipboard" do-not-collapse="true"></button></p>
 </div>
 <div id="conf-collapsible-desc-13" class="openblock description description-collapsed">
 <div class="content">
@@ -790,7 +830,7 @@ so be sure to set the Gradle property to the application name you want the Sprin
 <p>Password of KeyStore to be used containing the SSL certificate for authentication with the Config server</p>
 </div>
 <div class="paragraph">
-<p>Environment variable: <code id="env-var-47720">QUARKUS_SPRING_CLOUD_CONFIG_KEY_STORE_PASSWORD</code><button class="btn-copy fa fa-clipboard inline-btn-copy" data-clipboard-action="copy" data-clipboard-target="#env-var-47720" title="Copy to clipboard" do-not-collapse="true"></button></p>
+<p>Environment variable: <code id="env-var-55718">QUARKUS_SPRING_CLOUD_CONFIG_KEY_STORE_PASSWORD</code><button class="btn-copy fa fa-clipboard inline-btn-copy" data-clipboard-action="copy" data-clipboard-target="#env-var-55718" title="Copy to clipboard" do-not-collapse="true"></button></p>
 </div>
 </div>
 </div>
@@ -802,7 +842,8 @@ so be sure to set the Gradle property to the application name you want the Sprin
 </tr>
 <tr class="row-collapsible row-collapsed row-with-desc">
 <td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
-<p><a id="quarkus-spring-cloud-config-client_quarkus-spring-cloud-config-key-password"></a><code><a href="#quarkus-spring-cloud-config-client_quarkus-spring-cloud-config-key-password">quarkus.spring-cloud-config.key-password</a></code></p>
+<p><a id="quarkus-spring-cloud-config-client_quarkus-spring-cloud-config-key-password"></a> <span class="property-path"><a href="#quarkus-spring-cloud-config-client_quarkus-spring-cloud-config-key-password"><code>quarkus.spring-cloud-config.key-password</code></a></span>
+<button class="btn-copy fa fa-clipboard inline-btn-copy" data-clipboard-action="copy" data-clipboard-text='quarkus.spring-cloud-config.key-password' title="Copy to clipboard" do-not-collapse="true"></button></p>
 </div>
 <div id="conf-collapsible-desc-14" class="openblock description description-collapsed">
 <div class="content">
@@ -810,7 +851,7 @@ so be sure to set the Gradle property to the application name you want the Sprin
 <p>Password to recover key from KeyStore for SSL client authentication with the Config server If no value is provided, the key-store-password will be used</p>
 </div>
 <div class="paragraph">
-<p>Environment variable: <code id="env-var-47721">QUARKUS_SPRING_CLOUD_CONFIG_KEY_PASSWORD</code><button class="btn-copy fa fa-clipboard inline-btn-copy" data-clipboard-action="copy" data-clipboard-target="#env-var-47721" title="Copy to clipboard" do-not-collapse="true"></button></p>
+<p>Environment variable: <code id="env-var-55719">QUARKUS_SPRING_CLOUD_CONFIG_KEY_PASSWORD</code><button class="btn-copy fa fa-clipboard inline-btn-copy" data-clipboard-action="copy" data-clipboard-target="#env-var-55719" title="Copy to clipboard" do-not-collapse="true"></button></p>
 </div>
 </div>
 </div>
@@ -822,7 +863,8 @@ so be sure to set the Gradle property to the application name you want the Sprin
 </tr>
 <tr class="row-collapsible row-collapsed row-with-desc odd">
 <td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
-<p><a id="quarkus-spring-cloud-config-client_quarkus-spring-cloud-config-trust-certs"></a><code><a href="#quarkus-spring-cloud-config-client_quarkus-spring-cloud-config-trust-certs">quarkus.spring-cloud-config.trust-certs</a></code></p>
+<p><a id="quarkus-spring-cloud-config-client_quarkus-spring-cloud-config-trust-certs"></a> <span class="property-path"><a href="#quarkus-spring-cloud-config-client_quarkus-spring-cloud-config-trust-certs"><code>quarkus.spring-cloud-config.trust-certs</code></a></span>
+<button class="btn-copy fa fa-clipboard inline-btn-copy" data-clipboard-action="copy" data-clipboard-text='quarkus.spring-cloud-config.trust-certs' title="Copy to clipboard" do-not-collapse="true"></button></p>
 </div>
 <div id="conf-collapsible-desc-15" class="openblock description description-collapsed">
 <div class="content">
@@ -830,7 +872,7 @@ so be sure to set the Gradle property to the application name you want the Sprin
 <p>When using HTTPS and no keyStore has been specified, whether to trust all certificates</p>
 </div>
 <div class="paragraph">
-<p>Environment variable: <code id="env-var-47722">QUARKUS_SPRING_CLOUD_CONFIG_TRUST_CERTS</code><button class="btn-copy fa fa-clipboard inline-btn-copy" data-clipboard-action="copy" data-clipboard-target="#env-var-47722" title="Copy to clipboard" do-not-collapse="true"></button></p>
+<p>Environment variable: <code id="env-var-55720">QUARKUS_SPRING_CLOUD_CONFIG_TRUST_CERTS</code><button class="btn-copy fa fa-clipboard inline-btn-copy" data-clipboard-action="copy" data-clipboard-target="#env-var-55720" title="Copy to clipboard" do-not-collapse="true"></button></p>
 </div>
 </div>
 </div>
@@ -842,15 +884,37 @@ so be sure to set the Gradle property to the application name you want the Sprin
 </tr>
 <tr class="row-collapsible row-collapsed row-with-desc">
 <td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
-<p><a id="quarkus-spring-cloud-config-client_quarkus-spring-cloud-config-profiles"></a><code><a href="#quarkus-spring-cloud-config-client_quarkus-spring-cloud-config-profiles">quarkus.spring-cloud-config.profiles</a></code></p>
+<p><a id="quarkus-spring-cloud-config-client_quarkus-spring-cloud-config-headers-header-name"></a> <span class="property-path"><a href="#quarkus-spring-cloud-config-client_quarkus-spring-cloud-config-headers-header-name"><code>quarkus.spring-cloud-config.headers."header-name"</code></a></span>
+<button class="btn-copy fa fa-clipboard inline-btn-copy" data-clipboard-action="copy" data-clipboard-text='quarkus.spring-cloud-config.headers."header-name"' title="Copy to clipboard" do-not-collapse="true"></button></p>
 </div>
 <div id="conf-collapsible-desc-16" class="openblock description description-collapsed">
+<div class="content">
+<div class="paragraph">
+<p>Custom headers to pass the Spring Cloud Config Server when performing the HTTP request</p>
+</div>
+<div class="paragraph">
+<p>Environment variable: <code id="env-var-55721">QUARKUS_SPRING_CLOUD_CONFIG_HEADERS__HEADER_NAME_</code><button class="btn-copy fa fa-clipboard inline-btn-copy" data-clipboard-action="copy" data-clipboard-target="#env-var-55721" title="Copy to clipboard" do-not-collapse="true"></button></p>
+</div>
+</div>
+</div>
+<div class="paragraph description-decoration">
+<p><i class="fa fa-chevron-down"></i><span>Show more</span></p>
+</div></div></td>
+<td class="tableblock halign-left valign-middle"><p class="tableblock">Map&lt;String,String&gt;</p></td>
+<td class="tableblock halign-left valign-middle"></td>
+</tr>
+<tr class="row-collapsible row-collapsed row-with-desc odd">
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p><a id="quarkus-spring-cloud-config-client_quarkus-spring-cloud-config-profiles"></a> <span class="property-path"><a href="#quarkus-spring-cloud-config-client_quarkus-spring-cloud-config-profiles"><code>quarkus.spring-cloud-config.profiles</code></a></span>
+<button class="btn-copy fa fa-clipboard inline-btn-copy" data-clipboard-action="copy" data-clipboard-text='quarkus.spring-cloud-config.profiles' title="Copy to clipboard" do-not-collapse="true"></button></p>
+</div>
+<div id="conf-collapsible-desc-17" class="openblock description description-collapsed">
 <div class="content">
 <div class="paragraph">
 <p>The profiles to use for lookup</p>
 </div>
 <div class="paragraph">
-<p>Environment variable: <code id="env-var-47723">QUARKUS_SPRING_CLOUD_CONFIG_PROFILES</code><button class="btn-copy fa fa-clipboard inline-btn-copy" data-clipboard-action="copy" data-clipboard-target="#env-var-47723" title="Copy to clipboard" do-not-collapse="true"></button></p>
+<p>Environment variable: <code id="env-var-55722">QUARKUS_SPRING_CLOUD_CONFIG_PROFILES</code><button class="btn-copy fa fa-clipboard inline-btn-copy" data-clipboard-action="copy" data-clipboard-target="#env-var-55722" title="Copy to clipboard" do-not-collapse="true"></button></p>
 </div>
 </div>
 </div>
@@ -860,29 +924,9 @@ so be sure to set the Gradle property to the application name you want the Sprin
 <td class="tableblock halign-left valign-middle"><p class="tableblock">list of string</p></td>
 <td class="tableblock halign-left valign-middle"></td>
 </tr>
-<tr class="row-collapsible row-collapsed row-with-desc odd">
-<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
-<p><a id="quarkus-spring-cloud-config-client_quarkus-spring-cloud-config-headers-header-name"></a><code><a href="#quarkus-spring-cloud-config-client_quarkus-spring-cloud-config-headers-header-name">quarkus.spring-cloud-config.headers."header-name"</a></code></p>
-</div>
-<div id="conf-collapsible-desc-17" class="openblock description description-collapsed">
-<div class="content">
-<div class="paragraph">
-<p>Custom headers to pass the Spring Cloud Config Server when performing the HTTP request</p>
-</div>
-<div class="paragraph">
-<p>Environment variable: <code id="env-var-47724">QUARKUS_SPRING_CLOUD_CONFIG_HEADERS__HEADER_NAME_</code><button class="btn-copy fa fa-clipboard inline-btn-copy" data-clipboard-action="copy" data-clipboard-target="#env-var-47724" title="Copy to clipboard" do-not-collapse="true"></button></p>
-</div>
-</div>
-</div>
-<div class="paragraph description-decoration">
-<p><i class="fa fa-chevron-down"></i><span>Show more</span></p>
-</div></div></td>
-<td class="tableblock halign-left valign-middle"><p class="tableblock"><a href="https://docs.oracle.com/javase/8/docs/api/java/lang/String.html">String</a></p></td>
-<td class="tableblock halign-left valign-middle"></td>
-</tr>
 </tbody>
 </table>
-<div id="duration-note-anchor-quarkus-spring-cloud-config-client" class="admonitionblock note">
+<div id="duration-note-anchor-quarkus-spring-cloud-config-client_quarkus-spring-cloud-config" class="admonitionblock note">
 <table>
 <tr>
 <td class="icon">
@@ -1081,6 +1125,10 @@ See the <a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/ja
           
           
             <li><a href="https://x.com/quarkusio" target="_blank">X</a></li>
+          
+          
+          
+            <li><a href="https://bsky.app/profile/quarkus.io" target="_blank">Bluesky</a></li>
           
           
           

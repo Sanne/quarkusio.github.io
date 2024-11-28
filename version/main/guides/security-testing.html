@@ -11,8 +11,33 @@
   <title>Security Testing - main - Quarkus</title>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <meta http-equiv="Content-Security-Policy" content="default-src https://dpm.demdex.net https://route-default-test-mscherer-matamo.apps.ospo-osci.z3b1.p1.openshiftapps.com/ https://search.quarkus.io; script-src 'self' 'unsafe-eval'  'sha256-ANpuoVzuSex6VhqpYgsG25OHWVA1I+F6aGU04LoI+5s=' 'sha256-ipy9P/3rZZW06mTLAR0EnXvxSNcnfSDPLDuh3kzbB1w=' 'sha256-+5qDxnbsqhFKZIIfofMhmVgNChsVrKoHUdaQ2EMs9aU=' js.bizographics.com https://www.redhat.com https://static.redhat.com assets.adobedtm.com jsonip.com https://ajax.googleapis.com https://use.fontawesome.com https://app.mailjet.com http://www.youtube.com http://www.googleadservices.com https://googleads.g.doubleclick.net https://dpm.demdex.net https://giscus.app https://route-default-test-mscherer-matamo.apps.ospo-osci.z3b1.p1.openshiftapps.com/; style-src 'self' https://fonts.googleapis.com https://use.fontawesome.com; img-src 'self'
-  https://route-default-test-mscherer-matamo.apps.ospo-osci.z3b1.p1.openshiftapps.com/ * data:; media-src 'self'; frame-src  https://www.youtube.com https://embed.restream.io https://app.mailjet.com http://xy0p2.mjt.lu https://mj.quarkus.io https://giscus.app; base-uri 'none'; object-src 'none'; form-action 'none'; font-src 'self' https://use.fontawesome.com https://fonts.gstatic.com;" />
+  <meta http-equiv="Content-Security-Policy" content="
+  connect-src 'self' https://dpm.demdex.net https://adobedc.demdex.net https://route-default-test-mscherer-matamo.apps.ospo-osci.z3b1.p1.openshiftapps.com/ https://search.quarkus.io https://smetrics.redhat.com; 
+  script-src 'self' 'unsafe-inline' 'unsafe-eval'
+      
+      https://assets.adobedtm.com
+      js.bizographics.com
+      https://www.redhat.com
+      https://static.redhat.com
+      https://app.requestly.io/
+      jsonip.com
+      https://ajax.googleapis.com
+      https://use.fontawesome.com
+      http://www.youtube.com
+      http://www.googleadservices.com
+      https://googleads.g.doubleclick.net
+      https://giscus.app
+      https://route-default-test-mscherer-matamo.apps.ospo-osci.z3b1.p1.openshiftapps.com/
+      https://app.mailjet.com;
+
+  style-src 'self' https://fonts.googleapis.com https://use.fontawesome.com; 
+  img-src 'self' * data:; 
+  media-src 'self'; 
+  frame-src https://redhat.demdex.net https://www.youtube.com https://embed.restream.io https://app.mailjet.com http://xy0p2.mjt.lu https://mj.quarkus.io https://giscus.app; 
+  base-uri 'none'; 
+  object-src 'none'; 
+  form-action 'none'; 
+  font-src 'self' https://use.fontawesome.com https://fonts.gstatic.com;" />
   <script id="adobe_dtm" src="https://www.redhat.com/dtm.js" type="text/javascript"></script>
   <script src="/assets/javascript/highlight.pack.js" type="text/javascript"></script>
   <META HTTP-EQUIV='X-XSS-Protection' CONTENT="1; mode=block">
@@ -76,10 +101,12 @@
         <ul class="submenu">
           <li><a href="/about" class="">WHAT IS QUARKUS?</a></li>
           <li><a href="/container-first" class="">CONTAINER FIRST</a></li>
-          <li><a href="/continuum" class="">REACTIVE</a></li>
-          <li><a href="/developer-joy" class="">DEVELOPER JOY</a></li>
-          <li><a href="/kubernetes-native" class="">KUBERNETES NATIVE</a></li>
+          <li><a href="/continuum" class="">VERSATILITY</a></li>
           <li><a href="/standards" class="">STANDARDS</a></li>
+          <li><a href="/kubernetes-native" class="">KUBERNETES NATIVE</a></li>
+          <li><a href="/performance" class="">PERFORMANCE</a></li>
+          <li><a href="/developer-joy" class="">DEVELOPER JOY</a></li>
+          
         </ul>
       </li>
       <li class="dropdown">
@@ -107,6 +134,7 @@
           <li><a href="/support/" class="">SUPPORT</a></li>
           <li><a href="/blog" class="">BLOG</a></li>
           <li><a href="/discussion" class="">DISCUSSION</a></li>
+          <li><a href="/working-groups" class="">WORKING GROUPS</a></li>
           <li><a href="/insights" class="">PODCAST</a></li>
           <li><a href="/events" class="">EVENTS</a></li>
           <li><a href="/newsletter" class="">NEWSLETTER</a></li>
@@ -143,6 +171,7 @@
 
 
 
+
 <section class="full-width-version-bg flexfilterbar guides">
   <div class="guideflexcontainer">
     <div class="docslink">
@@ -160,7 +189,11 @@
         
         
         
-        <option value="latest" >3.13.0 - Latest</option>
+        <option value="latest" >3.17.0 - Latest</option>
+        
+        
+        
+        <option value="3.15" >3.15</option>
         
         
         
@@ -177,10 +210,6 @@
         
         
         <option value="2.13" >2.13</option>
-        
-        
-        
-        <option value="2.7" >2.7</option>
         </select>
     </div>
   </div>
@@ -190,7 +219,7 @@
   <div class="grid-wrapper">
     <div class="grid__item width-8-12 width-12-12-m">
       
-      <a class="editlink" href="https://github.com/quarkusio/quarkus/edit/main/docs/src/main/asciidoc/_versions/main/guides/security-testing.adoc">Edit this Page</a>
+      <a class="editlink" href="https://github.com/quarkusio/quarkus/edit/main/docs/src/main/asciidoc/security-testing.adoc">Edit this Page</a>
       
       <h1 class="text-caps">Security Testing </h1>
       <div id="preamble">
@@ -353,6 +382,78 @@ void someTestMethod() {
 </td>
 </tr>
 </table>
+</div>
+<div class="paragraph">
+<p>The <code>@TestSecurity</code> annotation also works with the <code>@PermissionsAllowed</code> security annotation.
+Consider following example:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-java hljs" data-lang="java">@Test
+@TestSecurity(user = "testUser", permissions = "see:detail")
+void someTestMethod() {
+    ...
+}</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>This will run the test with an identity possessing permission <code>see</code> and action <code>detail</code>.
+Consequently, call to the <code>getDetail</code> method declared in the example below will succeed:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-java hljs" data-lang="java">@PermissionsAllowed("see:detail")
+public String getDetail() {
+    return "detail";
+}</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>It is also possible to set custom permissions like in the example below:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-java hljs" data-lang="java">@PermissionsAllowed("see", permission = CustomPermission.class)
+public String getDetail() {
+    return "detail";
+}</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>The <code>CustomPermission</code> needs to be granted to the <code>SecurityIdentity</code> created
+by the <code>@TestSecurity</code> annotation with a <code>SecurityIdentityAugmentor</code> CDI bean:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-java hljs" data-lang="java">@ApplicationScoped
+public class CustomSecurityIdentityAugmentor implements SecurityIdentityAugmentor {
+    @Override
+    public Uni&lt;SecurityIdentity&gt; augment(SecurityIdentity securityIdentity,
+            AuthenticationRequestContext authenticationRequestContext) {
+        final SecurityIdentity augmentedIdentity;
+        if (shouldGrantCustomPermission(securityIdentity) {
+            augmentedIdentity = QuarkusSecurityIdentity.builder(securityIdentity)
+                                   .addPermission(new CustomPermission("see")).build();
+        } else {
+            augmentedIdentity = securityIdentity;
+        }
+        return Uni.createFrom().item(augmentedIdentity);
+    }
+}</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Quarkus will only augment the <code>SecurityIdentity</code> created with the <code>@TestSecurity</code> annotation if you set
+the <code>@TestSecurity#augmentors</code> annotation attribute to the <code>CustomSecurityIdentityAugmentor.class</code> like this:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-java hljs" data-lang="java">@Test
+@TestSecurity(user = "testUser", permissions = "see:detail", augmentors = CustomSecurityIdentityAugmentor.class)
+void someTestMethod() {
+    ...
+}</code></pre>
+</div>
 </div>
 <div class="sect2">
 <h3 id="mixing-security-tests"><a class="anchor" href="#mixing-security-tests"></a>Mixing security tests</h3>
@@ -560,7 +661,7 @@ See <a href="security-oauth2#integration-testing">OAuth2 Integration testing</a>
         <li class="concepts"><a href="/version/main/guides/security-basic-authentication">Basic authentication</a></li>
       
         
-        <li class="guide"><a href="/version/main/guides/security-jwt-build">Build, Sign and Encrypt JSON Web Tokens</a></li>
+        <li class="guide"><a href="/version/main/guides/security-jwt-build">Build, sign, and encrypt JSON Web Tokens</a></li>
       
         
         <li class="concepts"><a href="/version/main/guides/security-openid-connect-providers">Configuring Well-Known OpenID Connect Providers</a></li>
@@ -680,6 +781,10 @@ See <a href="security-oauth2#integration-testing">OAuth2 Integration testing</a>
           
           
             <li><a href="https://x.com/quarkusio" target="_blank">X</a></li>
+          
+          
+          
+            <li><a href="https://bsky.app/profile/quarkus.io" target="_blank">Bluesky</a></li>
           
           
           

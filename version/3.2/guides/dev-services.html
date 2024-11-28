@@ -11,8 +11,33 @@
   <title>Dev Services Overview - 3.2 - Quarkus</title>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <meta http-equiv="Content-Security-Policy" content="default-src https://dpm.demdex.net https://route-default-test-mscherer-matamo.apps.ospo-osci.z3b1.p1.openshiftapps.com/ https://search.quarkus.io; script-src 'self' 'unsafe-eval'  'sha256-ANpuoVzuSex6VhqpYgsG25OHWVA1I+F6aGU04LoI+5s=' 'sha256-ipy9P/3rZZW06mTLAR0EnXvxSNcnfSDPLDuh3kzbB1w=' 'sha256-+5qDxnbsqhFKZIIfofMhmVgNChsVrKoHUdaQ2EMs9aU=' js.bizographics.com https://www.redhat.com https://static.redhat.com assets.adobedtm.com jsonip.com https://ajax.googleapis.com https://use.fontawesome.com https://app.mailjet.com http://www.youtube.com http://www.googleadservices.com https://googleads.g.doubleclick.net https://dpm.demdex.net https://giscus.app https://route-default-test-mscherer-matamo.apps.ospo-osci.z3b1.p1.openshiftapps.com/; style-src 'self' https://fonts.googleapis.com https://use.fontawesome.com; img-src 'self'
-  https://route-default-test-mscherer-matamo.apps.ospo-osci.z3b1.p1.openshiftapps.com/ * data:; media-src 'self'; frame-src  https://www.youtube.com https://embed.restream.io https://app.mailjet.com http://xy0p2.mjt.lu https://mj.quarkus.io https://giscus.app; base-uri 'none'; object-src 'none'; form-action 'none'; font-src 'self' https://use.fontawesome.com https://fonts.gstatic.com;" />
+  <meta http-equiv="Content-Security-Policy" content="
+  connect-src 'self' https://dpm.demdex.net https://adobedc.demdex.net https://route-default-test-mscherer-matamo.apps.ospo-osci.z3b1.p1.openshiftapps.com/ https://search.quarkus.io https://smetrics.redhat.com; 
+  script-src 'self' 'unsafe-inline' 'unsafe-eval'
+      
+      https://assets.adobedtm.com
+      js.bizographics.com
+      https://www.redhat.com
+      https://static.redhat.com
+      https://app.requestly.io/
+      jsonip.com
+      https://ajax.googleapis.com
+      https://use.fontawesome.com
+      http://www.youtube.com
+      http://www.googleadservices.com
+      https://googleads.g.doubleclick.net
+      https://giscus.app
+      https://route-default-test-mscherer-matamo.apps.ospo-osci.z3b1.p1.openshiftapps.com/
+      https://app.mailjet.com;
+
+  style-src 'self' https://fonts.googleapis.com https://use.fontawesome.com; 
+  img-src 'self' * data:; 
+  media-src 'self'; 
+  frame-src https://redhat.demdex.net https://www.youtube.com https://embed.restream.io https://app.mailjet.com http://xy0p2.mjt.lu https://mj.quarkus.io https://giscus.app; 
+  base-uri 'none'; 
+  object-src 'none'; 
+  form-action 'none'; 
+  font-src 'self' https://use.fontawesome.com https://fonts.gstatic.com;" />
   <script id="adobe_dtm" src="https://www.redhat.com/dtm.js" type="text/javascript"></script>
   <script src="/assets/javascript/highlight.pack.js" type="text/javascript"></script>
   <META HTTP-EQUIV='X-XSS-Protection' CONTENT="1; mode=block">
@@ -76,10 +101,12 @@
         <ul class="submenu">
           <li><a href="/about" class="">WHAT IS QUARKUS?</a></li>
           <li><a href="/container-first" class="">CONTAINER FIRST</a></li>
-          <li><a href="/continuum" class="">REACTIVE</a></li>
-          <li><a href="/developer-joy" class="">DEVELOPER JOY</a></li>
-          <li><a href="/kubernetes-native" class="">KUBERNETES NATIVE</a></li>
+          <li><a href="/continuum" class="">VERSATILITY</a></li>
           <li><a href="/standards" class="">STANDARDS</a></li>
+          <li><a href="/kubernetes-native" class="">KUBERNETES NATIVE</a></li>
+          <li><a href="/performance" class="">PERFORMANCE</a></li>
+          <li><a href="/developer-joy" class="">DEVELOPER JOY</a></li>
+          
         </ul>
       </li>
       <li class="dropdown">
@@ -107,6 +134,7 @@
           <li><a href="/support/" class="">SUPPORT</a></li>
           <li><a href="/blog" class="">BLOG</a></li>
           <li><a href="/discussion" class="">DISCUSSION</a></li>
+          <li><a href="/working-groups" class="">WORKING GROUPS</a></li>
           <li><a href="/insights" class="">PODCAST</a></li>
           <li><a href="/events" class="">EVENTS</a></li>
           <li><a href="/newsletter" class="">NEWSLETTER</a></li>
@@ -143,6 +171,7 @@
 
 
 
+
 <section class="full-width-version-bg flexfilterbar guides">
   <div class="guideflexcontainer">
     <div class="docslink">
@@ -160,7 +189,11 @@
         
         
         
-        <option value="latest" >3.13.0 - Latest</option>
+        <option value="latest" >3.17.0 - Latest</option>
+        
+        
+        
+        <option value="3.15" >3.15</option>
         
         
         
@@ -177,10 +210,6 @@
         
         
         <option value="2.13" >2.13</option>
-        
-        
-        
-        <option value="2.7" >2.7</option>
         </select>
     </div>
   </div>
@@ -258,7 +287,7 @@ the broker address has not been explicitly configured. More information can be f
 <p>If Dev Services for AMQP has been explicitly enabled or disabled. Dev Services are generally enabled by default, unless there is an existing configuration present. For AMQP, Dev Services starts a broker unless <code>amqp-host</code> or <code>amqp-port</code> are set or if all the Reactive Messaging AMQP channel are configured with <code>host</code> or <code>port</code>.</p>
 </div>
 <div class="paragraph">
-<p>Environment variable: <code id="env-var-28651">QUARKUS_AMQP_DEVSERVICES_ENABLED</code><button class="btn-copy fa fa-clipboard inline-btn-copy" data-clipboard-action="copy" data-clipboard-target="#env-var-28651" title="Copy to clipboard" do-not-collapse="true"></button></p>
+<p>Environment variable: <code id="env-var-36980">QUARKUS_AMQP_DEVSERVICES_ENABLED</code><button class="btn-copy fa fa-clipboard inline-btn-copy" data-clipboard-action="copy" data-clipboard-target="#env-var-36980" title="Copy to clipboard" do-not-collapse="true"></button></p>
 </div>
 </div>
 </div>
@@ -281,7 +310,7 @@ the broker address has not been explicitly configured. More information can be f
 <p>If not defined, the port will be chosen randomly.</p>
 </div>
 <div class="paragraph">
-<p>Environment variable: <code id="env-var-28652">QUARKUS_AMQP_DEVSERVICES_PORT</code><button class="btn-copy fa fa-clipboard inline-btn-copy" data-clipboard-action="copy" data-clipboard-target="#env-var-28652" title="Copy to clipboard" do-not-collapse="true"></button></p>
+<p>Environment variable: <code id="env-var-36981">QUARKUS_AMQP_DEVSERVICES_PORT</code><button class="btn-copy fa fa-clipboard inline-btn-copy" data-clipboard-action="copy" data-clipboard-target="#env-var-36981" title="Copy to clipboard" do-not-collapse="true"></button></p>
 </div>
 </div>
 </div>
@@ -301,7 +330,7 @@ the broker address has not been explicitly configured. More information can be f
 <p>The image to use. Note that only ActiveMQ Artemis images are supported. Specifically, the image repository must end with <code>artemiscloud/activemq-artemis-broker</code>. Check the <a href="https://quay.io/repository/artemiscloud/activemq-artemis-broker">activemq-artemis-broker on Quay page</a> to find the available versions.</p>
 </div>
 <div class="paragraph">
-<p>Environment variable: <code id="env-var-28653">QUARKUS_AMQP_DEVSERVICES_IMAGE_NAME</code><button class="btn-copy fa fa-clipboard inline-btn-copy" data-clipboard-action="copy" data-clipboard-target="#env-var-28653" title="Copy to clipboard" do-not-collapse="true"></button></p>
+<p>Environment variable: <code id="env-var-36982">QUARKUS_AMQP_DEVSERVICES_IMAGE_NAME</code><button class="btn-copy fa fa-clipboard inline-btn-copy" data-clipboard-action="copy" data-clipboard-target="#env-var-36982" title="Copy to clipboard" do-not-collapse="true"></button></p>
 </div>
 </div>
 </div>
@@ -321,7 +350,7 @@ the broker address has not been explicitly configured. More information can be f
 <p>The value of the <code>AMQ_EXTRA_ARGS</code> environment variable to pass to the container.</p>
 </div>
 <div class="paragraph">
-<p>Environment variable: <code id="env-var-28654">QUARKUS_AMQP_DEVSERVICES_EXTRA_ARGS</code><button class="btn-copy fa fa-clipboard inline-btn-copy" data-clipboard-action="copy" data-clipboard-target="#env-var-28654" title="Copy to clipboard" do-not-collapse="true"></button></p>
+<p>Environment variable: <code id="env-var-36983">QUARKUS_AMQP_DEVSERVICES_EXTRA_ARGS</code><button class="btn-copy fa fa-clipboard inline-btn-copy" data-clipboard-action="copy" data-clipboard-target="#env-var-36983" title="Copy to clipboard" do-not-collapse="true"></button></p>
 </div>
 </div>
 </div>
@@ -347,7 +376,7 @@ the broker address has not been explicitly configured. More information can be f
 <p>Container sharing is only used in dev mode.</p>
 </div>
 <div class="paragraph">
-<p>Environment variable: <code id="env-var-28655">QUARKUS_AMQP_DEVSERVICES_SHARED</code><button class="btn-copy fa fa-clipboard inline-btn-copy" data-clipboard-action="copy" data-clipboard-target="#env-var-28655" title="Copy to clipboard" do-not-collapse="true"></button></p>
+<p>Environment variable: <code id="env-var-36984">QUARKUS_AMQP_DEVSERVICES_SHARED</code><button class="btn-copy fa fa-clipboard inline-btn-copy" data-clipboard-action="copy" data-clipboard-target="#env-var-36984" title="Copy to clipboard" do-not-collapse="true"></button></p>
 </div>
 </div>
 </div>
@@ -370,7 +399,7 @@ the broker address has not been explicitly configured. More information can be f
 <p>This property is used when you need multiple shared AMQP brokers.</p>
 </div>
 <div class="paragraph">
-<p>Environment variable: <code id="env-var-28656">QUARKUS_AMQP_DEVSERVICES_SERVICE_NAME</code><button class="btn-copy fa fa-clipboard inline-btn-copy" data-clipboard-action="copy" data-clipboard-target="#env-var-28656" title="Copy to clipboard" do-not-collapse="true"></button></p>
+<p>Environment variable: <code id="env-var-36985">QUARKUS_AMQP_DEVSERVICES_SERVICE_NAME</code><button class="btn-copy fa fa-clipboard inline-btn-copy" data-clipboard-action="copy" data-clipboard-target="#env-var-36985" title="Copy to clipboard" do-not-collapse="true"></button></p>
 </div>
 </div>
 </div>
@@ -390,7 +419,7 @@ the broker address has not been explicitly configured. More information can be f
 <p>Environment variables that are passed to the container.</p>
 </div>
 <div class="paragraph">
-<p>Environment variable: <code id="env-var-28657">QUARKUS_AMQP_DEVSERVICES_CONTAINER_ENV</code><button class="btn-copy fa fa-clipboard inline-btn-copy" data-clipboard-action="copy" data-clipboard-target="#env-var-28657" title="Copy to clipboard" do-not-collapse="true"></button></p>
+<p>Environment variable: <code id="env-var-36986">QUARKUS_AMQP_DEVSERVICES_CONTAINER_ENV</code><button class="btn-copy fa fa-clipboard inline-btn-copy" data-clipboard-action="copy" data-clipboard-target="#env-var-36986" title="Copy to clipboard" do-not-collapse="true"></button></p>
 </div>
 </div>
 </div>
@@ -437,7 +466,7 @@ address has not been explicitly configured. More information can be found in the
 <p>If Dev Services for Apicurio Registry has been explicitly enabled or disabled. Dev Services are generally enabled by default, unless there is an existing configuration present. For Apicurio Registry, Dev Services starts a registry unless <code>mp.messaging.connector.smallrye-kafka.apicurio.registry.url</code> or <code>mp.messaging.connector.smallrye-kafka.schema.registry.url</code> is set.</p>
 </div>
 <div class="paragraph">
-<p>Environment variable: <code id="env-var-28658">QUARKUS_APICURIO_REGISTRY_DEVSERVICES_ENABLED</code><button class="btn-copy fa fa-clipboard inline-btn-copy" data-clipboard-action="copy" data-clipboard-target="#env-var-28658" title="Copy to clipboard" do-not-collapse="true"></button></p>
+<p>Environment variable: <code id="env-var-36987">QUARKUS_APICURIO_REGISTRY_DEVSERVICES_ENABLED</code><button class="btn-copy fa fa-clipboard inline-btn-copy" data-clipboard-action="copy" data-clipboard-target="#env-var-36987" title="Copy to clipboard" do-not-collapse="true"></button></p>
 </div>
 </div>
 </div>
@@ -460,7 +489,7 @@ address has not been explicitly configured. More information can be found in the
 <p>If not defined, the port will be chosen randomly.</p>
 </div>
 <div class="paragraph">
-<p>Environment variable: <code id="env-var-28659">QUARKUS_APICURIO_REGISTRY_DEVSERVICES_PORT</code><button class="btn-copy fa fa-clipboard inline-btn-copy" data-clipboard-action="copy" data-clipboard-target="#env-var-28659" title="Copy to clipboard" do-not-collapse="true"></button></p>
+<p>Environment variable: <code id="env-var-36988">QUARKUS_APICURIO_REGISTRY_DEVSERVICES_PORT</code><button class="btn-copy fa fa-clipboard inline-btn-copy" data-clipboard-action="copy" data-clipboard-target="#env-var-36988" title="Copy to clipboard" do-not-collapse="true"></button></p>
 </div>
 </div>
 </div>
@@ -480,7 +509,7 @@ address has not been explicitly configured. More information can be found in the
 <p>The Apicurio Registry image to use. Note that only Apicurio Registry 2.x images are supported. Specifically, the image repository must end with <code>apicurio/apicurio-registry-mem</code>.</p>
 </div>
 <div class="paragraph">
-<p>Environment variable: <code id="env-var-28660">QUARKUS_APICURIO_REGISTRY_DEVSERVICES_IMAGE_NAME</code><button class="btn-copy fa fa-clipboard inline-btn-copy" data-clipboard-action="copy" data-clipboard-target="#env-var-28660" title="Copy to clipboard" do-not-collapse="true"></button></p>
+<p>Environment variable: <code id="env-var-36989">QUARKUS_APICURIO_REGISTRY_DEVSERVICES_IMAGE_NAME</code><button class="btn-copy fa fa-clipboard inline-btn-copy" data-clipboard-action="copy" data-clipboard-target="#env-var-36989" title="Copy to clipboard" do-not-collapse="true"></button></p>
 </div>
 </div>
 </div>
@@ -506,7 +535,7 @@ address has not been explicitly configured. More information can be found in the
 <p>Container sharing is only used in dev mode.</p>
 </div>
 <div class="paragraph">
-<p>Environment variable: <code id="env-var-28661">QUARKUS_APICURIO_REGISTRY_DEVSERVICES_SHARED</code><button class="btn-copy fa fa-clipboard inline-btn-copy" data-clipboard-action="copy" data-clipboard-target="#env-var-28661" title="Copy to clipboard" do-not-collapse="true"></button></p>
+<p>Environment variable: <code id="env-var-36990">QUARKUS_APICURIO_REGISTRY_DEVSERVICES_SHARED</code><button class="btn-copy fa fa-clipboard inline-btn-copy" data-clipboard-action="copy" data-clipboard-target="#env-var-36990" title="Copy to clipboard" do-not-collapse="true"></button></p>
 </div>
 </div>
 </div>
@@ -529,7 +558,7 @@ address has not been explicitly configured. More information can be found in the
 <p>This property is used when you need multiple shared Apicurio Registry instances.</p>
 </div>
 <div class="paragraph">
-<p>Environment variable: <code id="env-var-28662">QUARKUS_APICURIO_REGISTRY_DEVSERVICES_SERVICE_NAME</code><button class="btn-copy fa fa-clipboard inline-btn-copy" data-clipboard-action="copy" data-clipboard-target="#env-var-28662" title="Copy to clipboard" do-not-collapse="true"></button></p>
+<p>Environment variable: <code id="env-var-36991">QUARKUS_APICURIO_REGISTRY_DEVSERVICES_SERVICE_NAME</code><button class="btn-copy fa fa-clipboard inline-btn-copy" data-clipboard-action="copy" data-clipboard-target="#env-var-36991" title="Copy to clipboard" do-not-collapse="true"></button></p>
 </div>
 </div>
 </div>
@@ -549,7 +578,7 @@ address has not been explicitly configured. More information can be found in the
 <p>Environment variables that are passed to the container.</p>
 </div>
 <div class="paragraph">
-<p>Environment variable: <code id="env-var-28663">QUARKUS_APICURIO_REGISTRY_DEVSERVICES_CONTAINER_ENV</code><button class="btn-copy fa fa-clipboard inline-btn-copy" data-clipboard-action="copy" data-clipboard-target="#env-var-28663" title="Copy to clipboard" do-not-collapse="true"></button></p>
+<p>Environment variable: <code id="env-var-36992">QUARKUS_APICURIO_REGISTRY_DEVSERVICES_CONTAINER_ENV</code><button class="btn-copy fa fa-clipboard inline-btn-copy" data-clipboard-action="copy" data-clipboard-target="#env-var-36992" title="Copy to clipboard" do-not-collapse="true"></button></p>
 </div>
 </div>
 </div>
@@ -609,7 +638,7 @@ after each run, and can be reused.</p>
 <p>If DevServices has been explicitly enabled or disabled. DevServices is generally enabled by default unless an existing configuration is present. When DevServices is enabled, Quarkus will attempt to automatically configure and start a database when running in Dev or Test mode.</p>
 </div>
 <div class="paragraph">
-<p>Environment variable: <code id="env-var-28664">QUARKUS_DATASOURCE_DEVSERVICES_ENABLED</code><button class="btn-copy fa fa-clipboard inline-btn-copy" data-clipboard-action="copy" data-clipboard-target="#env-var-28664" title="Copy to clipboard" do-not-collapse="true"></button></p>
+<p>Environment variable: <code id="env-var-36993">QUARKUS_DATASOURCE_DEVSERVICES_ENABLED</code><button class="btn-copy fa fa-clipboard inline-btn-copy" data-clipboard-action="copy" data-clipboard-target="#env-var-36993" title="Copy to clipboard" do-not-collapse="true"></button></p>
 </div>
 </div>
 </div>
@@ -629,7 +658,7 @@ after each run, and can be reused.</p>
 <p>The container image name for container-based DevServices providers. This has no effect if the provider is not a container-based database, such as H2 or Derby.</p>
 </div>
 <div class="paragraph">
-<p>Environment variable: <code id="env-var-28665">QUARKUS_DATASOURCE_DEVSERVICES_IMAGE_NAME</code><button class="btn-copy fa fa-clipboard inline-btn-copy" data-clipboard-action="copy" data-clipboard-target="#env-var-28665" title="Copy to clipboard" do-not-collapse="true"></button></p>
+<p>Environment variable: <code id="env-var-36994">QUARKUS_DATASOURCE_DEVSERVICES_IMAGE_NAME</code><button class="btn-copy fa fa-clipboard inline-btn-copy" data-clipboard-action="copy" data-clipboard-target="#env-var-36994" title="Copy to clipboard" do-not-collapse="true"></button></p>
 </div>
 </div>
 </div>
@@ -652,7 +681,7 @@ after each run, and can be reused.</p>
 <p>If not defined, the port will be chosen randomly.</p>
 </div>
 <div class="paragraph">
-<p>Environment variable: <code id="env-var-28666">QUARKUS_DATASOURCE_DEVSERVICES_PORT</code><button class="btn-copy fa fa-clipboard inline-btn-copy" data-clipboard-action="copy" data-clipboard-target="#env-var-28666" title="Copy to clipboard" do-not-collapse="true"></button></p>
+<p>Environment variable: <code id="env-var-36995">QUARKUS_DATASOURCE_DEVSERVICES_PORT</code><button class="btn-copy fa fa-clipboard inline-btn-copy" data-clipboard-action="copy" data-clipboard-target="#env-var-36995" title="Copy to clipboard" do-not-collapse="true"></button></p>
 </div>
 </div>
 </div>
@@ -672,7 +701,7 @@ after each run, and can be reused.</p>
 <p>The container start command to use for container-based DevServices providers. This has no effect if the provider is not a container-based database, such as H2 or Derby.</p>
 </div>
 <div class="paragraph">
-<p>Environment variable: <code id="env-var-28667">QUARKUS_DATASOURCE_DEVSERVICES_COMMAND</code><button class="btn-copy fa fa-clipboard inline-btn-copy" data-clipboard-action="copy" data-clipboard-target="#env-var-28667" title="Copy to clipboard" do-not-collapse="true"></button></p>
+<p>Environment variable: <code id="env-var-36996">QUARKUS_DATASOURCE_DEVSERVICES_COMMAND</code><button class="btn-copy fa fa-clipboard inline-btn-copy" data-clipboard-action="copy" data-clipboard-target="#env-var-36996" title="Copy to clipboard" do-not-collapse="true"></button></p>
 </div>
 </div>
 </div>
@@ -692,7 +721,7 @@ after each run, and can be reused.</p>
 <p>The database name to use if this Dev Service supports overriding it.</p>
 </div>
 <div class="paragraph">
-<p>Environment variable: <code id="env-var-28668">QUARKUS_DATASOURCE_DEVSERVICES_DB_NAME</code><button class="btn-copy fa fa-clipboard inline-btn-copy" data-clipboard-action="copy" data-clipboard-target="#env-var-28668" title="Copy to clipboard" do-not-collapse="true"></button></p>
+<p>Environment variable: <code id="env-var-36997">QUARKUS_DATASOURCE_DEVSERVICES_DB_NAME</code><button class="btn-copy fa fa-clipboard inline-btn-copy" data-clipboard-action="copy" data-clipboard-target="#env-var-36997" title="Copy to clipboard" do-not-collapse="true"></button></p>
 </div>
 </div>
 </div>
@@ -712,7 +741,7 @@ after each run, and can be reused.</p>
 <p>The username to use if this Dev Service supports overriding it.</p>
 </div>
 <div class="paragraph">
-<p>Environment variable: <code id="env-var-28669">QUARKUS_DATASOURCE_DEVSERVICES_USERNAME</code><button class="btn-copy fa fa-clipboard inline-btn-copy" data-clipboard-action="copy" data-clipboard-target="#env-var-28669" title="Copy to clipboard" do-not-collapse="true"></button></p>
+<p>Environment variable: <code id="env-var-36998">QUARKUS_DATASOURCE_DEVSERVICES_USERNAME</code><button class="btn-copy fa fa-clipboard inline-btn-copy" data-clipboard-action="copy" data-clipboard-target="#env-var-36998" title="Copy to clipboard" do-not-collapse="true"></button></p>
 </div>
 </div>
 </div>
@@ -732,7 +761,7 @@ after each run, and can be reused.</p>
 <p>The password to use if this Dev Service supports overriding it.</p>
 </div>
 <div class="paragraph">
-<p>Environment variable: <code id="env-var-28670">QUARKUS_DATASOURCE_DEVSERVICES_PASSWORD</code><button class="btn-copy fa fa-clipboard inline-btn-copy" data-clipboard-action="copy" data-clipboard-target="#env-var-28670" title="Copy to clipboard" do-not-collapse="true"></button></p>
+<p>Environment variable: <code id="env-var-36999">QUARKUS_DATASOURCE_DEVSERVICES_PASSWORD</code><button class="btn-copy fa fa-clipboard inline-btn-copy" data-clipboard-action="copy" data-clipboard-target="#env-var-36999" title="Copy to clipboard" do-not-collapse="true"></button></p>
 </div>
 </div>
 </div>
@@ -752,7 +781,7 @@ after each run, and can be reused.</p>
 <p>The path to a SQL script to be loaded from the classpath and applied to the Dev Service database. This has no effect if the provider is not a container-based database, such as H2 or Derby.</p>
 </div>
 <div class="paragraph">
-<p>Environment variable: <code id="env-var-28671">QUARKUS_DATASOURCE_DEVSERVICES_INIT_SCRIPT_PATH</code><button class="btn-copy fa fa-clipboard inline-btn-copy" data-clipboard-action="copy" data-clipboard-target="#env-var-28671" title="Copy to clipboard" do-not-collapse="true"></button></p>
+<p>Environment variable: <code id="env-var-37000">QUARKUS_DATASOURCE_DEVSERVICES_INIT_SCRIPT_PATH</code><button class="btn-copy fa fa-clipboard inline-btn-copy" data-clipboard-action="copy" data-clipboard-target="#env-var-37000" title="Copy to clipboard" do-not-collapse="true"></button></p>
 </div>
 </div>
 </div>
@@ -772,7 +801,7 @@ after each run, and can be reused.</p>
 <p>Environment variables that are passed to the container.</p>
 </div>
 <div class="paragraph">
-<p>Environment variable: <code id="env-var-28672">QUARKUS_DATASOURCE_DEVSERVICES_CONTAINER_ENV</code><button class="btn-copy fa fa-clipboard inline-btn-copy" data-clipboard-action="copy" data-clipboard-target="#env-var-28672" title="Copy to clipboard" do-not-collapse="true"></button></p>
+<p>Environment variable: <code id="env-var-37001">QUARKUS_DATASOURCE_DEVSERVICES_CONTAINER_ENV</code><button class="btn-copy fa fa-clipboard inline-btn-copy" data-clipboard-action="copy" data-clipboard-target="#env-var-37001" title="Copy to clipboard" do-not-collapse="true"></button></p>
 </div>
 </div>
 </div>
@@ -795,7 +824,7 @@ after each run, and can be reused.</p>
 <p>Properties defined here are database-specific and are interpreted specifically in each database dev service implementation.</p>
 </div>
 <div class="paragraph">
-<p>Environment variable: <code id="env-var-28673">QUARKUS_DATASOURCE_DEVSERVICES_CONTAINER_PROPERTIES</code><button class="btn-copy fa fa-clipboard inline-btn-copy" data-clipboard-action="copy" data-clipboard-target="#env-var-28673" title="Copy to clipboard" do-not-collapse="true"></button></p>
+<p>Environment variable: <code id="env-var-37002">QUARKUS_DATASOURCE_DEVSERVICES_CONTAINER_PROPERTIES</code><button class="btn-copy fa fa-clipboard inline-btn-copy" data-clipboard-action="copy" data-clipboard-target="#env-var-37002" title="Copy to clipboard" do-not-collapse="true"></button></p>
 </div>
 </div>
 </div>
@@ -815,7 +844,7 @@ after each run, and can be reused.</p>
 <p>Generic properties that are added to the database connection URL.</p>
 </div>
 <div class="paragraph">
-<p>Environment variable: <code id="env-var-28674">QUARKUS_DATASOURCE_DEVSERVICES_PROPERTIES</code><button class="btn-copy fa fa-clipboard inline-btn-copy" data-clipboard-action="copy" data-clipboard-target="#env-var-28674" title="Copy to clipboard" do-not-collapse="true"></button></p>
+<p>Environment variable: <code id="env-var-37003">QUARKUS_DATASOURCE_DEVSERVICES_PROPERTIES</code><button class="btn-copy fa fa-clipboard inline-btn-copy" data-clipboard-action="copy" data-clipboard-target="#env-var-37003" title="Copy to clipboard" do-not-collapse="true"></button></p>
 </div>
 </div>
 </div>
@@ -835,7 +864,7 @@ after each run, and can be reused.</p>
 <p>The volumes to be mapped to the container. The map key corresponds to the host location; the map value is the container location. If the host location starts with "classpath:", the mapping loads the resource from the classpath with read-only permission. When using a file system location, the volume will be generated with read-write permission, potentially leading to data loss or modification in your file system. This has no effect if the provider is not a container-based database, such as H2 or Derby.</p>
 </div>
 <div class="paragraph">
-<p>Environment variable: <code id="env-var-28675">QUARKUS_DATASOURCE_DEVSERVICES_VOLUMES</code><button class="btn-copy fa fa-clipboard inline-btn-copy" data-clipboard-action="copy" data-clipboard-target="#env-var-28675" title="Copy to clipboard" do-not-collapse="true"></button></p>
+<p>Environment variable: <code id="env-var-37004">QUARKUS_DATASOURCE_DEVSERVICES_VOLUMES</code><button class="btn-copy fa fa-clipboard inline-btn-copy" data-clipboard-action="copy" data-clipboard-target="#env-var-37004" title="Copy to clipboard" do-not-collapse="true"></button></p>
 </div>
 </div>
 </div>
@@ -855,7 +884,7 @@ after each run, and can be reused.</p>
 <p>If DevServices has been explicitly enabled or disabled. DevServices is generally enabled by default unless an existing configuration is present. When DevServices is enabled, Quarkus will attempt to automatically configure and start a database when running in Dev or Test mode.</p>
 </div>
 <div class="paragraph">
-<p>Environment variable: <code id="env-var-28676">QUARKUS_DATASOURCE__DATASOURCE_NAME__DEVSERVICES_ENABLED</code><button class="btn-copy fa fa-clipboard inline-btn-copy" data-clipboard-action="copy" data-clipboard-target="#env-var-28676" title="Copy to clipboard" do-not-collapse="true"></button></p>
+<p>Environment variable: <code id="env-var-37005">QUARKUS_DATASOURCE__DATASOURCE_NAME__DEVSERVICES_ENABLED</code><button class="btn-copy fa fa-clipboard inline-btn-copy" data-clipboard-action="copy" data-clipboard-target="#env-var-37005" title="Copy to clipboard" do-not-collapse="true"></button></p>
 </div>
 </div>
 </div>
@@ -875,7 +904,7 @@ after each run, and can be reused.</p>
 <p>The container image name for container-based DevServices providers. This has no effect if the provider is not a container-based database, such as H2 or Derby.</p>
 </div>
 <div class="paragraph">
-<p>Environment variable: <code id="env-var-28677">QUARKUS_DATASOURCE__DATASOURCE_NAME__DEVSERVICES_IMAGE_NAME</code><button class="btn-copy fa fa-clipboard inline-btn-copy" data-clipboard-action="copy" data-clipboard-target="#env-var-28677" title="Copy to clipboard" do-not-collapse="true"></button></p>
+<p>Environment variable: <code id="env-var-37006">QUARKUS_DATASOURCE__DATASOURCE_NAME__DEVSERVICES_IMAGE_NAME</code><button class="btn-copy fa fa-clipboard inline-btn-copy" data-clipboard-action="copy" data-clipboard-target="#env-var-37006" title="Copy to clipboard" do-not-collapse="true"></button></p>
 </div>
 </div>
 </div>
@@ -895,7 +924,7 @@ after each run, and can be reused.</p>
 <p>Environment variables that are passed to the container.</p>
 </div>
 <div class="paragraph">
-<p>Environment variable: <code id="env-var-28678">QUARKUS_DATASOURCE__DATASOURCE_NAME__DEVSERVICES_CONTAINER_ENV</code><button class="btn-copy fa fa-clipboard inline-btn-copy" data-clipboard-action="copy" data-clipboard-target="#env-var-28678" title="Copy to clipboard" do-not-collapse="true"></button></p>
+<p>Environment variable: <code id="env-var-37007">QUARKUS_DATASOURCE__DATASOURCE_NAME__DEVSERVICES_CONTAINER_ENV</code><button class="btn-copy fa fa-clipboard inline-btn-copy" data-clipboard-action="copy" data-clipboard-target="#env-var-37007" title="Copy to clipboard" do-not-collapse="true"></button></p>
 </div>
 </div>
 </div>
@@ -918,7 +947,7 @@ after each run, and can be reused.</p>
 <p>Properties defined here are database-specific and are interpreted specifically in each database dev service implementation.</p>
 </div>
 <div class="paragraph">
-<p>Environment variable: <code id="env-var-28679">QUARKUS_DATASOURCE__DATASOURCE_NAME__DEVSERVICES_CONTAINER_PROPERTIES</code><button class="btn-copy fa fa-clipboard inline-btn-copy" data-clipboard-action="copy" data-clipboard-target="#env-var-28679" title="Copy to clipboard" do-not-collapse="true"></button></p>
+<p>Environment variable: <code id="env-var-37008">QUARKUS_DATASOURCE__DATASOURCE_NAME__DEVSERVICES_CONTAINER_PROPERTIES</code><button class="btn-copy fa fa-clipboard inline-btn-copy" data-clipboard-action="copy" data-clipboard-target="#env-var-37008" title="Copy to clipboard" do-not-collapse="true"></button></p>
 </div>
 </div>
 </div>
@@ -938,7 +967,7 @@ after each run, and can be reused.</p>
 <p>Generic properties that are added to the database connection URL.</p>
 </div>
 <div class="paragraph">
-<p>Environment variable: <code id="env-var-28680">QUARKUS_DATASOURCE__DATASOURCE_NAME__DEVSERVICES_PROPERTIES</code><button class="btn-copy fa fa-clipboard inline-btn-copy" data-clipboard-action="copy" data-clipboard-target="#env-var-28680" title="Copy to clipboard" do-not-collapse="true"></button></p>
+<p>Environment variable: <code id="env-var-37009">QUARKUS_DATASOURCE__DATASOURCE_NAME__DEVSERVICES_PROPERTIES</code><button class="btn-copy fa fa-clipboard inline-btn-copy" data-clipboard-action="copy" data-clipboard-target="#env-var-37009" title="Copy to clipboard" do-not-collapse="true"></button></p>
 </div>
 </div>
 </div>
@@ -961,7 +990,7 @@ after each run, and can be reused.</p>
 <p>If not defined, the port will be chosen randomly.</p>
 </div>
 <div class="paragraph">
-<p>Environment variable: <code id="env-var-28681">QUARKUS_DATASOURCE__DATASOURCE_NAME__DEVSERVICES_PORT</code><button class="btn-copy fa fa-clipboard inline-btn-copy" data-clipboard-action="copy" data-clipboard-target="#env-var-28681" title="Copy to clipboard" do-not-collapse="true"></button></p>
+<p>Environment variable: <code id="env-var-37010">QUARKUS_DATASOURCE__DATASOURCE_NAME__DEVSERVICES_PORT</code><button class="btn-copy fa fa-clipboard inline-btn-copy" data-clipboard-action="copy" data-clipboard-target="#env-var-37010" title="Copy to clipboard" do-not-collapse="true"></button></p>
 </div>
 </div>
 </div>
@@ -981,7 +1010,7 @@ after each run, and can be reused.</p>
 <p>The container start command to use for container-based DevServices providers. This has no effect if the provider is not a container-based database, such as H2 or Derby.</p>
 </div>
 <div class="paragraph">
-<p>Environment variable: <code id="env-var-28682">QUARKUS_DATASOURCE__DATASOURCE_NAME__DEVSERVICES_COMMAND</code><button class="btn-copy fa fa-clipboard inline-btn-copy" data-clipboard-action="copy" data-clipboard-target="#env-var-28682" title="Copy to clipboard" do-not-collapse="true"></button></p>
+<p>Environment variable: <code id="env-var-37011">QUARKUS_DATASOURCE__DATASOURCE_NAME__DEVSERVICES_COMMAND</code><button class="btn-copy fa fa-clipboard inline-btn-copy" data-clipboard-action="copy" data-clipboard-target="#env-var-37011" title="Copy to clipboard" do-not-collapse="true"></button></p>
 </div>
 </div>
 </div>
@@ -1001,7 +1030,7 @@ after each run, and can be reused.</p>
 <p>The database name to use if this Dev Service supports overriding it.</p>
 </div>
 <div class="paragraph">
-<p>Environment variable: <code id="env-var-28683">QUARKUS_DATASOURCE__DATASOURCE_NAME__DEVSERVICES_DB_NAME</code><button class="btn-copy fa fa-clipboard inline-btn-copy" data-clipboard-action="copy" data-clipboard-target="#env-var-28683" title="Copy to clipboard" do-not-collapse="true"></button></p>
+<p>Environment variable: <code id="env-var-37012">QUARKUS_DATASOURCE__DATASOURCE_NAME__DEVSERVICES_DB_NAME</code><button class="btn-copy fa fa-clipboard inline-btn-copy" data-clipboard-action="copy" data-clipboard-target="#env-var-37012" title="Copy to clipboard" do-not-collapse="true"></button></p>
 </div>
 </div>
 </div>
@@ -1021,7 +1050,7 @@ after each run, and can be reused.</p>
 <p>The username to use if this Dev Service supports overriding it.</p>
 </div>
 <div class="paragraph">
-<p>Environment variable: <code id="env-var-28684">QUARKUS_DATASOURCE__DATASOURCE_NAME__DEVSERVICES_USERNAME</code><button class="btn-copy fa fa-clipboard inline-btn-copy" data-clipboard-action="copy" data-clipboard-target="#env-var-28684" title="Copy to clipboard" do-not-collapse="true"></button></p>
+<p>Environment variable: <code id="env-var-37013">QUARKUS_DATASOURCE__DATASOURCE_NAME__DEVSERVICES_USERNAME</code><button class="btn-copy fa fa-clipboard inline-btn-copy" data-clipboard-action="copy" data-clipboard-target="#env-var-37013" title="Copy to clipboard" do-not-collapse="true"></button></p>
 </div>
 </div>
 </div>
@@ -1041,7 +1070,7 @@ after each run, and can be reused.</p>
 <p>The password to use if this Dev Service supports overriding it.</p>
 </div>
 <div class="paragraph">
-<p>Environment variable: <code id="env-var-28685">QUARKUS_DATASOURCE__DATASOURCE_NAME__DEVSERVICES_PASSWORD</code><button class="btn-copy fa fa-clipboard inline-btn-copy" data-clipboard-action="copy" data-clipboard-target="#env-var-28685" title="Copy to clipboard" do-not-collapse="true"></button></p>
+<p>Environment variable: <code id="env-var-37014">QUARKUS_DATASOURCE__DATASOURCE_NAME__DEVSERVICES_PASSWORD</code><button class="btn-copy fa fa-clipboard inline-btn-copy" data-clipboard-action="copy" data-clipboard-target="#env-var-37014" title="Copy to clipboard" do-not-collapse="true"></button></p>
 </div>
 </div>
 </div>
@@ -1061,7 +1090,7 @@ after each run, and can be reused.</p>
 <p>The path to a SQL script to be loaded from the classpath and applied to the Dev Service database. This has no effect if the provider is not a container-based database, such as H2 or Derby.</p>
 </div>
 <div class="paragraph">
-<p>Environment variable: <code id="env-var-28686">QUARKUS_DATASOURCE__DATASOURCE_NAME__DEVSERVICES_INIT_SCRIPT_PATH</code><button class="btn-copy fa fa-clipboard inline-btn-copy" data-clipboard-action="copy" data-clipboard-target="#env-var-28686" title="Copy to clipboard" do-not-collapse="true"></button></p>
+<p>Environment variable: <code id="env-var-37015">QUARKUS_DATASOURCE__DATASOURCE_NAME__DEVSERVICES_INIT_SCRIPT_PATH</code><button class="btn-copy fa fa-clipboard inline-btn-copy" data-clipboard-action="copy" data-clipboard-target="#env-var-37015" title="Copy to clipboard" do-not-collapse="true"></button></p>
 </div>
 </div>
 </div>
@@ -1081,7 +1110,7 @@ after each run, and can be reused.</p>
 <p>The volumes to be mapped to the container. The map key corresponds to the host location; the map value is the container location. If the host location starts with "classpath:", the mapping loads the resource from the classpath with read-only permission. When using a file system location, the volume will be generated with read-write permission, potentially leading to data loss or modification in your file system. This has no effect if the provider is not a container-based database, such as H2 or Derby.</p>
 </div>
 <div class="paragraph">
-<p>Environment variable: <code id="env-var-28687">QUARKUS_DATASOURCE__DATASOURCE_NAME__DEVSERVICES_VOLUMES</code><button class="btn-copy fa fa-clipboard inline-btn-copy" data-clipboard-action="copy" data-clipboard-target="#env-var-28687" title="Copy to clipboard" do-not-collapse="true"></button></p>
+<p>Environment variable: <code id="env-var-37016">QUARKUS_DATASOURCE__DATASOURCE_NAME__DEVSERVICES_VOLUMES</code><button class="btn-copy fa fa-clipboard inline-btn-copy" data-clipboard-action="copy" data-clipboard-target="#env-var-37016" title="Copy to clipboard" do-not-collapse="true"></button></p>
 </div>
 </div>
 </div>
@@ -1128,7 +1157,7 @@ the broker address has not been explicitly configured. More information can be f
 <p>If Dev Services for Kafka has been explicitly enabled or disabled. Dev Services are generally enabled by default, unless there is an existing configuration present. For Kafka, Dev Services starts a broker unless <code>kafka.bootstrap.servers</code> is set or if all the Reactive Messaging Kafka channel are configured with a <code>bootstrap.servers</code>.</p>
 </div>
 <div class="paragraph">
-<p>Environment variable: <code id="env-var-28688">QUARKUS_KAFKA_DEVSERVICES_ENABLED</code><button class="btn-copy fa fa-clipboard inline-btn-copy" data-clipboard-action="copy" data-clipboard-target="#env-var-28688" title="Copy to clipboard" do-not-collapse="true"></button></p>
+<p>Environment variable: <code id="env-var-37017">QUARKUS_KAFKA_DEVSERVICES_ENABLED</code><button class="btn-copy fa fa-clipboard inline-btn-copy" data-clipboard-action="copy" data-clipboard-target="#env-var-37017" title="Copy to clipboard" do-not-collapse="true"></button></p>
 </div>
 </div>
 </div>
@@ -1151,7 +1180,7 @@ the broker address has not been explicitly configured. More information can be f
 <p>If not defined, the port will be chosen randomly.</p>
 </div>
 <div class="paragraph">
-<p>Environment variable: <code id="env-var-28689">QUARKUS_KAFKA_DEVSERVICES_PORT</code><button class="btn-copy fa fa-clipboard inline-btn-copy" data-clipboard-action="copy" data-clipboard-target="#env-var-28689" title="Copy to clipboard" do-not-collapse="true"></button></p>
+<p>Environment variable: <code id="env-var-37018">QUARKUS_KAFKA_DEVSERVICES_PORT</code><button class="btn-copy fa fa-clipboard inline-btn-copy" data-clipboard-action="copy" data-clipboard-target="#env-var-37018" title="Copy to clipboard" do-not-collapse="true"></button></p>
 </div>
 </div>
 </div>
@@ -1186,7 +1215,7 @@ the broker address has not been explicitly configured. More information can be f
 <p>Note that Strimzi and Kafka Native images are launched in Kraft mode.</p>
 </div>
 <div class="paragraph">
-<p>Environment variable: <code id="env-var-28690">QUARKUS_KAFKA_DEVSERVICES_PROVIDER</code><button class="btn-copy fa fa-clipboard inline-btn-copy" data-clipboard-action="copy" data-clipboard-target="#env-var-28690" title="Copy to clipboard" do-not-collapse="true"></button></p>
+<p>Environment variable: <code id="env-var-37019">QUARKUS_KAFKA_DEVSERVICES_PROVIDER</code><button class="btn-copy fa fa-clipboard inline-btn-copy" data-clipboard-action="copy" data-clipboard-target="#env-var-37019" title="Copy to clipboard" do-not-collapse="true"></button></p>
 </div>
 </div>
 </div>
@@ -1211,7 +1240,7 @@ the broker address has not been explicitly configured. More information can be f
 <p>Dependent on the provider.</p>
 </div>
 <div class="paragraph">
-<p>Environment variable: <code id="env-var-28691">QUARKUS_KAFKA_DEVSERVICES_IMAGE_NAME</code><button class="btn-copy fa fa-clipboard inline-btn-copy" data-clipboard-action="copy" data-clipboard-target="#env-var-28691" title="Copy to clipboard" do-not-collapse="true"></button></p>
+<p>Environment variable: <code id="env-var-37020">QUARKUS_KAFKA_DEVSERVICES_IMAGE_NAME</code><button class="btn-copy fa fa-clipboard inline-btn-copy" data-clipboard-action="copy" data-clipboard-target="#env-var-37020" title="Copy to clipboard" do-not-collapse="true"></button></p>
 </div>
 </div>
 </div>
@@ -1237,7 +1266,7 @@ the broker address has not been explicitly configured. More information can be f
 <p>Container sharing is only used in dev mode.</p>
 </div>
 <div class="paragraph">
-<p>Environment variable: <code id="env-var-28692">QUARKUS_KAFKA_DEVSERVICES_SHARED</code><button class="btn-copy fa fa-clipboard inline-btn-copy" data-clipboard-action="copy" data-clipboard-target="#env-var-28692" title="Copy to clipboard" do-not-collapse="true"></button></p>
+<p>Environment variable: <code id="env-var-37021">QUARKUS_KAFKA_DEVSERVICES_SHARED</code><button class="btn-copy fa fa-clipboard inline-btn-copy" data-clipboard-action="copy" data-clipboard-target="#env-var-37021" title="Copy to clipboard" do-not-collapse="true"></button></p>
 </div>
 </div>
 </div>
@@ -1260,7 +1289,7 @@ the broker address has not been explicitly configured. More information can be f
 <p>This property is used when you need multiple shared Kafka brokers.</p>
 </div>
 <div class="paragraph">
-<p>Environment variable: <code id="env-var-28693">QUARKUS_KAFKA_DEVSERVICES_SERVICE_NAME</code><button class="btn-copy fa fa-clipboard inline-btn-copy" data-clipboard-action="copy" data-clipboard-target="#env-var-28693" title="Copy to clipboard" do-not-collapse="true"></button></p>
+<p>Environment variable: <code id="env-var-37022">QUARKUS_KAFKA_DEVSERVICES_SERVICE_NAME</code><button class="btn-copy fa fa-clipboard inline-btn-copy" data-clipboard-action="copy" data-clipboard-target="#env-var-37022" title="Copy to clipboard" do-not-collapse="true"></button></p>
 </div>
 </div>
 </div>
@@ -1283,7 +1312,7 @@ the broker address has not been explicitly configured. More information can be f
 <p>Defaults to 2 seconds.</p>
 </div>
 <div class="paragraph">
-<p>Environment variable: <code id="env-var-28694">QUARKUS_KAFKA_DEVSERVICES_TOPIC_PARTITIONS_TIMEOUT</code><button class="btn-copy fa fa-clipboard inline-btn-copy" data-clipboard-action="copy" data-clipboard-target="#env-var-28694" title="Copy to clipboard" do-not-collapse="true"></button></p>
+<p>Environment variable: <code id="env-var-37023">QUARKUS_KAFKA_DEVSERVICES_TOPIC_PARTITIONS_TIMEOUT</code><button class="btn-copy fa fa-clipboard inline-btn-copy" data-clipboard-action="copy" data-clipboard-target="#env-var-37023" title="Copy to clipboard" do-not-collapse="true"></button></p>
 </div>
 </div>
 </div>
@@ -1304,7 +1333,7 @@ the broker address has not been explicitly configured. More information can be f
 <p>Enables transaction support. Also enables the producer idempotence. Find more info about Red Panda transaction support on <a href="https://vectorized.io/blog/fast-transactions/">https://vectorized.io/blog/fast-transactions/</a>. Notice that <a href="https://cwiki.apache.org/confluence/display/KAFKA/KIP-447%3A+Producer+scalability+for+exactly+once+semantics">KIP-447 (producer scalability for exactly once semantic)</a> and <a href="https://cwiki.apache.org/confluence/pages/viewpage.action?pageId=89068820">KIP-360 (Improve reliability of idempotent/transactional producer)</a> are <em>not</em> supported.</p>
 </div>
 <div class="paragraph">
-<p>Environment variable: <code id="env-var-28695">QUARKUS_KAFKA_DEVSERVICES_REDPANDA_TRANSACTION_ENABLED</code><button class="btn-copy fa fa-clipboard inline-btn-copy" data-clipboard-action="copy" data-clipboard-target="#env-var-28695" title="Copy to clipboard" do-not-collapse="true"></button></p>
+<p>Environment variable: <code id="env-var-37024">QUARKUS_KAFKA_DEVSERVICES_REDPANDA_TRANSACTION_ENABLED</code><button class="btn-copy fa fa-clipboard inline-btn-copy" data-clipboard-action="copy" data-clipboard-target="#env-var-37024" title="Copy to clipboard" do-not-collapse="true"></button></p>
 </div>
 </div>
 </div>
@@ -1327,7 +1356,7 @@ the broker address has not been explicitly configured. More information can be f
 <p>The topic creation will not try to re-partition existing topics with different number of partitions.</p>
 </div>
 <div class="paragraph">
-<p>Environment variable: <code id="env-var-28696">QUARKUS_KAFKA_DEVSERVICES_TOPIC_PARTITIONS</code><button class="btn-copy fa fa-clipboard inline-btn-copy" data-clipboard-action="copy" data-clipboard-target="#env-var-28696" title="Copy to clipboard" do-not-collapse="true"></button></p>
+<p>Environment variable: <code id="env-var-37025">QUARKUS_KAFKA_DEVSERVICES_TOPIC_PARTITIONS</code><button class="btn-copy fa fa-clipboard inline-btn-copy" data-clipboard-action="copy" data-clipboard-target="#env-var-37025" title="Copy to clipboard" do-not-collapse="true"></button></p>
 </div>
 </div>
 </div>
@@ -1347,7 +1376,7 @@ the broker address has not been explicitly configured. More information can be f
 <p>Environment variables that are passed to the container.</p>
 </div>
 <div class="paragraph">
-<p>Environment variable: <code id="env-var-28697">QUARKUS_KAFKA_DEVSERVICES_CONTAINER_ENV</code><button class="btn-copy fa fa-clipboard inline-btn-copy" data-clipboard-action="copy" data-clipboard-target="#env-var-28697" title="Copy to clipboard" do-not-collapse="true"></button></p>
+<p>Environment variable: <code id="env-var-37026">QUARKUS_KAFKA_DEVSERVICES_CONTAINER_ENV</code><button class="btn-copy fa fa-clipboard inline-btn-copy" data-clipboard-action="copy" data-clipboard-target="#env-var-37026" title="Copy to clipboard" do-not-collapse="true"></button></p>
 </div>
 </div>
 </div>
@@ -1439,7 +1468,7 @@ the server address has not been explicitly configured. More information can be f
 <p>When DevServices is enabled Quarkus will attempt to automatically configure and start Keycloak when running in Dev or Test mode and when Docker is running.</p>
 </div>
 <div class="paragraph">
-<p>Environment variable: <code id="env-var-28698">QUARKUS_KEYCLOAK_DEVSERVICES_ENABLED</code><button class="btn-copy fa fa-clipboard inline-btn-copy" data-clipboard-action="copy" data-clipboard-target="#env-var-28698" title="Copy to clipboard" do-not-collapse="true"></button></p>
+<p>Environment variable: <code id="env-var-37027">QUARKUS_KEYCLOAK_DEVSERVICES_ENABLED</code><button class="btn-copy fa fa-clipboard inline-btn-copy" data-clipboard-action="copy" data-clipboard-target="#env-var-37027" title="Copy to clipboard" do-not-collapse="true"></button></p>
 </div>
 </div>
 </div>
@@ -1462,7 +1491,7 @@ the server address has not been explicitly configured. More information can be f
 <p>Note Keycloak Quarkus and Keycloak WildFly images are initialized differently. By default, Dev Services for Keycloak will assume it is a Keycloak Quarkus image if the image version does not end with a '-legacy' string. Set 'quarkus.keycloak.devservices.keycloak-x-image' to override this check.</p>
 </div>
 <div class="paragraph">
-<p>Environment variable: <code id="env-var-28699">QUARKUS_KEYCLOAK_DEVSERVICES_IMAGE_NAME</code><button class="btn-copy fa fa-clipboard inline-btn-copy" data-clipboard-action="copy" data-clipboard-target="#env-var-28699" title="Copy to clipboard" do-not-collapse="true"></button></p>
+<p>Environment variable: <code id="env-var-37028">QUARKUS_KEYCLOAK_DEVSERVICES_IMAGE_NAME</code><button class="btn-copy fa fa-clipboard inline-btn-copy" data-clipboard-action="copy" data-clipboard-target="#env-var-37028" title="Copy to clipboard" do-not-collapse="true"></button></p>
 </div>
 </div>
 </div>
@@ -1482,7 +1511,7 @@ the server address has not been explicitly configured. More information can be f
 <p>If Keycloak-X image is used. By default, Dev Services for Keycloak will assume a Keycloak-X image is used if the image name contains a 'keycloak-x' string. Set 'quarkus.keycloak.devservices.keycloak-x-image' to override this check which may be necessary if you build custom Keycloak-X or Keycloak images. You do not need to set this property if the default check works.</p>
 </div>
 <div class="paragraph">
-<p>Environment variable: <code id="env-var-28700">QUARKUS_KEYCLOAK_DEVSERVICES_KEYCLOAK_X_IMAGE</code><button class="btn-copy fa fa-clipboard inline-btn-copy" data-clipboard-action="copy" data-clipboard-target="#env-var-28700" title="Copy to clipboard" do-not-collapse="true"></button></p>
+<p>Environment variable: <code id="env-var-37029">QUARKUS_KEYCLOAK_DEVSERVICES_KEYCLOAK_X_IMAGE</code><button class="btn-copy fa fa-clipboard inline-btn-copy" data-clipboard-action="copy" data-clipboard-target="#env-var-37029" title="Copy to clipboard" do-not-collapse="true"></button></p>
 </div>
 </div>
 </div>
@@ -1508,7 +1537,7 @@ the server address has not been explicitly configured. More information can be f
 <p>Container sharing is only used in dev mode.</p>
 </div>
 <div class="paragraph">
-<p>Environment variable: <code id="env-var-28701">QUARKUS_KEYCLOAK_DEVSERVICES_SHARED</code><button class="btn-copy fa fa-clipboard inline-btn-copy" data-clipboard-action="copy" data-clipboard-target="#env-var-28701" title="Copy to clipboard" do-not-collapse="true"></button></p>
+<p>Environment variable: <code id="env-var-37030">QUARKUS_KEYCLOAK_DEVSERVICES_SHARED</code><button class="btn-copy fa fa-clipboard inline-btn-copy" data-clipboard-action="copy" data-clipboard-target="#env-var-37030" title="Copy to clipboard" do-not-collapse="true"></button></p>
 </div>
 </div>
 </div>
@@ -1531,7 +1560,7 @@ the server address has not been explicitly configured. More information can be f
 <p>Container sharing is only used in dev mode.</p>
 </div>
 <div class="paragraph">
-<p>Environment variable: <code id="env-var-28702">QUARKUS_KEYCLOAK_DEVSERVICES_SERVICE_NAME</code><button class="btn-copy fa fa-clipboard inline-btn-copy" data-clipboard-action="copy" data-clipboard-target="#env-var-28702" title="Copy to clipboard" do-not-collapse="true"></button></p>
+<p>Environment variable: <code id="env-var-37031">QUARKUS_KEYCLOAK_DEVSERVICES_SERVICE_NAME</code><button class="btn-copy fa fa-clipboard inline-btn-copy" data-clipboard-action="copy" data-clipboard-target="#env-var-37031" title="Copy to clipboard" do-not-collapse="true"></button></p>
 </div>
 </div>
 </div>
@@ -1551,7 +1580,7 @@ the server address has not been explicitly configured. More information can be f
 <p>The comma-separated list of class or file system paths to Keycloak realm files which will be used to initialize Keycloak. The first value in this list will be used to initialize default tenant connection properties.</p>
 </div>
 <div class="paragraph">
-<p>Environment variable: <code id="env-var-28703">QUARKUS_KEYCLOAK_DEVSERVICES_REALM_PATH</code><button class="btn-copy fa fa-clipboard inline-btn-copy" data-clipboard-action="copy" data-clipboard-target="#env-var-28703" title="Copy to clipboard" do-not-collapse="true"></button></p>
+<p>Environment variable: <code id="env-var-37032">QUARKUS_KEYCLOAK_DEVSERVICES_REALM_PATH</code><button class="btn-copy fa fa-clipboard inline-btn-copy" data-clipboard-action="copy" data-clipboard-target="#env-var-37032" title="Copy to clipboard" do-not-collapse="true"></button></p>
 </div>
 </div>
 </div>
@@ -1571,7 +1600,7 @@ the server address has not been explicitly configured. More information can be f
 <p>The JAVA_OPTS passed to the keycloak JVM</p>
 </div>
 <div class="paragraph">
-<p>Environment variable: <code id="env-var-28704">QUARKUS_KEYCLOAK_DEVSERVICES_JAVA_OPTS</code><button class="btn-copy fa fa-clipboard inline-btn-copy" data-clipboard-action="copy" data-clipboard-target="#env-var-28704" title="Copy to clipboard" do-not-collapse="true"></button></p>
+<p>Environment variable: <code id="env-var-37033">QUARKUS_KEYCLOAK_DEVSERVICES_JAVA_OPTS</code><button class="btn-copy fa fa-clipboard inline-btn-copy" data-clipboard-action="copy" data-clipboard-target="#env-var-37033" title="Copy to clipboard" do-not-collapse="true"></button></p>
 </div>
 </div>
 </div>
@@ -1591,7 +1620,7 @@ the server address has not been explicitly configured. More information can be f
 <p>Show Keycloak log messages with a "Keycloak:" prefix.</p>
 </div>
 <div class="paragraph">
-<p>Environment variable: <code id="env-var-28705">QUARKUS_KEYCLOAK_DEVSERVICES_SHOW_LOGS</code><button class="btn-copy fa fa-clipboard inline-btn-copy" data-clipboard-action="copy" data-clipboard-target="#env-var-28705" title="Copy to clipboard" do-not-collapse="true"></button></p>
+<p>Environment variable: <code id="env-var-37034">QUARKUS_KEYCLOAK_DEVSERVICES_SHOW_LOGS</code><button class="btn-copy fa fa-clipboard inline-btn-copy" data-clipboard-action="copy" data-clipboard-target="#env-var-37034" title="Copy to clipboard" do-not-collapse="true"></button></p>
 </div>
 </div>
 </div>
@@ -1611,7 +1640,7 @@ the server address has not been explicitly configured. More information can be f
 <p>Keycloak start command. Use this property to experiment with Keycloak start options, see <code><a href="https://www.keycloak.org/server/all-config" class="bare">https://www.keycloak.org/server/all-config</a></code>. Note it will be ignored when loading legacy Keycloak WildFly images.</p>
 </div>
 <div class="paragraph">
-<p>Environment variable: <code id="env-var-28706">QUARKUS_KEYCLOAK_DEVSERVICES_START_COMMAND</code><button class="btn-copy fa fa-clipboard inline-btn-copy" data-clipboard-action="copy" data-clipboard-target="#env-var-28706" title="Copy to clipboard" do-not-collapse="true"></button></p>
+<p>Environment variable: <code id="env-var-37035">QUARKUS_KEYCLOAK_DEVSERVICES_START_COMMAND</code><button class="btn-copy fa fa-clipboard inline-btn-copy" data-clipboard-action="copy" data-clipboard-target="#env-var-37035" title="Copy to clipboard" do-not-collapse="true"></button></p>
 </div>
 </div>
 </div>
@@ -1631,7 +1660,7 @@ the server address has not been explicitly configured. More information can be f
 <p>The Keycloak realm name. This property will be used to create the realm if the realm file pointed to by the <code>realm-path</code> property does not exist, default value is <code>quarkus</code> in this case. If the realm file pointed to by the <code>realm-path</code> property exists then it is still recommended to set this property for Dev Services for Keycloak to avoid parsing the realm file to determine the realm name.</p>
 </div>
 <div class="paragraph">
-<p>Environment variable: <code id="env-var-28707">QUARKUS_KEYCLOAK_DEVSERVICES_REALM_NAME</code><button class="btn-copy fa fa-clipboard inline-btn-copy" data-clipboard-action="copy" data-clipboard-target="#env-var-28707" title="Copy to clipboard" do-not-collapse="true"></button></p>
+<p>Environment variable: <code id="env-var-37036">QUARKUS_KEYCLOAK_DEVSERVICES_REALM_NAME</code><button class="btn-copy fa fa-clipboard inline-btn-copy" data-clipboard-action="copy" data-clipboard-target="#env-var-37036" title="Copy to clipboard" do-not-collapse="true"></button></p>
 </div>
 </div>
 </div>
@@ -1651,7 +1680,7 @@ the server address has not been explicitly configured. More information can be f
 <p>Indicates if the Keycloak realm has to be created when the realm file pointed to by the <code>realm-path</code> property does not exist. Disable it if you&#8217;d like to create a realm using Keycloak Administration Console or Keycloak Admin API from <code>io.quarkus.test.common.QuarkusTestResourceLifecycleManager</code>.</p>
 </div>
 <div class="paragraph">
-<p>Environment variable: <code id="env-var-28708">QUARKUS_KEYCLOAK_DEVSERVICES_CREATE_REALM</code><button class="btn-copy fa fa-clipboard inline-btn-copy" data-clipboard-action="copy" data-clipboard-target="#env-var-28708" title="Copy to clipboard" do-not-collapse="true"></button></p>
+<p>Environment variable: <code id="env-var-37037">QUARKUS_KEYCLOAK_DEVSERVICES_CREATE_REALM</code><button class="btn-copy fa fa-clipboard inline-btn-copy" data-clipboard-action="copy" data-clipboard-target="#env-var-37037" title="Copy to clipboard" do-not-collapse="true"></button></p>
 </div>
 </div>
 </div>
@@ -1674,7 +1703,7 @@ the server address has not been explicitly configured. More information can be f
 <p>If not defined, the port will be chosen randomly.</p>
 </div>
 <div class="paragraph">
-<p>Environment variable: <code id="env-var-28709">QUARKUS_KEYCLOAK_DEVSERVICES_PORT</code><button class="btn-copy fa fa-clipboard inline-btn-copy" data-clipboard-action="copy" data-clipboard-target="#env-var-28709" title="Copy to clipboard" do-not-collapse="true"></button></p>
+<p>Environment variable: <code id="env-var-37038">QUARKUS_KEYCLOAK_DEVSERVICES_PORT</code><button class="btn-copy fa fa-clipboard inline-btn-copy" data-clipboard-action="copy" data-clipboard-target="#env-var-37038" title="Copy to clipboard" do-not-collapse="true"></button></p>
 </div>
 </div>
 </div>
@@ -1694,7 +1723,7 @@ the server address has not been explicitly configured. More information can be f
 <p>The Keycloak users map containing the username and password pairs. If this map is empty then two users, 'alice' and 'bob' with the passwords matching their names will be created. This property will be used to create the Keycloak users if the realm file pointed to by the <code>realm-path</code> property does not exist.</p>
 </div>
 <div class="paragraph">
-<p>Environment variable: <code id="env-var-28710">QUARKUS_KEYCLOAK_DEVSERVICES_USERS</code><button class="btn-copy fa fa-clipboard inline-btn-copy" data-clipboard-action="copy" data-clipboard-target="#env-var-28710" title="Copy to clipboard" do-not-collapse="true"></button></p>
+<p>Environment variable: <code id="env-var-37039">QUARKUS_KEYCLOAK_DEVSERVICES_USERS</code><button class="btn-copy fa fa-clipboard inline-btn-copy" data-clipboard-action="copy" data-clipboard-target="#env-var-37039" title="Copy to clipboard" do-not-collapse="true"></button></p>
 </div>
 </div>
 </div>
@@ -1714,7 +1743,7 @@ the server address has not been explicitly configured. More information can be f
 <p>The Keycloak user roles. If this map is empty then a user named 'alice' will get 'admin' and 'user' roles and all other users will get a 'user' role. This property will be used to create the Keycloak roles if the realm file pointed to by the <code>realm-path</code> property does not exist.</p>
 </div>
 <div class="paragraph">
-<p>Environment variable: <code id="env-var-28711">QUARKUS_KEYCLOAK_DEVSERVICES_ROLES</code><button class="btn-copy fa fa-clipboard inline-btn-copy" data-clipboard-action="copy" data-clipboard-target="#env-var-28711" title="Copy to clipboard" do-not-collapse="true"></button></p>
+<p>Environment variable: <code id="env-var-37040">QUARKUS_KEYCLOAK_DEVSERVICES_ROLES</code><button class="btn-copy fa fa-clipboard inline-btn-copy" data-clipboard-action="copy" data-clipboard-target="#env-var-37040" title="Copy to clipboard" do-not-collapse="true"></button></p>
 </div>
 </div>
 </div>
@@ -1734,7 +1763,7 @@ the server address has not been explicitly configured. More information can be f
 <p>Environment variables that are passed to the container.</p>
 </div>
 <div class="paragraph">
-<p>Environment variable: <code id="env-var-28712">QUARKUS_KEYCLOAK_DEVSERVICES_CONTAINER_ENV</code><button class="btn-copy fa fa-clipboard inline-btn-copy" data-clipboard-action="copy" data-clipboard-target="#env-var-28712" title="Copy to clipboard" do-not-collapse="true"></button></p>
+<p>Environment variable: <code id="env-var-37041">QUARKUS_KEYCLOAK_DEVSERVICES_CONTAINER_ENV</code><button class="btn-copy fa fa-clipboard inline-btn-copy" data-clipboard-action="copy" data-clipboard-target="#env-var-37041" title="Copy to clipboard" do-not-collapse="true"></button></p>
 </div>
 </div>
 </div>
@@ -1781,7 +1810,7 @@ the API server address has not been explicitly configured. More information can 
 <p>If Dev Services for Kubernetes should be used. (default to true) If this is true and kubernetes client is not configured then a kubernetes cluster will be started and will be used.</p>
 </div>
 <div class="paragraph">
-<p>Environment variable: <code id="env-var-28713">QUARKUS_KUBERNETES_CLIENT_DEVSERVICES_ENABLED</code><button class="btn-copy fa fa-clipboard inline-btn-copy" data-clipboard-action="copy" data-clipboard-target="#env-var-28713" title="Copy to clipboard" do-not-collapse="true"></button></p>
+<p>Environment variable: <code id="env-var-37042">QUARKUS_KUBERNETES_CLIENT_DEVSERVICES_ENABLED</code><button class="btn-copy fa fa-clipboard inline-btn-copy" data-clipboard-action="copy" data-clipboard-target="#env-var-37042" title="Copy to clipboard" do-not-collapse="true"></button></p>
 </div>
 </div>
 </div>
@@ -1801,7 +1830,7 @@ the API server address has not been explicitly configured. More information can 
 <p>The kubernetes api server version to use. If not set, Dev Services for Kubernetes will use the latest supported version of the given flavor. see <a href="https://github.com/dajudge/kindcontainer/blob/master/k8s-versions.json" class="bare">https://github.com/dajudge/kindcontainer/blob/master/k8s-versions.json</a></p>
 </div>
 <div class="paragraph">
-<p>Environment variable: <code id="env-var-28714">QUARKUS_KUBERNETES_CLIENT_DEVSERVICES_API_VERSION</code><button class="btn-copy fa fa-clipboard inline-btn-copy" data-clipboard-action="copy" data-clipboard-target="#env-var-28714" title="Copy to clipboard" do-not-collapse="true"></button></p>
+<p>Environment variable: <code id="env-var-37043">QUARKUS_KUBERNETES_CLIENT_DEVSERVICES_API_VERSION</code><button class="btn-copy fa fa-clipboard inline-btn-copy" data-clipboard-action="copy" data-clipboard-target="#env-var-37043" title="Copy to clipboard" do-not-collapse="true"></button></p>
 </div>
 </div>
 </div>
@@ -1821,7 +1850,7 @@ the API server address has not been explicitly configured. More information can 
 <p>The flavor to use (kind, k3s or api-only). Default to api-only.</p>
 </div>
 <div class="paragraph">
-<p>Environment variable: <code id="env-var-28715">QUARKUS_KUBERNETES_CLIENT_DEVSERVICES_FLAVOR</code><button class="btn-copy fa fa-clipboard inline-btn-copy" data-clipboard-action="copy" data-clipboard-target="#env-var-28715" title="Copy to clipboard" do-not-collapse="true"></button></p>
+<p>Environment variable: <code id="env-var-37044">QUARKUS_KUBERNETES_CLIENT_DEVSERVICES_FLAVOR</code><button class="btn-copy fa fa-clipboard inline-btn-copy" data-clipboard-action="copy" data-clipboard-target="#env-var-37044" title="Copy to clipboard" do-not-collapse="true"></button></p>
 </div>
 </div>
 </div>
@@ -1843,7 +1872,7 @@ the API server address has not been explicitly configured. More information can 
 <p>By default, if a kubeconfig is found, Dev Services for Kubernetes will not start. Set this to true to override the kubeconfig config.</p>
 </div>
 <div class="paragraph">
-<p>Environment variable: <code id="env-var-28716">QUARKUS_KUBERNETES_CLIENT_DEVSERVICES_OVERRIDE_KUBECONFIG</code><button class="btn-copy fa fa-clipboard inline-btn-copy" data-clipboard-action="copy" data-clipboard-target="#env-var-28716" title="Copy to clipboard" do-not-collapse="true"></button></p>
+<p>Environment variable: <code id="env-var-37045">QUARKUS_KUBERNETES_CLIENT_DEVSERVICES_OVERRIDE_KUBECONFIG</code><button class="btn-copy fa fa-clipboard inline-btn-copy" data-clipboard-action="copy" data-clipboard-target="#env-var-37045" title="Copy to clipboard" do-not-collapse="true"></button></p>
 </div>
 </div>
 </div>
@@ -1869,7 +1898,7 @@ the API server address has not been explicitly configured. More information can 
 <p>Container sharing is only used in dev mode.</p>
 </div>
 <div class="paragraph">
-<p>Environment variable: <code id="env-var-28717">QUARKUS_KUBERNETES_CLIENT_DEVSERVICES_SHARED</code><button class="btn-copy fa fa-clipboard inline-btn-copy" data-clipboard-action="copy" data-clipboard-target="#env-var-28717" title="Copy to clipboard" do-not-collapse="true"></button></p>
+<p>Environment variable: <code id="env-var-37046">QUARKUS_KUBERNETES_CLIENT_DEVSERVICES_SHARED</code><button class="btn-copy fa fa-clipboard inline-btn-copy" data-clipboard-action="copy" data-clipboard-target="#env-var-37046" title="Copy to clipboard" do-not-collapse="true"></button></p>
 </div>
 </div>
 </div>
@@ -1892,7 +1921,7 @@ the API server address has not been explicitly configured. More information can 
 <p>This property is used when you need multiple shared Kubernetes clusters.</p>
 </div>
 <div class="paragraph">
-<p>Environment variable: <code id="env-var-28718">QUARKUS_KUBERNETES_CLIENT_DEVSERVICES_SERVICE_NAME</code><button class="btn-copy fa fa-clipboard inline-btn-copy" data-clipboard-action="copy" data-clipboard-target="#env-var-28718" title="Copy to clipboard" do-not-collapse="true"></button></p>
+<p>Environment variable: <code id="env-var-37047">QUARKUS_KUBERNETES_CLIENT_DEVSERVICES_SERVICE_NAME</code><button class="btn-copy fa fa-clipboard inline-btn-copy" data-clipboard-action="copy" data-clipboard-target="#env-var-37047" title="Copy to clipboard" do-not-collapse="true"></button></p>
 </div>
 </div>
 </div>
@@ -1912,7 +1941,7 @@ the API server address has not been explicitly configured. More information can 
 <p>Environment variables that are passed to the container.</p>
 </div>
 <div class="paragraph">
-<p>Environment variable: <code id="env-var-28719">QUARKUS_KUBERNETES_CLIENT_DEVSERVICES_CONTAINER_ENV</code><button class="btn-copy fa fa-clipboard inline-btn-copy" data-clipboard-action="copy" data-clipboard-target="#env-var-28719" title="Copy to clipboard" do-not-collapse="true"></button></p>
+<p>Environment variable: <code id="env-var-37048">QUARKUS_KUBERNETES_CLIENT_DEVSERVICES_CONTAINER_ENV</code><button class="btn-copy fa fa-clipboard inline-btn-copy" data-clipboard-action="copy" data-clipboard-target="#env-var-37048" title="Copy to clipboard" do-not-collapse="true"></button></p>
 </div>
 </div>
 </div>
@@ -1959,7 +1988,7 @@ the server address has not been explicitly configured. More information can be f
 <p>If DevServices has been explicitly enabled or disabled. DevServices is generally enabled by default, unless there is an existing configuration present. When DevServices is enabled Quarkus will attempt to automatically configure and start a database when running in Dev or Test mode.</p>
 </div>
 <div class="paragraph">
-<p>Environment variable: <code id="env-var-28720">QUARKUS_MONGODB_DEVSERVICES_ENABLED</code><button class="btn-copy fa fa-clipboard inline-btn-copy" data-clipboard-action="copy" data-clipboard-target="#env-var-28720" title="Copy to clipboard" do-not-collapse="true"></button></p>
+<p>Environment variable: <code id="env-var-37049">QUARKUS_MONGODB_DEVSERVICES_ENABLED</code><button class="btn-copy fa fa-clipboard inline-btn-copy" data-clipboard-action="copy" data-clipboard-target="#env-var-37049" title="Copy to clipboard" do-not-collapse="true"></button></p>
 </div>
 </div>
 </div>
@@ -1979,7 +2008,7 @@ the server address has not been explicitly configured. More information can be f
 <p>The container image name to use, for container based DevServices providers.</p>
 </div>
 <div class="paragraph">
-<p>Environment variable: <code id="env-var-28721">QUARKUS_MONGODB_DEVSERVICES_IMAGE_NAME</code><button class="btn-copy fa fa-clipboard inline-btn-copy" data-clipboard-action="copy" data-clipboard-target="#env-var-28721" title="Copy to clipboard" do-not-collapse="true"></button></p>
+<p>Environment variable: <code id="env-var-37050">QUARKUS_MONGODB_DEVSERVICES_IMAGE_NAME</code><button class="btn-copy fa fa-clipboard inline-btn-copy" data-clipboard-action="copy" data-clipboard-target="#env-var-37050" title="Copy to clipboard" do-not-collapse="true"></button></p>
 </div>
 </div>
 </div>
@@ -2002,7 +2031,7 @@ the server address has not been explicitly configured. More information can be f
 <p>If not defined, the port will be chosen randomly.</p>
 </div>
 <div class="paragraph">
-<p>Environment variable: <code id="env-var-28722">QUARKUS_MONGODB_DEVSERVICES_PORT</code><button class="btn-copy fa fa-clipboard inline-btn-copy" data-clipboard-action="copy" data-clipboard-target="#env-var-28722" title="Copy to clipboard" do-not-collapse="true"></button></p>
+<p>Environment variable: <code id="env-var-37051">QUARKUS_MONGODB_DEVSERVICES_PORT</code><button class="btn-copy fa fa-clipboard inline-btn-copy" data-clipboard-action="copy" data-clipboard-target="#env-var-37051" title="Copy to clipboard" do-not-collapse="true"></button></p>
 </div>
 </div>
 </div>
@@ -2022,7 +2051,7 @@ the server address has not been explicitly configured. More information can be f
 <p>Generic properties that are added to the connection URL.</p>
 </div>
 <div class="paragraph">
-<p>Environment variable: <code id="env-var-28723">QUARKUS_MONGODB_DEVSERVICES_PROPERTIES</code><button class="btn-copy fa fa-clipboard inline-btn-copy" data-clipboard-action="copy" data-clipboard-target="#env-var-28723" title="Copy to clipboard" do-not-collapse="true"></button></p>
+<p>Environment variable: <code id="env-var-37052">QUARKUS_MONGODB_DEVSERVICES_PROPERTIES</code><button class="btn-copy fa fa-clipboard inline-btn-copy" data-clipboard-action="copy" data-clipboard-target="#env-var-37052" title="Copy to clipboard" do-not-collapse="true"></button></p>
 </div>
 </div>
 </div>
@@ -2042,7 +2071,7 @@ the server address has not been explicitly configured. More information can be f
 <p>Environment variables that are passed to the container.</p>
 </div>
 <div class="paragraph">
-<p>Environment variable: <code id="env-var-28724">QUARKUS_MONGODB_DEVSERVICES_CONTAINER_ENV</code><button class="btn-copy fa fa-clipboard inline-btn-copy" data-clipboard-action="copy" data-clipboard-target="#env-var-28724" title="Copy to clipboard" do-not-collapse="true"></button></p>
+<p>Environment variable: <code id="env-var-37053">QUARKUS_MONGODB_DEVSERVICES_CONTAINER_ENV</code><button class="btn-copy fa fa-clipboard inline-btn-copy" data-clipboard-action="copy" data-clipboard-target="#env-var-37053" title="Copy to clipboard" do-not-collapse="true"></button></p>
 </div>
 </div>
 </div>
@@ -2089,7 +2118,7 @@ the broker address has not been explicitly configured. More information can be f
 <p>If Dev Services for RabbitMQ has been explicitly enabled or disabled. Dev Services are generally enabled by default, unless there is an existing configuration present. For RabbitMQ, Dev Services starts a broker unless <code>rabbitmq-host</code> or <code>rabbitmq-port</code> are set or if all the Reactive Messaging RabbitMQ channel are configured with <code>host</code> or <code>port</code>.</p>
 </div>
 <div class="paragraph">
-<p>Environment variable: <code id="env-var-28725">QUARKUS_RABBITMQ_DEVSERVICES_ENABLED</code><button class="btn-copy fa fa-clipboard inline-btn-copy" data-clipboard-action="copy" data-clipboard-target="#env-var-28725" title="Copy to clipboard" do-not-collapse="true"></button></p>
+<p>Environment variable: <code id="env-var-37054">QUARKUS_RABBITMQ_DEVSERVICES_ENABLED</code><button class="btn-copy fa fa-clipboard inline-btn-copy" data-clipboard-action="copy" data-clipboard-target="#env-var-37054" title="Copy to clipboard" do-not-collapse="true"></button></p>
 </div>
 </div>
 </div>
@@ -2112,7 +2141,7 @@ the broker address has not been explicitly configured. More information can be f
 <p>If not defined, the port will be chosen randomly.</p>
 </div>
 <div class="paragraph">
-<p>Environment variable: <code id="env-var-28726">QUARKUS_RABBITMQ_DEVSERVICES_PORT</code><button class="btn-copy fa fa-clipboard inline-btn-copy" data-clipboard-action="copy" data-clipboard-target="#env-var-28726" title="Copy to clipboard" do-not-collapse="true"></button></p>
+<p>Environment variable: <code id="env-var-37055">QUARKUS_RABBITMQ_DEVSERVICES_PORT</code><button class="btn-copy fa fa-clipboard inline-btn-copy" data-clipboard-action="copy" data-clipboard-target="#env-var-37055" title="Copy to clipboard" do-not-collapse="true"></button></p>
 </div>
 </div>
 </div>
@@ -2135,7 +2164,7 @@ the broker address has not been explicitly configured. More information can be f
 <p>If not defined, the port will be chosen randomly.</p>
 </div>
 <div class="paragraph">
-<p>Environment variable: <code id="env-var-28727">QUARKUS_RABBITMQ_DEVSERVICES_HTTP_PORT</code><button class="btn-copy fa fa-clipboard inline-btn-copy" data-clipboard-action="copy" data-clipboard-target="#env-var-28727" title="Copy to clipboard" do-not-collapse="true"></button></p>
+<p>Environment variable: <code id="env-var-37056">QUARKUS_RABBITMQ_DEVSERVICES_HTTP_PORT</code><button class="btn-copy fa fa-clipboard inline-btn-copy" data-clipboard-action="copy" data-clipboard-target="#env-var-37056" title="Copy to clipboard" do-not-collapse="true"></button></p>
 </div>
 </div>
 </div>
@@ -2155,7 +2184,7 @@ the broker address has not been explicitly configured. More information can be f
 <p>The image to use. Note that only official RabbitMQ images are supported. Specifically, the image repository must end with <code>rabbitmq</code>.</p>
 </div>
 <div class="paragraph">
-<p>Environment variable: <code id="env-var-28728">QUARKUS_RABBITMQ_DEVSERVICES_IMAGE_NAME</code><button class="btn-copy fa fa-clipboard inline-btn-copy" data-clipboard-action="copy" data-clipboard-target="#env-var-28728" title="Copy to clipboard" do-not-collapse="true"></button></p>
+<p>Environment variable: <code id="env-var-37057">QUARKUS_RABBITMQ_DEVSERVICES_IMAGE_NAME</code><button class="btn-copy fa fa-clipboard inline-btn-copy" data-clipboard-action="copy" data-clipboard-target="#env-var-37057" title="Copy to clipboard" do-not-collapse="true"></button></p>
 </div>
 </div>
 </div>
@@ -2181,7 +2210,7 @@ the broker address has not been explicitly configured. More information can be f
 <p>Container sharing is only used in dev mode.</p>
 </div>
 <div class="paragraph">
-<p>Environment variable: <code id="env-var-28729">QUARKUS_RABBITMQ_DEVSERVICES_SHARED</code><button class="btn-copy fa fa-clipboard inline-btn-copy" data-clipboard-action="copy" data-clipboard-target="#env-var-28729" title="Copy to clipboard" do-not-collapse="true"></button></p>
+<p>Environment variable: <code id="env-var-37058">QUARKUS_RABBITMQ_DEVSERVICES_SHARED</code><button class="btn-copy fa fa-clipboard inline-btn-copy" data-clipboard-action="copy" data-clipboard-target="#env-var-37058" title="Copy to clipboard" do-not-collapse="true"></button></p>
 </div>
 </div>
 </div>
@@ -2204,7 +2233,7 @@ the broker address has not been explicitly configured. More information can be f
 <p>This property is used when you need multiple shared RabbitMQ brokers.</p>
 </div>
 <div class="paragraph">
-<p>Environment variable: <code id="env-var-28730">QUARKUS_RABBITMQ_DEVSERVICES_SERVICE_NAME</code><button class="btn-copy fa fa-clipboard inline-btn-copy" data-clipboard-action="copy" data-clipboard-target="#env-var-28730" title="Copy to clipboard" do-not-collapse="true"></button></p>
+<p>Environment variable: <code id="env-var-37059">QUARKUS_RABBITMQ_DEVSERVICES_SERVICE_NAME</code><button class="btn-copy fa fa-clipboard inline-btn-copy" data-clipboard-action="copy" data-clipboard-target="#env-var-37059" title="Copy to clipboard" do-not-collapse="true"></button></p>
 </div>
 </div>
 </div>
@@ -2224,7 +2253,7 @@ the broker address has not been explicitly configured. More information can be f
 <p>Type of exchange: direct, topic, headers, fanout, etc.</p>
 </div>
 <div class="paragraph">
-<p>Environment variable: <code id="env-var-28731">QUARKUS_RABBITMQ_DEVSERVICES_EXCHANGES__EXCHANGES__TYPE</code><button class="btn-copy fa fa-clipboard inline-btn-copy" data-clipboard-action="copy" data-clipboard-target="#env-var-28731" title="Copy to clipboard" do-not-collapse="true"></button></p>
+<p>Environment variable: <code id="env-var-37060">QUARKUS_RABBITMQ_DEVSERVICES_EXCHANGES__EXCHANGES__TYPE</code><button class="btn-copy fa fa-clipboard inline-btn-copy" data-clipboard-action="copy" data-clipboard-target="#env-var-37060" title="Copy to clipboard" do-not-collapse="true"></button></p>
 </div>
 </div>
 </div>
@@ -2244,7 +2273,7 @@ the broker address has not been explicitly configured. More information can be f
 <p>Should the exchange be deleted when all queues are finished using it?</p>
 </div>
 <div class="paragraph">
-<p>Environment variable: <code id="env-var-28732">QUARKUS_RABBITMQ_DEVSERVICES_EXCHANGES__EXCHANGES__AUTO_DELETE</code><button class="btn-copy fa fa-clipboard inline-btn-copy" data-clipboard-action="copy" data-clipboard-target="#env-var-28732" title="Copy to clipboard" do-not-collapse="true"></button></p>
+<p>Environment variable: <code id="env-var-37061">QUARKUS_RABBITMQ_DEVSERVICES_EXCHANGES__EXCHANGES__AUTO_DELETE</code><button class="btn-copy fa fa-clipboard inline-btn-copy" data-clipboard-action="copy" data-clipboard-target="#env-var-37061" title="Copy to clipboard" do-not-collapse="true"></button></p>
 </div>
 </div>
 </div>
@@ -2264,7 +2293,7 @@ the broker address has not been explicitly configured. More information can be f
 <p>Should the exchange remain after restarts?</p>
 </div>
 <div class="paragraph">
-<p>Environment variable: <code id="env-var-28733">QUARKUS_RABBITMQ_DEVSERVICES_EXCHANGES__EXCHANGES__DURABLE</code><button class="btn-copy fa fa-clipboard inline-btn-copy" data-clipboard-action="copy" data-clipboard-target="#env-var-28733" title="Copy to clipboard" do-not-collapse="true"></button></p>
+<p>Environment variable: <code id="env-var-37062">QUARKUS_RABBITMQ_DEVSERVICES_EXCHANGES__EXCHANGES__DURABLE</code><button class="btn-copy fa fa-clipboard inline-btn-copy" data-clipboard-action="copy" data-clipboard-target="#env-var-37062" title="Copy to clipboard" do-not-collapse="true"></button></p>
 </div>
 </div>
 </div>
@@ -2284,7 +2313,7 @@ the broker address has not been explicitly configured. More information can be f
 <p>Extra arguments for the exchange definition.</p>
 </div>
 <div class="paragraph">
-<p>Environment variable: <code id="env-var-28734">QUARKUS_RABBITMQ_DEVSERVICES_EXCHANGES__EXCHANGES__ARGUMENTS</code><button class="btn-copy fa fa-clipboard inline-btn-copy" data-clipboard-action="copy" data-clipboard-target="#env-var-28734" title="Copy to clipboard" do-not-collapse="true"></button></p>
+<p>Environment variable: <code id="env-var-37063">QUARKUS_RABBITMQ_DEVSERVICES_EXCHANGES__EXCHANGES__ARGUMENTS</code><button class="btn-copy fa fa-clipboard inline-btn-copy" data-clipboard-action="copy" data-clipboard-target="#env-var-37063" title="Copy to clipboard" do-not-collapse="true"></button></p>
 </div>
 </div>
 </div>
@@ -2304,7 +2333,7 @@ the broker address has not been explicitly configured. More information can be f
 <p>Should the queue be deleted when all consumers are finished using it?</p>
 </div>
 <div class="paragraph">
-<p>Environment variable: <code id="env-var-28735">QUARKUS_RABBITMQ_DEVSERVICES_QUEUES__QUEUES__AUTO_DELETE</code><button class="btn-copy fa fa-clipboard inline-btn-copy" data-clipboard-action="copy" data-clipboard-target="#env-var-28735" title="Copy to clipboard" do-not-collapse="true"></button></p>
+<p>Environment variable: <code id="env-var-37064">QUARKUS_RABBITMQ_DEVSERVICES_QUEUES__QUEUES__AUTO_DELETE</code><button class="btn-copy fa fa-clipboard inline-btn-copy" data-clipboard-action="copy" data-clipboard-target="#env-var-37064" title="Copy to clipboard" do-not-collapse="true"></button></p>
 </div>
 </div>
 </div>
@@ -2324,7 +2353,7 @@ the broker address has not been explicitly configured. More information can be f
 <p>Should the queue remain after restarts?</p>
 </div>
 <div class="paragraph">
-<p>Environment variable: <code id="env-var-28736">QUARKUS_RABBITMQ_DEVSERVICES_QUEUES__QUEUES__DURABLE</code><button class="btn-copy fa fa-clipboard inline-btn-copy" data-clipboard-action="copy" data-clipboard-target="#env-var-28736" title="Copy to clipboard" do-not-collapse="true"></button></p>
+<p>Environment variable: <code id="env-var-37065">QUARKUS_RABBITMQ_DEVSERVICES_QUEUES__QUEUES__DURABLE</code><button class="btn-copy fa fa-clipboard inline-btn-copy" data-clipboard-action="copy" data-clipboard-target="#env-var-37065" title="Copy to clipboard" do-not-collapse="true"></button></p>
 </div>
 </div>
 </div>
@@ -2344,7 +2373,7 @@ the broker address has not been explicitly configured. More information can be f
 <p>Extra arguments for the queue definition.</p>
 </div>
 <div class="paragraph">
-<p>Environment variable: <code id="env-var-28737">QUARKUS_RABBITMQ_DEVSERVICES_QUEUES__QUEUES__ARGUMENTS</code><button class="btn-copy fa fa-clipboard inline-btn-copy" data-clipboard-action="copy" data-clipboard-target="#env-var-28737" title="Copy to clipboard" do-not-collapse="true"></button></p>
+<p>Environment variable: <code id="env-var-37066">QUARKUS_RABBITMQ_DEVSERVICES_QUEUES__QUEUES__ARGUMENTS</code><button class="btn-copy fa fa-clipboard inline-btn-copy" data-clipboard-action="copy" data-clipboard-target="#env-var-37066" title="Copy to clipboard" do-not-collapse="true"></button></p>
 </div>
 </div>
 </div>
@@ -2364,7 +2393,7 @@ the broker address has not been explicitly configured. More information can be f
 <p>Source exchange to bind to. Defaults to name of binding instance.</p>
 </div>
 <div class="paragraph">
-<p>Environment variable: <code id="env-var-28738">QUARKUS_RABBITMQ_DEVSERVICES_BINDINGS__BINDINGS__SOURCE</code><button class="btn-copy fa fa-clipboard inline-btn-copy" data-clipboard-action="copy" data-clipboard-target="#env-var-28738" title="Copy to clipboard" do-not-collapse="true"></button></p>
+<p>Environment variable: <code id="env-var-37067">QUARKUS_RABBITMQ_DEVSERVICES_BINDINGS__BINDINGS__SOURCE</code><button class="btn-copy fa fa-clipboard inline-btn-copy" data-clipboard-action="copy" data-clipboard-target="#env-var-37067" title="Copy to clipboard" do-not-collapse="true"></button></p>
 </div>
 </div>
 </div>
@@ -2384,7 +2413,7 @@ the broker address has not been explicitly configured. More information can be f
 <p>Routing key specification for the source exchange.</p>
 </div>
 <div class="paragraph">
-<p>Environment variable: <code id="env-var-28739">QUARKUS_RABBITMQ_DEVSERVICES_BINDINGS__BINDINGS__ROUTING_KEY</code><button class="btn-copy fa fa-clipboard inline-btn-copy" data-clipboard-action="copy" data-clipboard-target="#env-var-28739" title="Copy to clipboard" do-not-collapse="true"></button></p>
+<p>Environment variable: <code id="env-var-37068">QUARKUS_RABBITMQ_DEVSERVICES_BINDINGS__BINDINGS__ROUTING_KEY</code><button class="btn-copy fa fa-clipboard inline-btn-copy" data-clipboard-action="copy" data-clipboard-target="#env-var-37068" title="Copy to clipboard" do-not-collapse="true"></button></p>
 </div>
 </div>
 </div>
@@ -2404,7 +2433,7 @@ the broker address has not been explicitly configured. More information can be f
 <p>Destination exchange or queue to bind to. Defaults to name of binding instance.</p>
 </div>
 <div class="paragraph">
-<p>Environment variable: <code id="env-var-28740">QUARKUS_RABBITMQ_DEVSERVICES_BINDINGS__BINDINGS__DESTINATION</code><button class="btn-copy fa fa-clipboard inline-btn-copy" data-clipboard-action="copy" data-clipboard-target="#env-var-28740" title="Copy to clipboard" do-not-collapse="true"></button></p>
+<p>Environment variable: <code id="env-var-37069">QUARKUS_RABBITMQ_DEVSERVICES_BINDINGS__BINDINGS__DESTINATION</code><button class="btn-copy fa fa-clipboard inline-btn-copy" data-clipboard-action="copy" data-clipboard-target="#env-var-37069" title="Copy to clipboard" do-not-collapse="true"></button></p>
 </div>
 </div>
 </div>
@@ -2424,7 +2453,7 @@ the broker address has not been explicitly configured. More information can be f
 <p>Destination type for binding: queue, exchange, etc.</p>
 </div>
 <div class="paragraph">
-<p>Environment variable: <code id="env-var-28741">QUARKUS_RABBITMQ_DEVSERVICES_BINDINGS__BINDINGS__DESTINATION_TYPE</code><button class="btn-copy fa fa-clipboard inline-btn-copy" data-clipboard-action="copy" data-clipboard-target="#env-var-28741" title="Copy to clipboard" do-not-collapse="true"></button></p>
+<p>Environment variable: <code id="env-var-37070">QUARKUS_RABBITMQ_DEVSERVICES_BINDINGS__BINDINGS__DESTINATION_TYPE</code><button class="btn-copy fa fa-clipboard inline-btn-copy" data-clipboard-action="copy" data-clipboard-target="#env-var-37070" title="Copy to clipboard" do-not-collapse="true"></button></p>
 </div>
 </div>
 </div>
@@ -2444,7 +2473,7 @@ the broker address has not been explicitly configured. More information can be f
 <p>Extra arguments for the binding definition.</p>
 </div>
 <div class="paragraph">
-<p>Environment variable: <code id="env-var-28742">QUARKUS_RABBITMQ_DEVSERVICES_BINDINGS__BINDINGS__ARGUMENTS</code><button class="btn-copy fa fa-clipboard inline-btn-copy" data-clipboard-action="copy" data-clipboard-target="#env-var-28742" title="Copy to clipboard" do-not-collapse="true"></button></p>
+<p>Environment variable: <code id="env-var-37071">QUARKUS_RABBITMQ_DEVSERVICES_BINDINGS__BINDINGS__ARGUMENTS</code><button class="btn-copy fa fa-clipboard inline-btn-copy" data-clipboard-action="copy" data-clipboard-target="#env-var-37071" title="Copy to clipboard" do-not-collapse="true"></button></p>
 </div>
 </div>
 </div>
@@ -2464,7 +2493,7 @@ the broker address has not been explicitly configured. More information can be f
 <p>Environment variables that are passed to the container.</p>
 </div>
 <div class="paragraph">
-<p>Environment variable: <code id="env-var-28743">QUARKUS_RABBITMQ_DEVSERVICES_CONTAINER_ENV</code><button class="btn-copy fa fa-clipboard inline-btn-copy" data-clipboard-action="copy" data-clipboard-target="#env-var-28743" title="Copy to clipboard" do-not-collapse="true"></button></p>
+<p>Environment variable: <code id="env-var-37072">QUARKUS_RABBITMQ_DEVSERVICES_CONTAINER_ENV</code><button class="btn-copy fa fa-clipboard inline-btn-copy" data-clipboard-action="copy" data-clipboard-target="#env-var-37072" title="Copy to clipboard" do-not-collapse="true"></button></p>
 </div>
 </div>
 </div>
@@ -2514,7 +2543,7 @@ the server address has not been explicitly configured. More information can be f
 <p>When DevServices is enabled Quarkus will attempt to automatically configure and start a database when running in Dev or Test mode and when Docker is running.</p>
 </div>
 <div class="paragraph">
-<p>Environment variable: <code id="env-var-28744">QUARKUS_REDIS_DEVSERVICES_ENABLED</code><button class="btn-copy fa fa-clipboard inline-btn-copy" data-clipboard-action="copy" data-clipboard-target="#env-var-28744" title="Copy to clipboard" do-not-collapse="true"></button></p>
+<p>Environment variable: <code id="env-var-37073">QUARKUS_REDIS_DEVSERVICES_ENABLED</code><button class="btn-copy fa fa-clipboard inline-btn-copy" data-clipboard-action="copy" data-clipboard-target="#env-var-37073" title="Copy to clipboard" do-not-collapse="true"></button></p>
 </div>
 </div>
 </div>
@@ -2534,7 +2563,7 @@ the server address has not been explicitly configured. More information can be f
 <p>The container image name to use, for container based DevServices providers. If you want to use Redis Stack modules (bloom, graph, search&#8230;&#8203;), use: <code>redis/redis-stack-server:latest</code>.</p>
 </div>
 <div class="paragraph">
-<p>Environment variable: <code id="env-var-28745">QUARKUS_REDIS_DEVSERVICES_IMAGE_NAME</code><button class="btn-copy fa fa-clipboard inline-btn-copy" data-clipboard-action="copy" data-clipboard-target="#env-var-28745" title="Copy to clipboard" do-not-collapse="true"></button></p>
+<p>Environment variable: <code id="env-var-37074">QUARKUS_REDIS_DEVSERVICES_IMAGE_NAME</code><button class="btn-copy fa fa-clipboard inline-btn-copy" data-clipboard-action="copy" data-clipboard-target="#env-var-37074" title="Copy to clipboard" do-not-collapse="true"></button></p>
 </div>
 </div>
 </div>
@@ -2557,7 +2586,7 @@ the server address has not been explicitly configured. More information can be f
 <p>If not defined, the port will be chosen randomly.</p>
 </div>
 <div class="paragraph">
-<p>Environment variable: <code id="env-var-28746">QUARKUS_REDIS_DEVSERVICES_PORT</code><button class="btn-copy fa fa-clipboard inline-btn-copy" data-clipboard-action="copy" data-clipboard-target="#env-var-28746" title="Copy to clipboard" do-not-collapse="true"></button></p>
+<p>Environment variable: <code id="env-var-37075">QUARKUS_REDIS_DEVSERVICES_PORT</code><button class="btn-copy fa fa-clipboard inline-btn-copy" data-clipboard-action="copy" data-clipboard-target="#env-var-37075" title="Copy to clipboard" do-not-collapse="true"></button></p>
 </div>
 </div>
 </div>
@@ -2583,7 +2612,7 @@ the server address has not been explicitly configured. More information can be f
 <p>Container sharing is only used in dev mode.</p>
 </div>
 <div class="paragraph">
-<p>Environment variable: <code id="env-var-28747">QUARKUS_REDIS_DEVSERVICES_SHARED</code><button class="btn-copy fa fa-clipboard inline-btn-copy" data-clipboard-action="copy" data-clipboard-target="#env-var-28747" title="Copy to clipboard" do-not-collapse="true"></button></p>
+<p>Environment variable: <code id="env-var-37076">QUARKUS_REDIS_DEVSERVICES_SHARED</code><button class="btn-copy fa fa-clipboard inline-btn-copy" data-clipboard-action="copy" data-clipboard-target="#env-var-37076" title="Copy to clipboard" do-not-collapse="true"></button></p>
 </div>
 </div>
 </div>
@@ -2606,7 +2635,7 @@ the server address has not been explicitly configured. More information can be f
 <p>This property is used when you need multiple shared Redis servers.</p>
 </div>
 <div class="paragraph">
-<p>Environment variable: <code id="env-var-28748">QUARKUS_REDIS_DEVSERVICES_SERVICE_NAME</code><button class="btn-copy fa fa-clipboard inline-btn-copy" data-clipboard-action="copy" data-clipboard-target="#env-var-28748" title="Copy to clipboard" do-not-collapse="true"></button></p>
+<p>Environment variable: <code id="env-var-37077">QUARKUS_REDIS_DEVSERVICES_SERVICE_NAME</code><button class="btn-copy fa fa-clipboard inline-btn-copy" data-clipboard-action="copy" data-clipboard-target="#env-var-37077" title="Copy to clipboard" do-not-collapse="true"></button></p>
 </div>
 </div>
 </div>
@@ -2626,7 +2655,7 @@ the server address has not been explicitly configured. More information can be f
 <p>Environment variables that are passed to the container.</p>
 </div>
 <div class="paragraph">
-<p>Environment variable: <code id="env-var-28749">QUARKUS_REDIS_DEVSERVICES_CONTAINER_ENV</code><button class="btn-copy fa fa-clipboard inline-btn-copy" data-clipboard-action="copy" data-clipboard-target="#env-var-28749" title="Copy to clipboard" do-not-collapse="true"></button></p>
+<p>Environment variable: <code id="env-var-37078">QUARKUS_REDIS_DEVSERVICES_CONTAINER_ENV</code><button class="btn-copy fa fa-clipboard inline-btn-copy" data-clipboard-action="copy" data-clipboard-target="#env-var-37078" title="Copy to clipboard" do-not-collapse="true"></button></p>
 </div>
 </div>
 </div>
@@ -2649,7 +2678,7 @@ the server address has not been explicitly configured. More information can be f
 <p>When DevServices is enabled Quarkus will attempt to automatically configure and start a database when running in Dev or Test mode and when Docker is running.</p>
 </div>
 <div class="paragraph">
-<p>Environment variable: <code id="env-var-28750">QUARKUS_REDIS__ADDITIONAL_REDIS_CLIENTS__DEVSERVICES_ENABLED</code><button class="btn-copy fa fa-clipboard inline-btn-copy" data-clipboard-action="copy" data-clipboard-target="#env-var-28750" title="Copy to clipboard" do-not-collapse="true"></button></p>
+<p>Environment variable: <code id="env-var-37079">QUARKUS_REDIS__ADDITIONAL_REDIS_CLIENTS__DEVSERVICES_ENABLED</code><button class="btn-copy fa fa-clipboard inline-btn-copy" data-clipboard-action="copy" data-clipboard-target="#env-var-37079" title="Copy to clipboard" do-not-collapse="true"></button></p>
 </div>
 </div>
 </div>
@@ -2669,7 +2698,7 @@ the server address has not been explicitly configured. More information can be f
 <p>The container image name to use, for container based DevServices providers. If you want to use Redis Stack modules (bloom, graph, search&#8230;&#8203;), use: <code>redis/redis-stack-server:latest</code>.</p>
 </div>
 <div class="paragraph">
-<p>Environment variable: <code id="env-var-28751">QUARKUS_REDIS__ADDITIONAL_REDIS_CLIENTS__DEVSERVICES_IMAGE_NAME</code><button class="btn-copy fa fa-clipboard inline-btn-copy" data-clipboard-action="copy" data-clipboard-target="#env-var-28751" title="Copy to clipboard" do-not-collapse="true"></button></p>
+<p>Environment variable: <code id="env-var-37080">QUARKUS_REDIS__ADDITIONAL_REDIS_CLIENTS__DEVSERVICES_IMAGE_NAME</code><button class="btn-copy fa fa-clipboard inline-btn-copy" data-clipboard-action="copy" data-clipboard-target="#env-var-37080" title="Copy to clipboard" do-not-collapse="true"></button></p>
 </div>
 </div>
 </div>
@@ -2692,7 +2721,7 @@ the server address has not been explicitly configured. More information can be f
 <p>If not defined, the port will be chosen randomly.</p>
 </div>
 <div class="paragraph">
-<p>Environment variable: <code id="env-var-28752">QUARKUS_REDIS__ADDITIONAL_REDIS_CLIENTS__DEVSERVICES_PORT</code><button class="btn-copy fa fa-clipboard inline-btn-copy" data-clipboard-action="copy" data-clipboard-target="#env-var-28752" title="Copy to clipboard" do-not-collapse="true"></button></p>
+<p>Environment variable: <code id="env-var-37081">QUARKUS_REDIS__ADDITIONAL_REDIS_CLIENTS__DEVSERVICES_PORT</code><button class="btn-copy fa fa-clipboard inline-btn-copy" data-clipboard-action="copy" data-clipboard-target="#env-var-37081" title="Copy to clipboard" do-not-collapse="true"></button></p>
 </div>
 </div>
 </div>
@@ -2718,7 +2747,7 @@ the server address has not been explicitly configured. More information can be f
 <p>Container sharing is only used in dev mode.</p>
 </div>
 <div class="paragraph">
-<p>Environment variable: <code id="env-var-28753">QUARKUS_REDIS__ADDITIONAL_REDIS_CLIENTS__DEVSERVICES_SHARED</code><button class="btn-copy fa fa-clipboard inline-btn-copy" data-clipboard-action="copy" data-clipboard-target="#env-var-28753" title="Copy to clipboard" do-not-collapse="true"></button></p>
+<p>Environment variable: <code id="env-var-37082">QUARKUS_REDIS__ADDITIONAL_REDIS_CLIENTS__DEVSERVICES_SHARED</code><button class="btn-copy fa fa-clipboard inline-btn-copy" data-clipboard-action="copy" data-clipboard-target="#env-var-37082" title="Copy to clipboard" do-not-collapse="true"></button></p>
 </div>
 </div>
 </div>
@@ -2741,7 +2770,7 @@ the server address has not been explicitly configured. More information can be f
 <p>This property is used when you need multiple shared Redis servers.</p>
 </div>
 <div class="paragraph">
-<p>Environment variable: <code id="env-var-28754">QUARKUS_REDIS__ADDITIONAL_REDIS_CLIENTS__DEVSERVICES_SERVICE_NAME</code><button class="btn-copy fa fa-clipboard inline-btn-copy" data-clipboard-action="copy" data-clipboard-target="#env-var-28754" title="Copy to clipboard" do-not-collapse="true"></button></p>
+<p>Environment variable: <code id="env-var-37083">QUARKUS_REDIS__ADDITIONAL_REDIS_CLIENTS__DEVSERVICES_SERVICE_NAME</code><button class="btn-copy fa fa-clipboard inline-btn-copy" data-clipboard-action="copy" data-clipboard-target="#env-var-37083" title="Copy to clipboard" do-not-collapse="true"></button></p>
 </div>
 </div>
 </div>
@@ -2761,7 +2790,7 @@ the server address has not been explicitly configured. More information can be f
 <p>Environment variables that are passed to the container.</p>
 </div>
 <div class="paragraph">
-<p>Environment variable: <code id="env-var-28755">QUARKUS_REDIS__ADDITIONAL_REDIS_CLIENTS__DEVSERVICES_CONTAINER_ENV</code><button class="btn-copy fa fa-clipboard inline-btn-copy" data-clipboard-action="copy" data-clipboard-target="#env-var-28755" title="Copy to clipboard" do-not-collapse="true"></button></p>
+<p>Environment variable: <code id="env-var-37084">QUARKUS_REDIS__ADDITIONAL_REDIS_CLIENTS__DEVSERVICES_CONTAINER_ENV</code><button class="btn-copy fa fa-clipboard inline-btn-copy" data-clipboard-action="copy" data-clipboard-target="#env-var-37084" title="Copy to clipboard" do-not-collapse="true"></button></p>
 </div>
 </div>
 </div>
@@ -2831,7 +2860,7 @@ the server address has not been explicitly configured. More information can be f
 <p>When DevServices is enabled Quarkus will attempt to automatically configure and start a database when running in Dev or Test mode and when Docker is running.</p>
 </div>
 <div class="paragraph">
-<p>Environment variable: <code id="env-var-28756">QUARKUS_INFINISPAN_CLIENT_DEVSERVICES_ENABLED</code><button class="btn-copy fa fa-clipboard inline-btn-copy" data-clipboard-action="copy" data-clipboard-target="#env-var-28756" title="Copy to clipboard" do-not-collapse="true"></button></p>
+<p>Environment variable: <code id="env-var-37085">QUARKUS_INFINISPAN_CLIENT_DEVSERVICES_ENABLED</code><button class="btn-copy fa fa-clipboard inline-btn-copy" data-clipboard-action="copy" data-clipboard-target="#env-var-37085" title="Copy to clipboard" do-not-collapse="true"></button></p>
 </div>
 </div>
 </div>
@@ -2854,7 +2883,7 @@ the server address has not been explicitly configured. More information can be f
 <p>If not defined, the port will be chosen randomly.</p>
 </div>
 <div class="paragraph">
-<p>Environment variable: <code id="env-var-28757">QUARKUS_INFINISPAN_CLIENT_DEVSERVICES_PORT</code><button class="btn-copy fa fa-clipboard inline-btn-copy" data-clipboard-action="copy" data-clipboard-target="#env-var-28757" title="Copy to clipboard" do-not-collapse="true"></button></p>
+<p>Environment variable: <code id="env-var-37086">QUARKUS_INFINISPAN_CLIENT_DEVSERVICES_PORT</code><button class="btn-copy fa fa-clipboard inline-btn-copy" data-clipboard-action="copy" data-clipboard-target="#env-var-37086" title="Copy to clipboard" do-not-collapse="true"></button></p>
 </div>
 </div>
 </div>
@@ -2880,7 +2909,7 @@ the server address has not been explicitly configured. More information can be f
 <p>Container sharing is only used in dev mode.</p>
 </div>
 <div class="paragraph">
-<p>Environment variable: <code id="env-var-28758">QUARKUS_INFINISPAN_CLIENT_DEVSERVICES_SHARED</code><button class="btn-copy fa fa-clipboard inline-btn-copy" data-clipboard-action="copy" data-clipboard-target="#env-var-28758" title="Copy to clipboard" do-not-collapse="true"></button></p>
+<p>Environment variable: <code id="env-var-37087">QUARKUS_INFINISPAN_CLIENT_DEVSERVICES_SHARED</code><button class="btn-copy fa fa-clipboard inline-btn-copy" data-clipboard-action="copy" data-clipboard-target="#env-var-37087" title="Copy to clipboard" do-not-collapse="true"></button></p>
 </div>
 </div>
 </div>
@@ -2903,7 +2932,7 @@ the server address has not been explicitly configured. More information can be f
 <p>This property is used when you need multiple shared Infinispan servers.</p>
 </div>
 <div class="paragraph">
-<p>Environment variable: <code id="env-var-28759">QUARKUS_INFINISPAN_CLIENT_DEVSERVICES_SERVICE_NAME</code><button class="btn-copy fa fa-clipboard inline-btn-copy" data-clipboard-action="copy" data-clipboard-target="#env-var-28759" title="Copy to clipboard" do-not-collapse="true"></button></p>
+<p>Environment variable: <code id="env-var-37088">QUARKUS_INFINISPAN_CLIENT_DEVSERVICES_SERVICE_NAME</code><button class="btn-copy fa fa-clipboard inline-btn-copy" data-clipboard-action="copy" data-clipboard-target="#env-var-37088" title="Copy to clipboard" do-not-collapse="true"></button></p>
 </div>
 </div>
 </div>
@@ -2923,7 +2952,7 @@ the server address has not been explicitly configured. More information can be f
 <p>The image to use. Note that only official Infinispan images are supported.</p>
 </div>
 <div class="paragraph">
-<p>Environment variable: <code id="env-var-28760">QUARKUS_INFINISPAN_CLIENT_DEVSERVICES_IMAGE_NAME</code><button class="btn-copy fa fa-clipboard inline-btn-copy" data-clipboard-action="copy" data-clipboard-target="#env-var-28760" title="Copy to clipboard" do-not-collapse="true"></button></p>
+<p>Environment variable: <code id="env-var-37089">QUARKUS_INFINISPAN_CLIENT_DEVSERVICES_IMAGE_NAME</code><button class="btn-copy fa fa-clipboard inline-btn-copy" data-clipboard-action="copy" data-clipboard-target="#env-var-37089" title="Copy to clipboard" do-not-collapse="true"></button></p>
 </div>
 </div>
 </div>
@@ -2949,7 +2978,7 @@ the server address has not been explicitly configured. More information can be f
 <p>If an invalid value is passed, the Infinispan server will throw an error when trying to start.</p>
 </div>
 <div class="paragraph">
-<p>Environment variable: <code id="env-var-28761">QUARKUS_INFINISPAN_CLIENT_DEVSERVICES_ARTIFACTS</code><button class="btn-copy fa fa-clipboard inline-btn-copy" data-clipboard-action="copy" data-clipboard-target="#env-var-28761" title="Copy to clipboard" do-not-collapse="true"></button></p>
+<p>Environment variable: <code id="env-var-37090">QUARKUS_INFINISPAN_CLIENT_DEVSERVICES_ARTIFACTS</code><button class="btn-copy fa fa-clipboard inline-btn-copy" data-clipboard-action="copy" data-clipboard-target="#env-var-37090" title="Copy to clipboard" do-not-collapse="true"></button></p>
 </div>
 </div>
 </div>
@@ -2969,7 +2998,7 @@ the server address has not been explicitly configured. More information can be f
 <p>Add a site name to start the Infinispan Server Container with Cross Site Replication enabled (ex. lon). Cross Site Replication is the capability to connect two separate Infinispan Server Clusters that might run in different Data Centers, and configure backup caches to copy the data across the clusters with active-active or active-passive replication. See more about Cross Site Replication in the Infinispan Documentation <a href="https://infinispan.org/docs/stable/titles/xsite/xsite.html" class="bare">https://infinispan.org/docs/stable/titles/xsite/xsite.html</a> Configure <code>mcast-port</code> to avoid forming a cluster with any other running Infinispan Server container.</p>
 </div>
 <div class="paragraph">
-<p>Environment variable: <code id="env-var-28762">QUARKUS_INFINISPAN_CLIENT_DEVSERVICES_SITE</code><button class="btn-copy fa fa-clipboard inline-btn-copy" data-clipboard-action="copy" data-clipboard-target="#env-var-28762" title="Copy to clipboard" do-not-collapse="true"></button></p>
+<p>Environment variable: <code id="env-var-37091">QUARKUS_INFINISPAN_CLIENT_DEVSERVICES_SITE</code><button class="btn-copy fa fa-clipboard inline-btn-copy" data-clipboard-action="copy" data-clipboard-target="#env-var-37091" title="Copy to clipboard" do-not-collapse="true"></button></p>
 </div>
 </div>
 </div>
@@ -2989,7 +3018,7 @@ the server address has not been explicitly configured. More information can be f
 <p>If you are running an Infinispan Server already in docker, if the containers use the same mcastPort they will form a cluster. Set a different mcastPort to create a separate cluster in Docker (e. 46656). A common use case in a local Docker development mode, is the need of having two different Infinispan Clusters with Cross Site Replication enabled. see <a href="https://github.com/infinispan/infinispan-simple-tutorials/blob/main/infinispan-remote/cross-site-replication/docker-compose/" class="bare">https://github.com/infinispan/infinispan-simple-tutorials/blob/main/infinispan-remote/cross-site-replication/docker-compose/</a></p>
 </div>
 <div class="paragraph">
-<p>Environment variable: <code id="env-var-28763">QUARKUS_INFINISPAN_CLIENT_DEVSERVICES_MCAST_PORT</code><button class="btn-copy fa fa-clipboard inline-btn-copy" data-clipboard-action="copy" data-clipboard-target="#env-var-28763" title="Copy to clipboard" do-not-collapse="true"></button></p>
+<p>Environment variable: <code id="env-var-37092">QUARKUS_INFINISPAN_CLIENT_DEVSERVICES_MCAST_PORT</code><button class="btn-copy fa fa-clipboard inline-btn-copy" data-clipboard-action="copy" data-clipboard-target="#env-var-37092" title="Copy to clipboard" do-not-collapse="true"></button></p>
 </div>
 </div>
 </div>
@@ -3009,7 +3038,7 @@ the server address has not been explicitly configured. More information can be f
 <p>Runs the Infinispan Server container with tracing enabled. Traces are disabled by default</p>
 </div>
 <div class="paragraph">
-<p>Environment variable: <code id="env-var-28764">QUARKUS_INFINISPAN_CLIENT_DEVSERVICES_TRACING_ENABLED</code><button class="btn-copy fa fa-clipboard inline-btn-copy" data-clipboard-action="copy" data-clipboard-target="#env-var-28764" title="Copy to clipboard" do-not-collapse="true"></button></p>
+<p>Environment variable: <code id="env-var-37093">QUARKUS_INFINISPAN_CLIENT_DEVSERVICES_TRACING_ENABLED</code><button class="btn-copy fa fa-clipboard inline-btn-copy" data-clipboard-action="copy" data-clipboard-target="#env-var-37093" title="Copy to clipboard" do-not-collapse="true"></button></p>
 </div>
 </div>
 </div>
@@ -3029,7 +3058,7 @@ the server address has not been explicitly configured. More information can be f
 <p>Sets Infinispan Server otlp endpoint. Default value is <a href="http://localhost:4317" class="bare">http://localhost:4317</a></p>
 </div>
 <div class="paragraph">
-<p>Environment variable: <code id="env-var-28765">QUARKUS_INFINISPAN_CLIENT_DEVSERVICES_TRACING_EXPORTER_OTLP_ENDPOINT</code><button class="btn-copy fa fa-clipboard inline-btn-copy" data-clipboard-action="copy" data-clipboard-target="#env-var-28765" title="Copy to clipboard" do-not-collapse="true"></button></p>
+<p>Environment variable: <code id="env-var-37094">QUARKUS_INFINISPAN_CLIENT_DEVSERVICES_TRACING_EXPORTER_OTLP_ENDPOINT</code><button class="btn-copy fa fa-clipboard inline-btn-copy" data-clipboard-action="copy" data-clipboard-target="#env-var-37094" title="Copy to clipboard" do-not-collapse="true"></button></p>
 </div>
 </div>
 </div>
@@ -3049,7 +3078,7 @@ the server address has not been explicitly configured. More information can be f
 <p>Environment variables that are passed to the container.</p>
 </div>
 <div class="paragraph">
-<p>Environment variable: <code id="env-var-28766">QUARKUS_INFINISPAN_CLIENT_DEVSERVICES_CONTAINER_ENV</code><button class="btn-copy fa fa-clipboard inline-btn-copy" data-clipboard-action="copy" data-clipboard-target="#env-var-28766" title="Copy to clipboard" do-not-collapse="true"></button></p>
+<p>Environment variable: <code id="env-var-37095">QUARKUS_INFINISPAN_CLIENT_DEVSERVICES_CONTAINER_ENV</code><button class="btn-copy fa fa-clipboard inline-btn-copy" data-clipboard-action="copy" data-clipboard-target="#env-var-37095" title="Copy to clipboard" do-not-collapse="true"></button></p>
 </div>
 </div>
 </div>
@@ -3072,7 +3101,7 @@ the server address has not been explicitly configured. More information can be f
 <p>When DevServices is enabled Quarkus will attempt to automatically configure and start a database when running in Dev or Test mode and when Docker is running.</p>
 </div>
 <div class="paragraph">
-<p>Environment variable: <code id="env-var-28767">QUARKUS_INFINISPAN_CLIENT__NAMED_INFINISPAN_CLIENTS__DEVSERVICES_ENABLED</code><button class="btn-copy fa fa-clipboard inline-btn-copy" data-clipboard-action="copy" data-clipboard-target="#env-var-28767" title="Copy to clipboard" do-not-collapse="true"></button></p>
+<p>Environment variable: <code id="env-var-37096">QUARKUS_INFINISPAN_CLIENT__NAMED_INFINISPAN_CLIENTS__DEVSERVICES_ENABLED</code><button class="btn-copy fa fa-clipboard inline-btn-copy" data-clipboard-action="copy" data-clipboard-target="#env-var-37096" title="Copy to clipboard" do-not-collapse="true"></button></p>
 </div>
 </div>
 </div>
@@ -3095,7 +3124,7 @@ the server address has not been explicitly configured. More information can be f
 <p>If not defined, the port will be chosen randomly.</p>
 </div>
 <div class="paragraph">
-<p>Environment variable: <code id="env-var-28768">QUARKUS_INFINISPAN_CLIENT__NAMED_INFINISPAN_CLIENTS__DEVSERVICES_PORT</code><button class="btn-copy fa fa-clipboard inline-btn-copy" data-clipboard-action="copy" data-clipboard-target="#env-var-28768" title="Copy to clipboard" do-not-collapse="true"></button></p>
+<p>Environment variable: <code id="env-var-37097">QUARKUS_INFINISPAN_CLIENT__NAMED_INFINISPAN_CLIENTS__DEVSERVICES_PORT</code><button class="btn-copy fa fa-clipboard inline-btn-copy" data-clipboard-action="copy" data-clipboard-target="#env-var-37097" title="Copy to clipboard" do-not-collapse="true"></button></p>
 </div>
 </div>
 </div>
@@ -3121,7 +3150,7 @@ the server address has not been explicitly configured. More information can be f
 <p>Container sharing is only used in dev mode.</p>
 </div>
 <div class="paragraph">
-<p>Environment variable: <code id="env-var-28769">QUARKUS_INFINISPAN_CLIENT__NAMED_INFINISPAN_CLIENTS__DEVSERVICES_SHARED</code><button class="btn-copy fa fa-clipboard inline-btn-copy" data-clipboard-action="copy" data-clipboard-target="#env-var-28769" title="Copy to clipboard" do-not-collapse="true"></button></p>
+<p>Environment variable: <code id="env-var-37098">QUARKUS_INFINISPAN_CLIENT__NAMED_INFINISPAN_CLIENTS__DEVSERVICES_SHARED</code><button class="btn-copy fa fa-clipboard inline-btn-copy" data-clipboard-action="copy" data-clipboard-target="#env-var-37098" title="Copy to clipboard" do-not-collapse="true"></button></p>
 </div>
 </div>
 </div>
@@ -3144,7 +3173,7 @@ the server address has not been explicitly configured. More information can be f
 <p>This property is used when you need multiple shared Infinispan servers.</p>
 </div>
 <div class="paragraph">
-<p>Environment variable: <code id="env-var-28770">QUARKUS_INFINISPAN_CLIENT__NAMED_INFINISPAN_CLIENTS__DEVSERVICES_SERVICE_NAME</code><button class="btn-copy fa fa-clipboard inline-btn-copy" data-clipboard-action="copy" data-clipboard-target="#env-var-28770" title="Copy to clipboard" do-not-collapse="true"></button></p>
+<p>Environment variable: <code id="env-var-37099">QUARKUS_INFINISPAN_CLIENT__NAMED_INFINISPAN_CLIENTS__DEVSERVICES_SERVICE_NAME</code><button class="btn-copy fa fa-clipboard inline-btn-copy" data-clipboard-action="copy" data-clipboard-target="#env-var-37099" title="Copy to clipboard" do-not-collapse="true"></button></p>
 </div>
 </div>
 </div>
@@ -3164,7 +3193,7 @@ the server address has not been explicitly configured. More information can be f
 <p>The image to use. Note that only official Infinispan images are supported.</p>
 </div>
 <div class="paragraph">
-<p>Environment variable: <code id="env-var-28771">QUARKUS_INFINISPAN_CLIENT__NAMED_INFINISPAN_CLIENTS__DEVSERVICES_IMAGE_NAME</code><button class="btn-copy fa fa-clipboard inline-btn-copy" data-clipboard-action="copy" data-clipboard-target="#env-var-28771" title="Copy to clipboard" do-not-collapse="true"></button></p>
+<p>Environment variable: <code id="env-var-37100">QUARKUS_INFINISPAN_CLIENT__NAMED_INFINISPAN_CLIENTS__DEVSERVICES_IMAGE_NAME</code><button class="btn-copy fa fa-clipboard inline-btn-copy" data-clipboard-action="copy" data-clipboard-target="#env-var-37100" title="Copy to clipboard" do-not-collapse="true"></button></p>
 </div>
 </div>
 </div>
@@ -3190,7 +3219,7 @@ the server address has not been explicitly configured. More information can be f
 <p>If an invalid value is passed, the Infinispan server will throw an error when trying to start.</p>
 </div>
 <div class="paragraph">
-<p>Environment variable: <code id="env-var-28772">QUARKUS_INFINISPAN_CLIENT__NAMED_INFINISPAN_CLIENTS__DEVSERVICES_ARTIFACTS</code><button class="btn-copy fa fa-clipboard inline-btn-copy" data-clipboard-action="copy" data-clipboard-target="#env-var-28772" title="Copy to clipboard" do-not-collapse="true"></button></p>
+<p>Environment variable: <code id="env-var-37101">QUARKUS_INFINISPAN_CLIENT__NAMED_INFINISPAN_CLIENTS__DEVSERVICES_ARTIFACTS</code><button class="btn-copy fa fa-clipboard inline-btn-copy" data-clipboard-action="copy" data-clipboard-target="#env-var-37101" title="Copy to clipboard" do-not-collapse="true"></button></p>
 </div>
 </div>
 </div>
@@ -3210,7 +3239,7 @@ the server address has not been explicitly configured. More information can be f
 <p>Add a site name to start the Infinispan Server Container with Cross Site Replication enabled (ex. lon). Cross Site Replication is the capability to connect two separate Infinispan Server Clusters that might run in different Data Centers, and configure backup caches to copy the data across the clusters with active-active or active-passive replication. See more about Cross Site Replication in the Infinispan Documentation <a href="https://infinispan.org/docs/stable/titles/xsite/xsite.html" class="bare">https://infinispan.org/docs/stable/titles/xsite/xsite.html</a> Configure <code>mcast-port</code> to avoid forming a cluster with any other running Infinispan Server container.</p>
 </div>
 <div class="paragraph">
-<p>Environment variable: <code id="env-var-28773">QUARKUS_INFINISPAN_CLIENT__NAMED_INFINISPAN_CLIENTS__DEVSERVICES_SITE</code><button class="btn-copy fa fa-clipboard inline-btn-copy" data-clipboard-action="copy" data-clipboard-target="#env-var-28773" title="Copy to clipboard" do-not-collapse="true"></button></p>
+<p>Environment variable: <code id="env-var-37102">QUARKUS_INFINISPAN_CLIENT__NAMED_INFINISPAN_CLIENTS__DEVSERVICES_SITE</code><button class="btn-copy fa fa-clipboard inline-btn-copy" data-clipboard-action="copy" data-clipboard-target="#env-var-37102" title="Copy to clipboard" do-not-collapse="true"></button></p>
 </div>
 </div>
 </div>
@@ -3230,7 +3259,7 @@ the server address has not been explicitly configured. More information can be f
 <p>If you are running an Infinispan Server already in docker, if the containers use the same mcastPort they will form a cluster. Set a different mcastPort to create a separate cluster in Docker (e. 46656). A common use case in a local Docker development mode, is the need of having two different Infinispan Clusters with Cross Site Replication enabled. see <a href="https://github.com/infinispan/infinispan-simple-tutorials/blob/main/infinispan-remote/cross-site-replication/docker-compose/" class="bare">https://github.com/infinispan/infinispan-simple-tutorials/blob/main/infinispan-remote/cross-site-replication/docker-compose/</a></p>
 </div>
 <div class="paragraph">
-<p>Environment variable: <code id="env-var-28774">QUARKUS_INFINISPAN_CLIENT__NAMED_INFINISPAN_CLIENTS__DEVSERVICES_MCAST_PORT</code><button class="btn-copy fa fa-clipboard inline-btn-copy" data-clipboard-action="copy" data-clipboard-target="#env-var-28774" title="Copy to clipboard" do-not-collapse="true"></button></p>
+<p>Environment variable: <code id="env-var-37103">QUARKUS_INFINISPAN_CLIENT__NAMED_INFINISPAN_CLIENTS__DEVSERVICES_MCAST_PORT</code><button class="btn-copy fa fa-clipboard inline-btn-copy" data-clipboard-action="copy" data-clipboard-target="#env-var-37103" title="Copy to clipboard" do-not-collapse="true"></button></p>
 </div>
 </div>
 </div>
@@ -3250,7 +3279,7 @@ the server address has not been explicitly configured. More information can be f
 <p>Runs the Infinispan Server container with tracing enabled. Traces are disabled by default</p>
 </div>
 <div class="paragraph">
-<p>Environment variable: <code id="env-var-28775">QUARKUS_INFINISPAN_CLIENT__NAMED_INFINISPAN_CLIENTS__DEVSERVICES_TRACING_ENABLED</code><button class="btn-copy fa fa-clipboard inline-btn-copy" data-clipboard-action="copy" data-clipboard-target="#env-var-28775" title="Copy to clipboard" do-not-collapse="true"></button></p>
+<p>Environment variable: <code id="env-var-37104">QUARKUS_INFINISPAN_CLIENT__NAMED_INFINISPAN_CLIENTS__DEVSERVICES_TRACING_ENABLED</code><button class="btn-copy fa fa-clipboard inline-btn-copy" data-clipboard-action="copy" data-clipboard-target="#env-var-37104" title="Copy to clipboard" do-not-collapse="true"></button></p>
 </div>
 </div>
 </div>
@@ -3270,7 +3299,7 @@ the server address has not been explicitly configured. More information can be f
 <p>Sets Infinispan Server otlp endpoint. Default value is <a href="http://localhost:4317" class="bare">http://localhost:4317</a></p>
 </div>
 <div class="paragraph">
-<p>Environment variable: <code id="env-var-28776">QUARKUS_INFINISPAN_CLIENT__NAMED_INFINISPAN_CLIENTS__DEVSERVICES_TRACING_EXPORTER_OTLP_ENDPOINT</code><button class="btn-copy fa fa-clipboard inline-btn-copy" data-clipboard-action="copy" data-clipboard-target="#env-var-28776" title="Copy to clipboard" do-not-collapse="true"></button></p>
+<p>Environment variable: <code id="env-var-37105">QUARKUS_INFINISPAN_CLIENT__NAMED_INFINISPAN_CLIENTS__DEVSERVICES_TRACING_EXPORTER_OTLP_ENDPOINT</code><button class="btn-copy fa fa-clipboard inline-btn-copy" data-clipboard-action="copy" data-clipboard-target="#env-var-37105" title="Copy to clipboard" do-not-collapse="true"></button></p>
 </div>
 </div>
 </div>
@@ -3290,7 +3319,7 @@ the server address has not been explicitly configured. More information can be f
 <p>Environment variables that are passed to the container.</p>
 </div>
 <div class="paragraph">
-<p>Environment variable: <code id="env-var-28777">QUARKUS_INFINISPAN_CLIENT__NAMED_INFINISPAN_CLIENTS__DEVSERVICES_CONTAINER_ENV</code><button class="btn-copy fa fa-clipboard inline-btn-copy" data-clipboard-action="copy" data-clipboard-target="#env-var-28777" title="Copy to clipboard" do-not-collapse="true"></button></p>
+<p>Environment variable: <code id="env-var-37106">QUARKUS_INFINISPAN_CLIENT__NAMED_INFINISPAN_CLIENTS__DEVSERVICES_CONTAINER_ENV</code><button class="btn-copy fa fa-clipboard inline-btn-copy" data-clipboard-action="copy" data-clipboard-target="#env-var-37106" title="Copy to clipboard" do-not-collapse="true"></button></p>
 </div>
 </div>
 </div>
@@ -3337,7 +3366,7 @@ More information can be found in the <a href="elasticsearch-dev-services">Elasti
 <p>If Dev Services for Elasticsearch has been explicitly enabled or disabled. Dev Services are generally enabled by default, unless there is an existing configuration present. For Elasticsearch, Dev Services starts a server unless <code>quarkus.elasticsearch.hosts</code> is set.</p>
 </div>
 <div class="paragraph">
-<p>Environment variable: <code id="env-var-28778">QUARKUS_ELASTICSEARCH_DEVSERVICES_ENABLED</code><button class="btn-copy fa fa-clipboard inline-btn-copy" data-clipboard-action="copy" data-clipboard-target="#env-var-28778" title="Copy to clipboard" do-not-collapse="true"></button></p>
+<p>Environment variable: <code id="env-var-37107">QUARKUS_ELASTICSEARCH_DEVSERVICES_ENABLED</code><button class="btn-copy fa fa-clipboard inline-btn-copy" data-clipboard-action="copy" data-clipboard-target="#env-var-37107" title="Copy to clipboard" do-not-collapse="true"></button></p>
 </div>
 </div>
 </div>
@@ -3360,7 +3389,7 @@ More information can be found in the <a href="elasticsearch-dev-services">Elasti
 <p>If not defined, the port will be chosen randomly.</p>
 </div>
 <div class="paragraph">
-<p>Environment variable: <code id="env-var-28779">QUARKUS_ELASTICSEARCH_DEVSERVICES_PORT</code><button class="btn-copy fa fa-clipboard inline-btn-copy" data-clipboard-action="copy" data-clipboard-target="#env-var-28779" title="Copy to clipboard" do-not-collapse="true"></button></p>
+<p>Environment variable: <code id="env-var-37108">QUARKUS_ELASTICSEARCH_DEVSERVICES_PORT</code><button class="btn-copy fa fa-clipboard inline-btn-copy" data-clipboard-action="copy" data-clipboard-target="#env-var-37108" title="Copy to clipboard" do-not-collapse="true"></button></p>
 </div>
 </div>
 </div>
@@ -3380,7 +3409,7 @@ More information can be found in the <a href="elasticsearch-dev-services">Elasti
 <p>The Elasticsearch container image to use. Defaults to the elasticsearch image provided by Elastic.</p>
 </div>
 <div class="paragraph">
-<p>Environment variable: <code id="env-var-28780">QUARKUS_ELASTICSEARCH_DEVSERVICES_IMAGE_NAME</code><button class="btn-copy fa fa-clipboard inline-btn-copy" data-clipboard-action="copy" data-clipboard-target="#env-var-28780" title="Copy to clipboard" do-not-collapse="true"></button></p>
+<p>Environment variable: <code id="env-var-37109">QUARKUS_ELASTICSEARCH_DEVSERVICES_IMAGE_NAME</code><button class="btn-copy fa fa-clipboard inline-btn-copy" data-clipboard-action="copy" data-clipboard-target="#env-var-37109" title="Copy to clipboard" do-not-collapse="true"></button></p>
 </div>
 </div>
 </div>
@@ -3400,7 +3429,7 @@ More information can be found in the <a href="elasticsearch-dev-services">Elasti
 <p>The value for the ES_JAVA_OPTS env variable. Defaults to setting the heap to 512MB min - 1GB max.</p>
 </div>
 <div class="paragraph">
-<p>Environment variable: <code id="env-var-28781">QUARKUS_ELASTICSEARCH_DEVSERVICES_JAVA_OPTS</code><button class="btn-copy fa fa-clipboard inline-btn-copy" data-clipboard-action="copy" data-clipboard-target="#env-var-28781" title="Copy to clipboard" do-not-collapse="true"></button></p>
+<p>Environment variable: <code id="env-var-37110">QUARKUS_ELASTICSEARCH_DEVSERVICES_JAVA_OPTS</code><button class="btn-copy fa fa-clipboard inline-btn-copy" data-clipboard-action="copy" data-clipboard-target="#env-var-37110" title="Copy to clipboard" do-not-collapse="true"></button></p>
 </div>
 </div>
 </div>
@@ -3426,7 +3455,7 @@ More information can be found in the <a href="elasticsearch-dev-services">Elasti
 <p>Container sharing is only used in dev mode.</p>
 </div>
 <div class="paragraph">
-<p>Environment variable: <code id="env-var-28782">QUARKUS_ELASTICSEARCH_DEVSERVICES_SHARED</code><button class="btn-copy fa fa-clipboard inline-btn-copy" data-clipboard-action="copy" data-clipboard-target="#env-var-28782" title="Copy to clipboard" do-not-collapse="true"></button></p>
+<p>Environment variable: <code id="env-var-37111">QUARKUS_ELASTICSEARCH_DEVSERVICES_SHARED</code><button class="btn-copy fa fa-clipboard inline-btn-copy" data-clipboard-action="copy" data-clipboard-target="#env-var-37111" title="Copy to clipboard" do-not-collapse="true"></button></p>
 </div>
 </div>
 </div>
@@ -3449,7 +3478,7 @@ More information can be found in the <a href="elasticsearch-dev-services">Elasti
 <p>This property is used when you need multiple shared Elasticsearch servers.</p>
 </div>
 <div class="paragraph">
-<p>Environment variable: <code id="env-var-28783">QUARKUS_ELASTICSEARCH_DEVSERVICES_SERVICE_NAME</code><button class="btn-copy fa fa-clipboard inline-btn-copy" data-clipboard-action="copy" data-clipboard-target="#env-var-28783" title="Copy to clipboard" do-not-collapse="true"></button></p>
+<p>Environment variable: <code id="env-var-37112">QUARKUS_ELASTICSEARCH_DEVSERVICES_SERVICE_NAME</code><button class="btn-copy fa fa-clipboard inline-btn-copy" data-clipboard-action="copy" data-clipboard-target="#env-var-37112" title="Copy to clipboard" do-not-collapse="true"></button></p>
 </div>
 </div>
 </div>
@@ -3469,7 +3498,7 @@ More information can be found in the <a href="elasticsearch-dev-services">Elasti
 <p>Environment variables that are passed to the container.</p>
 </div>
 <div class="paragraph">
-<p>Environment variable: <code id="env-var-28784">QUARKUS_ELASTICSEARCH_DEVSERVICES_CONTAINER_ENV</code><button class="btn-copy fa fa-clipboard inline-btn-copy" data-clipboard-action="copy" data-clipboard-target="#env-var-28784" title="Copy to clipboard" do-not-collapse="true"></button></p>
+<p>Environment variable: <code id="env-var-37113">QUARKUS_ELASTICSEARCH_DEVSERVICES_CONTAINER_ENV</code><button class="btn-copy fa fa-clipboard inline-btn-copy" data-clipboard-action="copy" data-clipboard-target="#env-var-37113" title="Copy to clipboard" do-not-collapse="true"></button></p>
 </div>
 </div>
 </div>
@@ -3573,6 +3602,10 @@ More information can be found in the <a href="elasticsearch-dev-services">Elasti
           
           
             <li><a href="https://x.com/quarkusio" target="_blank">X</a></li>
+          
+          
+          
+            <li><a href="https://bsky.app/profile/quarkus.io" target="_blank">Bluesky</a></li>
           
           
           

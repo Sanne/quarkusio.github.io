@@ -11,8 +11,33 @@
   <title>Measuring the coverage of your tests - Quarkus</title>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <meta http-equiv="Content-Security-Policy" content="default-src https://dpm.demdex.net https://route-default-test-mscherer-matamo.apps.ospo-osci.z3b1.p1.openshiftapps.com/ https://search.quarkus.io; script-src 'self' 'unsafe-eval'  'sha256-ANpuoVzuSex6VhqpYgsG25OHWVA1I+F6aGU04LoI+5s=' 'sha256-ipy9P/3rZZW06mTLAR0EnXvxSNcnfSDPLDuh3kzbB1w=' 'sha256-+5qDxnbsqhFKZIIfofMhmVgNChsVrKoHUdaQ2EMs9aU=' js.bizographics.com https://www.redhat.com https://static.redhat.com assets.adobedtm.com jsonip.com https://ajax.googleapis.com https://use.fontawesome.com https://app.mailjet.com http://www.youtube.com http://www.googleadservices.com https://googleads.g.doubleclick.net https://dpm.demdex.net https://giscus.app https://route-default-test-mscherer-matamo.apps.ospo-osci.z3b1.p1.openshiftapps.com/; style-src 'self' https://fonts.googleapis.com https://use.fontawesome.com; img-src 'self'
-  https://route-default-test-mscherer-matamo.apps.ospo-osci.z3b1.p1.openshiftapps.com/ * data:; media-src 'self'; frame-src  https://www.youtube.com https://embed.restream.io https://app.mailjet.com http://xy0p2.mjt.lu https://mj.quarkus.io https://giscus.app; base-uri 'none'; object-src 'none'; form-action 'none'; font-src 'self' https://use.fontawesome.com https://fonts.gstatic.com;" />
+  <meta http-equiv="Content-Security-Policy" content="
+  connect-src 'self' https://dpm.demdex.net https://adobedc.demdex.net https://route-default-test-mscherer-matamo.apps.ospo-osci.z3b1.p1.openshiftapps.com/ https://search.quarkus.io https://smetrics.redhat.com; 
+  script-src 'self' 'unsafe-inline' 'unsafe-eval'
+      
+      https://assets.adobedtm.com
+      js.bizographics.com
+      https://www.redhat.com
+      https://static.redhat.com
+      https://app.requestly.io/
+      jsonip.com
+      https://ajax.googleapis.com
+      https://use.fontawesome.com
+      http://www.youtube.com
+      http://www.googleadservices.com
+      https://googleads.g.doubleclick.net
+      https://giscus.app
+      https://route-default-test-mscherer-matamo.apps.ospo-osci.z3b1.p1.openshiftapps.com/
+      https://app.mailjet.com;
+
+  style-src 'self' https://fonts.googleapis.com https://use.fontawesome.com; 
+  img-src 'self' * data:; 
+  media-src 'self'; 
+  frame-src https://redhat.demdex.net https://www.youtube.com https://embed.restream.io https://app.mailjet.com http://xy0p2.mjt.lu https://mj.quarkus.io https://giscus.app; 
+  base-uri 'none'; 
+  object-src 'none'; 
+  form-action 'none'; 
+  font-src 'self' https://use.fontawesome.com https://fonts.gstatic.com;" />
   <script id="adobe_dtm" src="https://www.redhat.com/dtm.js" type="text/javascript"></script>
   <script src="/assets/javascript/highlight.pack.js" type="text/javascript"></script>
   <META HTTP-EQUIV='X-XSS-Protection' CONTENT="1; mode=block">
@@ -76,10 +101,12 @@
         <ul class="submenu">
           <li><a href="/about" class="">WHAT IS QUARKUS?</a></li>
           <li><a href="/container-first" class="">CONTAINER FIRST</a></li>
-          <li><a href="/continuum" class="">REACTIVE</a></li>
-          <li><a href="/developer-joy" class="">DEVELOPER JOY</a></li>
-          <li><a href="/kubernetes-native" class="">KUBERNETES NATIVE</a></li>
+          <li><a href="/continuum" class="">VERSATILITY</a></li>
           <li><a href="/standards" class="">STANDARDS</a></li>
+          <li><a href="/kubernetes-native" class="">KUBERNETES NATIVE</a></li>
+          <li><a href="/performance" class="">PERFORMANCE</a></li>
+          <li><a href="/developer-joy" class="">DEVELOPER JOY</a></li>
+          
         </ul>
       </li>
       <li class="dropdown">
@@ -107,6 +134,7 @@
           <li><a href="/support/" class="">SUPPORT</a></li>
           <li><a href="/blog" class="">BLOG</a></li>
           <li><a href="/discussion" class="">DISCUSSION</a></li>
+          <li><a href="/working-groups" class="">WORKING GROUPS</a></li>
           <li><a href="/insights" class="">PODCAST</a></li>
           <li><a href="/events" class="">EVENTS</a></li>
           <li><a href="/newsletter" class="">NEWSLETTER</a></li>
@@ -143,6 +171,7 @@
 
 
 
+
 <section class="full-width-version-bg flexfilterbar guides">
   <div class="guideflexcontainer">
     <div class="docslink">
@@ -160,7 +189,11 @@
         
         
         
-        <option value="latest" selected>3.13.0 - Latest</option>
+        <option value="latest" selected>3.17.0 - Latest</option>
+        
+        
+        
+        <option value="3.15" >3.15</option>
         
         
         
@@ -177,10 +210,6 @@
         
         
         <option value="2.13" >2.13</option>
-        
-        
-        
-        <option value="2.7" >2.7</option>
         </select>
     </div>
   </div>
@@ -237,7 +266,7 @@
 <p>JDK 17+ installed with <code>JAVA_HOME</code> configured appropriately</p>
 </li>
 <li>
-<p>Apache Maven 3.9.8</p>
+<p>Apache Maven 3.9.9</p>
 </li>
 <li>
 <p>Optionally the <a href="cli-tooling">Quarkus CLI</a> if you want to use it</p>
@@ -303,7 +332,7 @@ cd tests-with-coverage-quickstart</code></pre>
 <div class="title">Maven</div>
 <div class="listingblock">
 <div class="content">
-<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">mvn io.quarkus.platform:quarkus-maven-plugin:3.13.0:create \
+<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">mvn io.quarkus.platform:quarkus-maven-plugin:3.17.0:create \
     -DprojectGroupId=org.acme \
     -DprojectArtifactId=tests-with-coverage-quickstart \
     -Dextensions='rest' \
@@ -495,6 +524,18 @@ specifying a <code>data-file</code> or <code>report-location</code> will assume 
 &lt;/plugin</code></pre>
 </div>
 </div>
+<div class="admonitionblock warning">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-warning" title="Warning"></i>
+</td>
+<td class="content">
+If you need to configure the <code>argLine</code> property of the Surefire plugin (e.g. for setting memory parameters), you need to use <a href="https://maven.apache.org/surefire/maven-surefire-plugin/faq.html#late-property-evaluation" target="_blank" rel="noopener">Maven late property evaluation</a>, otherwise the Jacoco agent will not be correctly added, and regular JUnit tests and Quarkus <code>ComponentTest</code> will not get covered. Example: <code>&lt;argLine&gt;@{argLine} -your -extra -arguments&lt;/argLine&gt;</code>.
+</td>
+</tr>
+</table>
+</div>
 </div>
 </div>
 <div class="sect1">
@@ -507,10 +548,10 @@ the <code>quarkus-jacoco</code> extension allows JaCoCo to just work out of the 
 <div class="paragraph">
 <p>There are some config options that affect this:</p>
 </div>
-<div class="paragraph configuration-legend">
-<p><span class="icon"><i class="fa fa-lock" title="Fixed at build time"></i></span> Configuration property fixed at build time - All other configuration properties are overridable at runtime</p>
+<div class="paragraph">
+<p><span class="icon"><i class="fa fa-lock" title="Fixed at build time"></i></span> Configuration property fixed at build time - All other configuration properties are overridable at runtime <input type="search" id="config-search-0" placeholder="FILTER CONFIGURATION" disabled></p>
 </div>
-<table class="tableblock frame-all grid-all stretch configuration-reference configuration-reference-all-rows">
+<table class="tableblock frame-all grid-all stretch configuration-reference searchable configuration-reference-all-rows">
 <colgroup>
 <col style="width: 80%;">
 <col style="width: 10%;">
@@ -518,13 +559,13 @@ the <code>quarkus-jacoco</code> extension allows JaCoCo to just work out of the 
 </colgroup>
 <tbody>
 <tr>
-<th class="tableblock halign-left valign-top"><p class="tableblock"><a id="quarkus-jacoco-jacoco-config_configuration"></a><a href="#quarkus-jacoco-jacoco-config_configuration">Configuration property</a></p></th>
+<th class="tableblock halign-left valign-top"><p class="tableblock"><span class="header-title">Configuration property</span></p></th>
 <th class="tableblock halign-left valign-middle"><p class="tableblock">Type</p></th>
 <th class="tableblock halign-left valign-middle"><p class="tableblock">Default</p></th>
 </tr>
 <tr class="row-collapsible row-collapsed row-with-desc odd">
 <td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
-<p><span class="icon"><i class="fa fa-lock" title="Fixed at build time"></i></span> <a id="quarkus-jacoco-jacoco-config_quarkus-jacoco-enabled"></a><code><a href="#quarkus-jacoco-jacoco-config_quarkus-jacoco-enabled">quarkus.jacoco.enabled</a></code></p>
+<p><span class="icon"><i class="fa fa-lock" title="Fixed at build time"></i></span> <a id="quarkus-jacoco_quarkus-jacoco-enabled"></a> <span class="property-path"><a href="#quarkus-jacoco_quarkus-jacoco-enabled"><code>quarkus.jacoco.enabled</code></a></span></p>
 </div>
 <div id="conf-collapsible-desc-1" class="openblock description description-collapsed">
 <div class="content">
@@ -532,7 +573,7 @@ the <code>quarkus-jacoco</code> extension allows JaCoCo to just work out of the 
 <p>Whether or not the jacoco extension is enabled.</p>
 </div>
 <div class="paragraph">
-<p>Environment variable: <code id="env-var-8661">QUARKUS_JACOCO_ENABLED</code><button class="btn-copy fa fa-clipboard inline-btn-copy" data-clipboard-action="copy" data-clipboard-target="#env-var-8661" title="Copy to clipboard" do-not-collapse="true"></button></p>
+<p>Environment variable: <code id="env-var-8364">QUARKUS_JACOCO_ENABLED</code><button class="btn-copy fa fa-clipboard inline-btn-copy" data-clipboard-action="copy" data-clipboard-target="#env-var-8364" title="Copy to clipboard" do-not-collapse="true"></button></p>
 </div>
 </div>
 </div>
@@ -544,7 +585,7 @@ the <code>quarkus-jacoco</code> extension allows JaCoCo to just work out of the 
 </tr>
 <tr class="row-collapsible row-collapsed row-with-desc">
 <td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
-<p><span class="icon"><i class="fa fa-lock" title="Fixed at build time"></i></span> <a id="quarkus-jacoco-jacoco-config_quarkus-jacoco-data-file"></a><code><a href="#quarkus-jacoco-jacoco-config_quarkus-jacoco-data-file">quarkus.jacoco.data-file</a></code></p>
+<p><span class="icon"><i class="fa fa-lock" title="Fixed at build time"></i></span> <a id="quarkus-jacoco_quarkus-jacoco-data-file"></a> <span class="property-path"><a href="#quarkus-jacoco_quarkus-jacoco-data-file"><code>quarkus.jacoco.data-file</code></a></span></p>
 </div>
 <div id="conf-collapsible-desc-2" class="openblock description description-collapsed">
 <div class="content">
@@ -552,7 +593,7 @@ the <code>quarkus-jacoco</code> extension allows JaCoCo to just work out of the 
 <p>The jacoco data file. The path can be relative (to the module) or absolute.</p>
 </div>
 <div class="paragraph">
-<p>Environment variable: <code id="env-var-8662">QUARKUS_JACOCO_DATA_FILE</code><button class="btn-copy fa fa-clipboard inline-btn-copy" data-clipboard-action="copy" data-clipboard-target="#env-var-8662" title="Copy to clipboard" do-not-collapse="true"></button></p>
+<p>Environment variable: <code id="env-var-8365">QUARKUS_JACOCO_DATA_FILE</code><button class="btn-copy fa fa-clipboard inline-btn-copy" data-clipboard-action="copy" data-clipboard-target="#env-var-8365" title="Copy to clipboard" do-not-collapse="true"></button></p>
 </div>
 </div>
 </div>
@@ -564,7 +605,7 @@ the <code>quarkus-jacoco</code> extension allows JaCoCo to just work out of the 
 </tr>
 <tr class="row-collapsible row-collapsed row-with-desc odd">
 <td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
-<p><span class="icon"><i class="fa fa-lock" title="Fixed at build time"></i></span> <a id="quarkus-jacoco-jacoco-config_quarkus-jacoco-reuse-data-file"></a><code><a href="#quarkus-jacoco-jacoco-config_quarkus-jacoco-reuse-data-file">quarkus.jacoco.reuse-data-file</a></code></p>
+<p><span class="icon"><i class="fa fa-lock" title="Fixed at build time"></i></span> <a id="quarkus-jacoco_quarkus-jacoco-reuse-data-file"></a> <span class="property-path"><a href="#quarkus-jacoco_quarkus-jacoco-reuse-data-file"><code>quarkus.jacoco.reuse-data-file</code></a></span></p>
 </div>
 <div id="conf-collapsible-desc-3" class="openblock description description-collapsed">
 <div class="content">
@@ -572,7 +613,7 @@ the <code>quarkus-jacoco</code> extension allows JaCoCo to just work out of the 
 <p>Whether to reuse (<code>true</code>) or delete (<code>false</code>) the jacoco data file on each run.</p>
 </div>
 <div class="paragraph">
-<p>Environment variable: <code id="env-var-8663">QUARKUS_JACOCO_REUSE_DATA_FILE</code><button class="btn-copy fa fa-clipboard inline-btn-copy" data-clipboard-action="copy" data-clipboard-target="#env-var-8663" title="Copy to clipboard" do-not-collapse="true"></button></p>
+<p>Environment variable: <code id="env-var-8366">QUARKUS_JACOCO_REUSE_DATA_FILE</code><button class="btn-copy fa fa-clipboard inline-btn-copy" data-clipboard-action="copy" data-clipboard-target="#env-var-8366" title="Copy to clipboard" do-not-collapse="true"></button></p>
 </div>
 </div>
 </div>
@@ -584,7 +625,7 @@ the <code>quarkus-jacoco</code> extension allows JaCoCo to just work out of the 
 </tr>
 <tr class="row-collapsible row-collapsed row-with-desc">
 <td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
-<p><span class="icon"><i class="fa fa-lock" title="Fixed at build time"></i></span> <a id="quarkus-jacoco-jacoco-config_quarkus-jacoco-report"></a><code><a href="#quarkus-jacoco-jacoco-config_quarkus-jacoco-report">quarkus.jacoco.report</a></code></p>
+<p><span class="icon"><i class="fa fa-lock" title="Fixed at build time"></i></span> <a id="quarkus-jacoco_quarkus-jacoco-report"></a> <span class="property-path"><a href="#quarkus-jacoco_quarkus-jacoco-report"><code>quarkus.jacoco.report</code></a></span></p>
 </div>
 <div id="conf-collapsible-desc-4" class="openblock description description-collapsed">
 <div class="content">
@@ -592,7 +633,7 @@ the <code>quarkus-jacoco</code> extension allows JaCoCo to just work out of the 
 <p>If Quarkus should generate the Jacoco report</p>
 </div>
 <div class="paragraph">
-<p>Environment variable: <code id="env-var-8664">QUARKUS_JACOCO_REPORT</code><button class="btn-copy fa fa-clipboard inline-btn-copy" data-clipboard-action="copy" data-clipboard-target="#env-var-8664" title="Copy to clipboard" do-not-collapse="true"></button></p>
+<p>Environment variable: <code id="env-var-8367">QUARKUS_JACOCO_REPORT</code><button class="btn-copy fa fa-clipboard inline-btn-copy" data-clipboard-action="copy" data-clipboard-target="#env-var-8367" title="Copy to clipboard" do-not-collapse="true"></button></p>
 </div>
 </div>
 </div>
@@ -604,7 +645,7 @@ the <code>quarkus-jacoco</code> extension allows JaCoCo to just work out of the 
 </tr>
 <tr class="row-collapsible row-collapsed row-with-desc odd">
 <td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
-<p><span class="icon"><i class="fa fa-lock" title="Fixed at build time"></i></span> <a id="quarkus-jacoco-jacoco-config_quarkus-jacoco-output-encoding"></a><code><a href="#quarkus-jacoco-jacoco-config_quarkus-jacoco-output-encoding">quarkus.jacoco.output-encoding</a></code></p>
+<p><span class="icon"><i class="fa fa-lock" title="Fixed at build time"></i></span> <a id="quarkus-jacoco_quarkus-jacoco-output-encoding"></a> <span class="property-path"><a href="#quarkus-jacoco_quarkus-jacoco-output-encoding"><code>quarkus.jacoco.output-encoding</code></a></span></p>
 </div>
 <div id="conf-collapsible-desc-5" class="openblock description description-collapsed">
 <div class="content">
@@ -612,7 +653,7 @@ the <code>quarkus-jacoco</code> extension allows JaCoCo to just work out of the 
 <p>Encoding of the generated reports.</p>
 </div>
 <div class="paragraph">
-<p>Environment variable: <code id="env-var-8665">QUARKUS_JACOCO_OUTPUT_ENCODING</code><button class="btn-copy fa fa-clipboard inline-btn-copy" data-clipboard-action="copy" data-clipboard-target="#env-var-8665" title="Copy to clipboard" do-not-collapse="true"></button></p>
+<p>Environment variable: <code id="env-var-8368">QUARKUS_JACOCO_OUTPUT_ENCODING</code><button class="btn-copy fa fa-clipboard inline-btn-copy" data-clipboard-action="copy" data-clipboard-target="#env-var-8368" title="Copy to clipboard" do-not-collapse="true"></button></p>
 </div>
 </div>
 </div>
@@ -624,7 +665,7 @@ the <code>quarkus-jacoco</code> extension allows JaCoCo to just work out of the 
 </tr>
 <tr class="row-collapsible row-collapsed row-with-desc">
 <td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
-<p><span class="icon"><i class="fa fa-lock" title="Fixed at build time"></i></span> <a id="quarkus-jacoco-jacoco-config_quarkus-jacoco-title"></a><code><a href="#quarkus-jacoco-jacoco-config_quarkus-jacoco-title">quarkus.jacoco.title</a></code></p>
+<p><span class="icon"><i class="fa fa-lock" title="Fixed at build time"></i></span> <a id="quarkus-jacoco_quarkus-jacoco-title"></a> <span class="property-path"><a href="#quarkus-jacoco_quarkus-jacoco-title"><code>quarkus.jacoco.title</code></a></span></p>
 </div>
 <div id="conf-collapsible-desc-6" class="openblock description description-collapsed">
 <div class="content">
@@ -632,7 +673,7 @@ the <code>quarkus-jacoco</code> extension allows JaCoCo to just work out of the 
 <p>Name of the root node HTML report pages.</p>
 </div>
 <div class="paragraph">
-<p>Environment variable: <code id="env-var-8666">QUARKUS_JACOCO_TITLE</code><button class="btn-copy fa fa-clipboard inline-btn-copy" data-clipboard-action="copy" data-clipboard-target="#env-var-8666" title="Copy to clipboard" do-not-collapse="true"></button></p>
+<p>Environment variable: <code id="env-var-8369">QUARKUS_JACOCO_TITLE</code><button class="btn-copy fa fa-clipboard inline-btn-copy" data-clipboard-action="copy" data-clipboard-target="#env-var-8369" title="Copy to clipboard" do-not-collapse="true"></button></p>
 </div>
 </div>
 </div>
@@ -644,7 +685,7 @@ the <code>quarkus-jacoco</code> extension allows JaCoCo to just work out of the 
 </tr>
 <tr class="row-collapsible row-collapsed row-with-desc odd">
 <td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
-<p><span class="icon"><i class="fa fa-lock" title="Fixed at build time"></i></span> <a id="quarkus-jacoco-jacoco-config_quarkus-jacoco-footer"></a><code><a href="#quarkus-jacoco-jacoco-config_quarkus-jacoco-footer">quarkus.jacoco.footer</a></code></p>
+<p><span class="icon"><i class="fa fa-lock" title="Fixed at build time"></i></span> <a id="quarkus-jacoco_quarkus-jacoco-footer"></a> <span class="property-path"><a href="#quarkus-jacoco_quarkus-jacoco-footer"><code>quarkus.jacoco.footer</code></a></span></p>
 </div>
 <div id="conf-collapsible-desc-7" class="openblock description description-collapsed">
 <div class="content">
@@ -652,7 +693,7 @@ the <code>quarkus-jacoco</code> extension allows JaCoCo to just work out of the 
 <p>Footer text used in HTML report pages.</p>
 </div>
 <div class="paragraph">
-<p>Environment variable: <code id="env-var-8667">QUARKUS_JACOCO_FOOTER</code><button class="btn-copy fa fa-clipboard inline-btn-copy" data-clipboard-action="copy" data-clipboard-target="#env-var-8667" title="Copy to clipboard" do-not-collapse="true"></button></p>
+<p>Environment variable: <code id="env-var-8370">QUARKUS_JACOCO_FOOTER</code><button class="btn-copy fa fa-clipboard inline-btn-copy" data-clipboard-action="copy" data-clipboard-target="#env-var-8370" title="Copy to clipboard" do-not-collapse="true"></button></p>
 </div>
 </div>
 </div>
@@ -664,7 +705,7 @@ the <code>quarkus-jacoco</code> extension allows JaCoCo to just work out of the 
 </tr>
 <tr class="row-collapsible row-collapsed row-with-desc">
 <td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
-<p><span class="icon"><i class="fa fa-lock" title="Fixed at build time"></i></span> <a id="quarkus-jacoco-jacoco-config_quarkus-jacoco-source-encoding"></a><code><a href="#quarkus-jacoco-jacoco-config_quarkus-jacoco-source-encoding">quarkus.jacoco.source-encoding</a></code></p>
+<p><span class="icon"><i class="fa fa-lock" title="Fixed at build time"></i></span> <a id="quarkus-jacoco_quarkus-jacoco-source-encoding"></a> <span class="property-path"><a href="#quarkus-jacoco_quarkus-jacoco-source-encoding"><code>quarkus.jacoco.source-encoding</code></a></span></p>
 </div>
 <div id="conf-collapsible-desc-8" class="openblock description description-collapsed">
 <div class="content">
@@ -672,7 +713,7 @@ the <code>quarkus-jacoco</code> extension allows JaCoCo to just work out of the 
 <p>Encoding of the source files.</p>
 </div>
 <div class="paragraph">
-<p>Environment variable: <code id="env-var-8668">QUARKUS_JACOCO_SOURCE_ENCODING</code><button class="btn-copy fa fa-clipboard inline-btn-copy" data-clipboard-action="copy" data-clipboard-target="#env-var-8668" title="Copy to clipboard" do-not-collapse="true"></button></p>
+<p>Environment variable: <code id="env-var-8371">QUARKUS_JACOCO_SOURCE_ENCODING</code><button class="btn-copy fa fa-clipboard inline-btn-copy" data-clipboard-action="copy" data-clipboard-target="#env-var-8371" title="Copy to clipboard" do-not-collapse="true"></button></p>
 </div>
 </div>
 </div>
@@ -684,7 +725,7 @@ the <code>quarkus-jacoco</code> extension allows JaCoCo to just work out of the 
 </tr>
 <tr class="row-collapsible row-collapsed row-with-desc odd">
 <td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
-<p><span class="icon"><i class="fa fa-lock" title="Fixed at build time"></i></span> <a id="quarkus-jacoco-jacoco-config_quarkus-jacoco-includes"></a><code><a href="#quarkus-jacoco-jacoco-config_quarkus-jacoco-includes">quarkus.jacoco.includes</a></code></p>
+<p><span class="icon"><i class="fa fa-lock" title="Fixed at build time"></i></span> <a id="quarkus-jacoco_quarkus-jacoco-includes"></a> <span class="property-path"><a href="#quarkus-jacoco_quarkus-jacoco-includes"><code>quarkus.jacoco.includes</code></a></span></p>
 </div>
 <div id="conf-collapsible-desc-9" class="openblock description description-collapsed">
 <div class="content">
@@ -708,7 +749,7 @@ the <code>quarkus-jacoco</code> extension allows JaCoCo to just work out of the 
 </ul>
 </div>
 <div class="paragraph">
-<p>Environment variable: <code id="env-var-8669">QUARKUS_JACOCO_INCLUDES</code><button class="btn-copy fa fa-clipboard inline-btn-copy" data-clipboard-action="copy" data-clipboard-target="#env-var-8669" title="Copy to clipboard" do-not-collapse="true"></button></p>
+<p>Environment variable: <code id="env-var-8372">QUARKUS_JACOCO_INCLUDES</code><button class="btn-copy fa fa-clipboard inline-btn-copy" data-clipboard-action="copy" data-clipboard-target="#env-var-8372" title="Copy to clipboard" do-not-collapse="true"></button></p>
 </div>
 </div>
 </div>
@@ -720,7 +761,7 @@ the <code>quarkus-jacoco</code> extension allows JaCoCo to just work out of the 
 </tr>
 <tr class="row-collapsible row-collapsed row-with-desc">
 <td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
-<p><span class="icon"><i class="fa fa-lock" title="Fixed at build time"></i></span> <a id="quarkus-jacoco-jacoco-config_quarkus-jacoco-excludes"></a><code><a href="#quarkus-jacoco-jacoco-config_quarkus-jacoco-excludes">quarkus.jacoco.excludes</a></code></p>
+<p><span class="icon"><i class="fa fa-lock" title="Fixed at build time"></i></span> <a id="quarkus-jacoco_quarkus-jacoco-excludes"></a> <span class="property-path"><a href="#quarkus-jacoco_quarkus-jacoco-excludes"><code>quarkus.jacoco.excludes</code></a></span></p>
 </div>
 <div id="conf-collapsible-desc-10" class="openblock description description-collapsed">
 <div class="content">
@@ -744,7 +785,7 @@ the <code>quarkus-jacoco</code> extension allows JaCoCo to just work out of the 
 </ul>
 </div>
 <div class="paragraph">
-<p>Environment variable: <code id="env-var-8670">QUARKUS_JACOCO_EXCLUDES</code><button class="btn-copy fa fa-clipboard inline-btn-copy" data-clipboard-action="copy" data-clipboard-target="#env-var-8670" title="Copy to clipboard" do-not-collapse="true"></button></p>
+<p>Environment variable: <code id="env-var-8373">QUARKUS_JACOCO_EXCLUDES</code><button class="btn-copy fa fa-clipboard inline-btn-copy" data-clipboard-action="copy" data-clipboard-target="#env-var-8373" title="Copy to clipboard" do-not-collapse="true"></button></p>
 </div>
 </div>
 </div>
@@ -756,7 +797,7 @@ the <code>quarkus-jacoco</code> extension allows JaCoCo to just work out of the 
 </tr>
 <tr class="row-collapsible row-collapsed row-with-desc odd">
 <td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
-<p><span class="icon"><i class="fa fa-lock" title="Fixed at build time"></i></span> <a id="quarkus-jacoco-jacoco-config_quarkus-jacoco-report-location"></a><code><a href="#quarkus-jacoco-jacoco-config_quarkus-jacoco-report-location">quarkus.jacoco.report-location</a></code></p>
+<p><span class="icon"><i class="fa fa-lock" title="Fixed at build time"></i></span> <a id="quarkus-jacoco_quarkus-jacoco-report-location"></a> <span class="property-path"><a href="#quarkus-jacoco_quarkus-jacoco-report-location"><code>quarkus.jacoco.report-location</code></a></span></p>
 </div>
 <div id="conf-collapsible-desc-11" class="openblock description description-collapsed">
 <div class="content">
@@ -764,7 +805,7 @@ the <code>quarkus-jacoco</code> extension allows JaCoCo to just work out of the 
 <p>The location of the report files. The path can be relative (to the module) or absolute.</p>
 </div>
 <div class="paragraph">
-<p>Environment variable: <code id="env-var-8671">QUARKUS_JACOCO_REPORT_LOCATION</code><button class="btn-copy fa fa-clipboard inline-btn-copy" data-clipboard-action="copy" data-clipboard-target="#env-var-8671" title="Copy to clipboard" do-not-collapse="true"></button></p>
+<p>Environment variable: <code id="env-var-8374">QUARKUS_JACOCO_REPORT_LOCATION</code><button class="btn-copy fa fa-clipboard inline-btn-copy" data-clipboard-action="copy" data-clipboard-target="#env-var-8374" title="Copy to clipboard" do-not-collapse="true"></button></p>
 </div>
 </div>
 </div>
@@ -1324,6 +1365,10 @@ But remember, some code that is not covered is certainly not well tested. But so
           
           
             <li><a href="https://x.com/quarkusio" target="_blank">X</a></li>
+          
+          
+          
+            <li><a href="https://bsky.app/profile/quarkus.io" target="_blank">Bluesky</a></li>
           
           
           
