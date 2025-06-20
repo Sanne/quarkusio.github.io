@@ -12,7 +12,7 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <meta http-equiv="Content-Security-Policy" content="
-  connect-src 'self' https://dpm.demdex.net https://adobedc.demdex.net https://route-default-test-mscherer-matamo.apps.ospo-osci.z3b1.p1.openshiftapps.com/ https://search.quarkus.io https://smetrics.redhat.com; 
+  connect-src 'self' https://dpm.demdex.net https://adobedc.demdex.net https://analytics.ossupstream.org/ https://search.quarkus.io https://smetrics.redhat.com; 
   script-src 'self' 'unsafe-inline' 'unsafe-eval'
       
       https://assets.adobedtm.com
@@ -27,13 +27,13 @@
       http://www.googleadservices.com
       https://googleads.g.doubleclick.net
       https://giscus.app
-      https://route-default-test-mscherer-matamo.apps.ospo-osci.z3b1.p1.openshiftapps.com/
+      https://analytics.ossupstream.org/
       https://app.mailjet.com;
 
   style-src 'self' https://fonts.googleapis.com https://use.fontawesome.com; 
   img-src 'self' * data:; 
   media-src 'self'; 
-  frame-src https://redhat.demdex.net https://www.youtube.com https://embed.restream.io https://app.mailjet.com http://xy0p2.mjt.lu https://mj.quarkus.io https://giscus.app; 
+  frame-src https://redhat.demdex.net https://www.youtube.com https://player.restream.io https://app.mailjet.com http://xy0p2.mjt.lu https://mj.quarkus.io https://giscus.app; 
   base-uri 'none'; 
   object-src 'none'; 
   form-action 'none'; 
@@ -100,13 +100,12 @@
         <span href="/about/">Why<i class="fas fa-chevron-down"></i></span>
         <ul class="submenu">
           <li><a href="/about" class="">WHAT IS QUARKUS?</a></li>
-          <li><a href="/container-first" class="">CONTAINER FIRST</a></li>
-          <li><a href="/continuum" class="">VERSATILITY</a></li>
-          <li><a href="/standards" class="">STANDARDS</a></li>
-          <li><a href="/kubernetes-native" class="">KUBERNETES NATIVE</a></li>
-          <li><a href="/performance" class="">PERFORMANCE</a></li>
           <li><a href="/developer-joy" class="">DEVELOPER JOY</a></li>
-          
+          <li><a href="/performance" class="">PERFORMANCE</a></li>
+          <li><a href="/kubernetes-native" class="">KUBERNETES NATIVE</a></li>
+          <li><a href="/standards" class="">STANDARDS</a></li>
+          <li><a href="/versatility" class="">VERSATILITY</a></li>
+          <li><a href="/container-first" class="">CONTAINER FIRST</a></li>          
         </ul>
       </li>
       <li class="dropdown">
@@ -114,6 +113,7 @@
         <ul class="submenu">
           <li><a href="/get-started" class="">GET STARTED</a></li>
           <li><a href="/guides" class="active">DOCUMENTATION</a></li>
+          <li><a href="/userstories/" class="">USER STORIES</a></li>  
           <li><a href="/qtips" class="">"Q" TIP VIDEOS</a></li>          
           <li><a href="/books" class="">BOOKS</a></li>
           </ul>
@@ -189,7 +189,11 @@
         
         
         
-        <option value="latest" selected>3.17.0 - Latest</option>
+        <option value="latest" selected>3.23.4 - Latest</option>
+        
+        
+        
+        <option value="3.20" >3.20</option>
         
         
         
@@ -323,7 +327,7 @@ cd microprofile-health-quickstart</code></pre>
 <div class="title">Maven</div>
 <div class="listingblock">
 <div class="content">
-<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">mvn io.quarkus.platform:quarkus-maven-plugin:3.17.0:create \
+<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">mvn io.quarkus.platform:quarkus-maven-plugin:3.23.4:create \
     -DprojectGroupId=org.acme \
     -DprojectArtifactId=microprofile-health-quickstart \
     -Dextensions='smallrye-health' \
@@ -865,6 +869,42 @@ public class LivenessAsync implements AsyncHealthCheck {
 </div>
 </div>
 <div class="sect1">
+<h2 id="health-status-change-observers"><a class="anchor" href="#health-status-change-observers"></a>Health status change observers</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>If you need to react to change of the health status of your application, the Smallrye Health
+extension provides a CDI event that can notify you about the individual health status changes.</p>
+</div>
+<div class="paragraph">
+<p>To observe the health status change, you can observe the <code>io.smallrye.health.api.event.HealthStatusChangeEvent</code>
+with the standard CDI observation mechanism. Since we cannot guarantee that the observer method
+runs all the time on the worker thread (meaning it can run on the event loop thread), it&#8217;s
+recommended that you never block in the in observer method.</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-java hljs" data-lang="java">import io.smallrye.health.api.event.HealthStatusChangeEvent;
+
+@ApplicationScoped
+public class HealthObserver {
+
+    public void observeHealthChange(@Observes @Default HealthStatusChangeEvent event) {
+        ...
+    }
+
+    public void observeReadinessChange(@Observes @Readiness HealthStatusChangeEvent event) {
+        ...
+    }
+
+    public void observeLivenessChange(@Observes @Liveness HealthStatusChangeEvent event) {
+        ...
+    }
+}</code></pre>
+</div>
+</div>
+</div>
+</div>
+<div class="sect1">
 <h2 id="extension-health-checks"><a class="anchor" href="#extension-health-checks"></a>Extension health checks</h2>
 <div class="sectionbody">
 <div class="paragraph">
@@ -1004,7 +1044,8 @@ readiness checks are used to tell whether the application is able to process req
 </tr>
 <tr class="row-collapsible row-collapsed row-with-desc odd">
 <td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
-<p><span class="icon"><i class="fa fa-lock" title="Fixed at build time"></i></span> <a id="quarkus-smallrye-health_quarkus-smallrye-health-enabled"></a> <span class="property-path"><a href="#quarkus-smallrye-health_quarkus-smallrye-health-enabled"><code>quarkus.smallrye-health.enabled</code></a></span></p>
+<p><span class="icon"><i class="fa fa-lock" title="Fixed at build time"></i></span> <a id="quarkus-smallrye-health_quarkus-smallrye-health-enabled"></a> <span class="property-path"><a href="#quarkus-smallrye-health_quarkus-smallrye-health-enabled"><code>quarkus.smallrye-health.enabled</code></a></span>
+<button class="btn-copy fa fa-clipboard inline-btn-copy" data-clipboard-action="copy" data-clipboard-text='quarkus.smallrye-health.enabled' title="Copy to clipboard" do-not-collapse="true"></button></p>
 </div>
 <div id="conf-collapsible-desc-1" class="openblock description description-collapsed">
 <div class="content">
@@ -1012,7 +1053,7 @@ readiness checks are used to tell whether the application is able to process req
 <p>Activate or disable this extension. Disabling this extension means that no health related information is exposed.</p>
 </div>
 <div class="paragraph">
-<p>Environment variable: <code id="env-var-8286">QUARKUS_SMALLRYE_HEALTH_ENABLED</code><button class="btn-copy fa fa-clipboard inline-btn-copy" data-clipboard-action="copy" data-clipboard-target="#env-var-8286" title="Copy to clipboard" do-not-collapse="true"></button></p>
+<p>Environment variable: <code id="env-var-8500">QUARKUS_SMALLRYE_HEALTH_ENABLED</code><button class="btn-copy fa fa-clipboard inline-btn-copy" data-clipboard-action="copy" data-clipboard-target="#env-var-8500" title="Copy to clipboard" do-not-collapse="true"></button></p>
 </div>
 </div>
 </div>
@@ -1024,7 +1065,8 @@ readiness checks are used to tell whether the application is able to process req
 </tr>
 <tr class="row-collapsible row-collapsed row-with-desc">
 <td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
-<p><span class="icon"><i class="fa fa-lock" title="Fixed at build time"></i></span> <a id="quarkus-smallrye-health_quarkus-smallrye-health-extensions-enabled"></a> <span class="property-path"><a href="#quarkus-smallrye-health_quarkus-smallrye-health-extensions-enabled"><code>quarkus.smallrye-health.extensions.enabled</code></a></span></p>
+<p><span class="icon"><i class="fa fa-lock" title="Fixed at build time"></i></span> <a id="quarkus-smallrye-health_quarkus-smallrye-health-extensions-enabled"></a> <span class="property-path"><a href="#quarkus-smallrye-health_quarkus-smallrye-health-extensions-enabled"><code>quarkus.smallrye-health.extensions.enabled</code></a></span>
+<button class="btn-copy fa fa-clipboard inline-btn-copy" data-clipboard-action="copy" data-clipboard-text='quarkus.smallrye-health.extensions.enabled' title="Copy to clipboard" do-not-collapse="true"></button></p>
 </div>
 <div id="conf-collapsible-desc-2" class="openblock description description-collapsed">
 <div class="content">
@@ -1032,7 +1074,7 @@ readiness checks are used to tell whether the application is able to process req
 <p>Whether extensions published health check should be enabled.</p>
 </div>
 <div class="paragraph">
-<p>Environment variable: <code id="env-var-8287">QUARKUS_SMALLRYE_HEALTH_EXTENSIONS_ENABLED</code><button class="btn-copy fa fa-clipboard inline-btn-copy" data-clipboard-action="copy" data-clipboard-target="#env-var-8287" title="Copy to clipboard" do-not-collapse="true"></button></p>
+<p>Environment variable: <code id="env-var-8501">QUARKUS_SMALLRYE_HEALTH_EXTENSIONS_ENABLED</code><button class="btn-copy fa fa-clipboard inline-btn-copy" data-clipboard-action="copy" data-clipboard-target="#env-var-8501" title="Copy to clipboard" do-not-collapse="true"></button></p>
 </div>
 </div>
 </div>
@@ -1044,7 +1086,8 @@ readiness checks are used to tell whether the application is able to process req
 </tr>
 <tr class="row-collapsible row-collapsed row-with-desc odd">
 <td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
-<p><span class="icon"><i class="fa fa-lock" title="Fixed at build time"></i></span> <a id="quarkus-smallrye-health_quarkus-smallrye-health-openapi-included"></a> <span class="property-path"><a href="#quarkus-smallrye-health_quarkus-smallrye-health-openapi-included"><code>quarkus.smallrye-health.openapi.included</code></a></span></p>
+<p><span class="icon"><i class="fa fa-lock" title="Fixed at build time"></i></span> <a id="quarkus-smallrye-health_quarkus-smallrye-health-openapi-included"></a> <span class="property-path"><a href="#quarkus-smallrye-health_quarkus-smallrye-health-openapi-included"><code>quarkus.smallrye-health.openapi.included</code></a></span>
+<button class="btn-copy fa fa-clipboard inline-btn-copy" data-clipboard-action="copy" data-clipboard-text='quarkus.smallrye-health.openapi.included' title="Copy to clipboard" do-not-collapse="true"></button></p>
 </div>
 <div id="conf-collapsible-desc-3" class="openblock description description-collapsed">
 <div class="content">
@@ -1052,7 +1095,7 @@ readiness checks are used to tell whether the application is able to process req
 <p>Whether to include the Liveness and Readiness Health endpoints in the generated OpenAPI document</p>
 </div>
 <div class="paragraph">
-<p>Environment variable: <code id="env-var-8288">QUARKUS_SMALLRYE_HEALTH_OPENAPI_INCLUDED</code><button class="btn-copy fa fa-clipboard inline-btn-copy" data-clipboard-action="copy" data-clipboard-target="#env-var-8288" title="Copy to clipboard" do-not-collapse="true"></button></p>
+<p>Environment variable: <code id="env-var-8502">QUARKUS_SMALLRYE_HEALTH_OPENAPI_INCLUDED</code><button class="btn-copy fa fa-clipboard inline-btn-copy" data-clipboard-action="copy" data-clipboard-target="#env-var-8502" title="Copy to clipboard" do-not-collapse="true"></button></p>
 </div>
 </div>
 </div>
@@ -1064,7 +1107,8 @@ readiness checks are used to tell whether the application is able to process req
 </tr>
 <tr class="row-collapsible row-collapsed row-with-desc">
 <td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
-<p><span class="icon"><i class="fa fa-lock" title="Fixed at build time"></i></span> <a id="quarkus-smallrye-health_quarkus-smallrye-health-root-path"></a> <span class="property-path"><a href="#quarkus-smallrye-health_quarkus-smallrye-health-root-path"><code>quarkus.smallrye-health.root-path</code></a></span></p>
+<p><span class="icon"><i class="fa fa-lock" title="Fixed at build time"></i></span> <a id="quarkus-smallrye-health_quarkus-smallrye-health-root-path"></a> <span class="property-path"><a href="#quarkus-smallrye-health_quarkus-smallrye-health-root-path"><code>quarkus.smallrye-health.root-path</code></a></span>
+<button class="btn-copy fa fa-clipboard inline-btn-copy" data-clipboard-action="copy" data-clipboard-text='quarkus.smallrye-health.root-path' title="Copy to clipboard" do-not-collapse="true"></button></p>
 </div>
 <div id="conf-collapsible-desc-4" class="openblock description description-collapsed">
 <div class="content">
@@ -1072,7 +1116,7 @@ readiness checks are used to tell whether the application is able to process req
 <p>Root path for health-checking endpoints. By default, this value will be resolved as a path relative to <code>${quarkus.http.non-application-root-path}</code>. If the management interface is enabled, the value will be resolved as a path relative to <code>${quarkus.management.root-path}</code>.</p>
 </div>
 <div class="paragraph">
-<p>Environment variable: <code id="env-var-8289">QUARKUS_SMALLRYE_HEALTH_ROOT_PATH</code><button class="btn-copy fa fa-clipboard inline-btn-copy" data-clipboard-action="copy" data-clipboard-target="#env-var-8289" title="Copy to clipboard" do-not-collapse="true"></button></p>
+<p>Environment variable: <code id="env-var-8503">QUARKUS_SMALLRYE_HEALTH_ROOT_PATH</code><button class="btn-copy fa fa-clipboard inline-btn-copy" data-clipboard-action="copy" data-clipboard-target="#env-var-8503" title="Copy to clipboard" do-not-collapse="true"></button></p>
 </div>
 </div>
 </div>
@@ -1084,7 +1128,8 @@ readiness checks are used to tell whether the application is able to process req
 </tr>
 <tr class="row-collapsible row-collapsed row-with-desc odd">
 <td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
-<p><span class="icon"><i class="fa fa-lock" title="Fixed at build time"></i></span> <a id="quarkus-smallrye-health_quarkus-smallrye-health-liveness-path"></a> <span class="property-path"><a href="#quarkus-smallrye-health_quarkus-smallrye-health-liveness-path"><code>quarkus.smallrye-health.liveness-path</code></a></span></p>
+<p><span class="icon"><i class="fa fa-lock" title="Fixed at build time"></i></span> <a id="quarkus-smallrye-health_quarkus-smallrye-health-liveness-path"></a> <span class="property-path"><a href="#quarkus-smallrye-health_quarkus-smallrye-health-liveness-path"><code>quarkus.smallrye-health.liveness-path</code></a></span>
+<button class="btn-copy fa fa-clipboard inline-btn-copy" data-clipboard-action="copy" data-clipboard-text='quarkus.smallrye-health.liveness-path' title="Copy to clipboard" do-not-collapse="true"></button></p>
 </div>
 <div id="conf-collapsible-desc-5" class="openblock description description-collapsed">
 <div class="content">
@@ -1092,7 +1137,7 @@ readiness checks are used to tell whether the application is able to process req
 <p>The relative path of the liveness health-checking endpoint. By default, this value will be resolved as a path relative to <code>${quarkus.smallrye-health.rootPath}</code>.</p>
 </div>
 <div class="paragraph">
-<p>Environment variable: <code id="env-var-8290">QUARKUS_SMALLRYE_HEALTH_LIVENESS_PATH</code><button class="btn-copy fa fa-clipboard inline-btn-copy" data-clipboard-action="copy" data-clipboard-target="#env-var-8290" title="Copy to clipboard" do-not-collapse="true"></button></p>
+<p>Environment variable: <code id="env-var-8504">QUARKUS_SMALLRYE_HEALTH_LIVENESS_PATH</code><button class="btn-copy fa fa-clipboard inline-btn-copy" data-clipboard-action="copy" data-clipboard-target="#env-var-8504" title="Copy to clipboard" do-not-collapse="true"></button></p>
 </div>
 </div>
 </div>
@@ -1104,7 +1149,8 @@ readiness checks are used to tell whether the application is able to process req
 </tr>
 <tr class="row-collapsible row-collapsed row-with-desc">
 <td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
-<p><span class="icon"><i class="fa fa-lock" title="Fixed at build time"></i></span> <a id="quarkus-smallrye-health_quarkus-smallrye-health-readiness-path"></a> <span class="property-path"><a href="#quarkus-smallrye-health_quarkus-smallrye-health-readiness-path"><code>quarkus.smallrye-health.readiness-path</code></a></span></p>
+<p><span class="icon"><i class="fa fa-lock" title="Fixed at build time"></i></span> <a id="quarkus-smallrye-health_quarkus-smallrye-health-readiness-path"></a> <span class="property-path"><a href="#quarkus-smallrye-health_quarkus-smallrye-health-readiness-path"><code>quarkus.smallrye-health.readiness-path</code></a></span>
+<button class="btn-copy fa fa-clipboard inline-btn-copy" data-clipboard-action="copy" data-clipboard-text='quarkus.smallrye-health.readiness-path' title="Copy to clipboard" do-not-collapse="true"></button></p>
 </div>
 <div id="conf-collapsible-desc-6" class="openblock description description-collapsed">
 <div class="content">
@@ -1112,7 +1158,7 @@ readiness checks are used to tell whether the application is able to process req
 <p>The relative path of the readiness health-checking endpoint. By default, this value will be resolved as a path relative to <code>${quarkus.smallrye-health.rootPath}</code>.</p>
 </div>
 <div class="paragraph">
-<p>Environment variable: <code id="env-var-8291">QUARKUS_SMALLRYE_HEALTH_READINESS_PATH</code><button class="btn-copy fa fa-clipboard inline-btn-copy" data-clipboard-action="copy" data-clipboard-target="#env-var-8291" title="Copy to clipboard" do-not-collapse="true"></button></p>
+<p>Environment variable: <code id="env-var-8505">QUARKUS_SMALLRYE_HEALTH_READINESS_PATH</code><button class="btn-copy fa fa-clipboard inline-btn-copy" data-clipboard-action="copy" data-clipboard-target="#env-var-8505" title="Copy to clipboard" do-not-collapse="true"></button></p>
 </div>
 </div>
 </div>
@@ -1124,7 +1170,8 @@ readiness checks are used to tell whether the application is able to process req
 </tr>
 <tr class="row-collapsible row-collapsed row-with-desc odd">
 <td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
-<p><span class="icon"><i class="fa fa-lock" title="Fixed at build time"></i></span> <a id="quarkus-smallrye-health_quarkus-smallrye-health-group-path"></a> <span class="property-path"><a href="#quarkus-smallrye-health_quarkus-smallrye-health-group-path"><code>quarkus.smallrye-health.group-path</code></a></span></p>
+<p><span class="icon"><i class="fa fa-lock" title="Fixed at build time"></i></span> <a id="quarkus-smallrye-health_quarkus-smallrye-health-group-path"></a> <span class="property-path"><a href="#quarkus-smallrye-health_quarkus-smallrye-health-group-path"><code>quarkus.smallrye-health.group-path</code></a></span>
+<button class="btn-copy fa fa-clipboard inline-btn-copy" data-clipboard-action="copy" data-clipboard-text='quarkus.smallrye-health.group-path' title="Copy to clipboard" do-not-collapse="true"></button></p>
 </div>
 <div id="conf-collapsible-desc-7" class="openblock description description-collapsed">
 <div class="content">
@@ -1132,7 +1179,7 @@ readiness checks are used to tell whether the application is able to process req
 <p>The relative path of the health group endpoint. By default, this value will be resolved as a path relative to <code>${quarkus.smallrye-health.rootPath}</code>.</p>
 </div>
 <div class="paragraph">
-<p>Environment variable: <code id="env-var-8292">QUARKUS_SMALLRYE_HEALTH_GROUP_PATH</code><button class="btn-copy fa fa-clipboard inline-btn-copy" data-clipboard-action="copy" data-clipboard-target="#env-var-8292" title="Copy to clipboard" do-not-collapse="true"></button></p>
+<p>Environment variable: <code id="env-var-8506">QUARKUS_SMALLRYE_HEALTH_GROUP_PATH</code><button class="btn-copy fa fa-clipboard inline-btn-copy" data-clipboard-action="copy" data-clipboard-target="#env-var-8506" title="Copy to clipboard" do-not-collapse="true"></button></p>
 </div>
 </div>
 </div>
@@ -1144,7 +1191,8 @@ readiness checks are used to tell whether the application is able to process req
 </tr>
 <tr class="row-collapsible row-collapsed row-with-desc">
 <td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
-<p><span class="icon"><i class="fa fa-lock" title="Fixed at build time"></i></span> <a id="quarkus-smallrye-health_quarkus-smallrye-health-wellness-path"></a> <span class="property-path"><a href="#quarkus-smallrye-health_quarkus-smallrye-health-wellness-path"><code>quarkus.smallrye-health.wellness-path</code></a></span></p>
+<p><span class="icon"><i class="fa fa-lock" title="Fixed at build time"></i></span> <a id="quarkus-smallrye-health_quarkus-smallrye-health-wellness-path"></a> <span class="property-path"><a href="#quarkus-smallrye-health_quarkus-smallrye-health-wellness-path"><code>quarkus.smallrye-health.wellness-path</code></a></span>
+<button class="btn-copy fa fa-clipboard inline-btn-copy" data-clipboard-action="copy" data-clipboard-text='quarkus.smallrye-health.wellness-path' title="Copy to clipboard" do-not-collapse="true"></button></p>
 </div>
 <div id="conf-collapsible-desc-8" class="openblock description description-collapsed">
 <div class="content">
@@ -1152,7 +1200,7 @@ readiness checks are used to tell whether the application is able to process req
 <p>The relative path of the wellness health-checking endpoint. By default, this value will be resolved as a path relative to <code>${quarkus.smallrye-health.rootPath}</code>.</p>
 </div>
 <div class="paragraph">
-<p>Environment variable: <code id="env-var-8293">QUARKUS_SMALLRYE_HEALTH_WELLNESS_PATH</code><button class="btn-copy fa fa-clipboard inline-btn-copy" data-clipboard-action="copy" data-clipboard-target="#env-var-8293" title="Copy to clipboard" do-not-collapse="true"></button></p>
+<p>Environment variable: <code id="env-var-8507">QUARKUS_SMALLRYE_HEALTH_WELLNESS_PATH</code><button class="btn-copy fa fa-clipboard inline-btn-copy" data-clipboard-action="copy" data-clipboard-target="#env-var-8507" title="Copy to clipboard" do-not-collapse="true"></button></p>
 </div>
 </div>
 </div>
@@ -1164,7 +1212,8 @@ readiness checks are used to tell whether the application is able to process req
 </tr>
 <tr class="row-collapsible row-collapsed row-with-desc odd">
 <td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
-<p><span class="icon"><i class="fa fa-lock" title="Fixed at build time"></i></span> <a id="quarkus-smallrye-health_quarkus-smallrye-health-startup-path"></a> <span class="property-path"><a href="#quarkus-smallrye-health_quarkus-smallrye-health-startup-path"><code>quarkus.smallrye-health.startup-path</code></a></span></p>
+<p><span class="icon"><i class="fa fa-lock" title="Fixed at build time"></i></span> <a id="quarkus-smallrye-health_quarkus-smallrye-health-startup-path"></a> <span class="property-path"><a href="#quarkus-smallrye-health_quarkus-smallrye-health-startup-path"><code>quarkus.smallrye-health.startup-path</code></a></span>
+<button class="btn-copy fa fa-clipboard inline-btn-copy" data-clipboard-action="copy" data-clipboard-text='quarkus.smallrye-health.startup-path' title="Copy to clipboard" do-not-collapse="true"></button></p>
 </div>
 <div id="conf-collapsible-desc-9" class="openblock description description-collapsed">
 <div class="content">
@@ -1172,7 +1221,7 @@ readiness checks are used to tell whether the application is able to process req
 <p>The relative path of the startup health-checking endpoint. By default, this value will be resolved as a path relative to <code>${quarkus.smallrye-health.rootPath}</code>.</p>
 </div>
 <div class="paragraph">
-<p>Environment variable: <code id="env-var-8294">QUARKUS_SMALLRYE_HEALTH_STARTUP_PATH</code><button class="btn-copy fa fa-clipboard inline-btn-copy" data-clipboard-action="copy" data-clipboard-target="#env-var-8294" title="Copy to clipboard" do-not-collapse="true"></button></p>
+<p>Environment variable: <code id="env-var-8508">QUARKUS_SMALLRYE_HEALTH_STARTUP_PATH</code><button class="btn-copy fa fa-clipboard inline-btn-copy" data-clipboard-action="copy" data-clipboard-target="#env-var-8508" title="Copy to clipboard" do-not-collapse="true"></button></p>
 </div>
 </div>
 </div>
@@ -1184,7 +1233,8 @@ readiness checks are used to tell whether the application is able to process req
 </tr>
 <tr class="row-collapsible row-collapsed row-with-desc">
 <td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
-<p><span class="icon"><i class="fa fa-lock" title="Fixed at build time"></i></span> <a id="quarkus-smallrye-health_quarkus-smallrye-health-context-propagation"></a> <span class="property-path"><a href="#quarkus-smallrye-health_quarkus-smallrye-health-context-propagation"><code>quarkus.smallrye-health.context-propagation</code></a></span></p>
+<p><span class="icon"><i class="fa fa-lock" title="Fixed at build time"></i></span> <a id="quarkus-smallrye-health_quarkus-smallrye-health-context-propagation"></a> <span class="property-path"><a href="#quarkus-smallrye-health_quarkus-smallrye-health-context-propagation"><code>quarkus.smallrye-health.context-propagation</code></a></span>
+<button class="btn-copy fa fa-clipboard inline-btn-copy" data-clipboard-action="copy" data-clipboard-text='quarkus.smallrye-health.context-propagation' title="Copy to clipboard" do-not-collapse="true"></button></p>
 </div>
 <div id="conf-collapsible-desc-10" class="openblock description description-collapsed">
 <div class="content">
@@ -1192,7 +1242,7 @@ readiness checks are used to tell whether the application is able to process req
 <p>Whether the context should be propagated to each health check invocation.</p>
 </div>
 <div class="paragraph">
-<p>Environment variable: <code id="env-var-8295">QUARKUS_SMALLRYE_HEALTH_CONTEXT_PROPAGATION</code><button class="btn-copy fa fa-clipboard inline-btn-copy" data-clipboard-action="copy" data-clipboard-target="#env-var-8295" title="Copy to clipboard" do-not-collapse="true"></button></p>
+<p>Environment variable: <code id="env-var-8509">QUARKUS_SMALLRYE_HEALTH_CONTEXT_PROPAGATION</code><button class="btn-copy fa fa-clipboard inline-btn-copy" data-clipboard-action="copy" data-clipboard-target="#env-var-8509" title="Copy to clipboard" do-not-collapse="true"></button></p>
 </div>
 </div>
 </div>
@@ -1204,7 +1254,8 @@ readiness checks are used to tell whether the application is able to process req
 </tr>
 <tr class="row-collapsible row-collapsed row-with-desc odd">
 <td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
-<p><span class="icon"><i class="fa fa-lock" title="Fixed at build time"></i></span> <a id="quarkus-smallrye-health_quarkus-smallrye-health-max-group-registries-count"></a> <span class="property-path"><a href="#quarkus-smallrye-health_quarkus-smallrye-health-max-group-registries-count"><code>quarkus.smallrye-health.max-group-registries-count</code></a></span></p>
+<p><span class="icon"><i class="fa fa-lock" title="Fixed at build time"></i></span> <a id="quarkus-smallrye-health_quarkus-smallrye-health-max-group-registries-count"></a> <span class="property-path"><a href="#quarkus-smallrye-health_quarkus-smallrye-health-max-group-registries-count"><code>quarkus.smallrye-health.max-group-registries-count</code></a></span>
+<button class="btn-copy fa fa-clipboard inline-btn-copy" data-clipboard-action="copy" data-clipboard-text='quarkus.smallrye-health.max-group-registries-count' title="Copy to clipboard" do-not-collapse="true"></button></p>
 </div>
 <div id="conf-collapsible-desc-11" class="openblock description description-collapsed">
 <div class="content">
@@ -1212,7 +1263,7 @@ readiness checks are used to tell whether the application is able to process req
 <p>The number of the maximum health groups that can be created.</p>
 </div>
 <div class="paragraph">
-<p>Environment variable: <code id="env-var-8296">QUARKUS_SMALLRYE_HEALTH_MAX_GROUP_REGISTRIES_COUNT</code><button class="btn-copy fa fa-clipboard inline-btn-copy" data-clipboard-action="copy" data-clipboard-target="#env-var-8296" title="Copy to clipboard" do-not-collapse="true"></button></p>
+<p>Environment variable: <code id="env-var-8510">QUARKUS_SMALLRYE_HEALTH_MAX_GROUP_REGISTRIES_COUNT</code><button class="btn-copy fa fa-clipboard inline-btn-copy" data-clipboard-action="copy" data-clipboard-target="#env-var-8510" title="Copy to clipboard" do-not-collapse="true"></button></p>
 </div>
 </div>
 </div>
@@ -1224,7 +1275,8 @@ readiness checks are used to tell whether the application is able to process req
 </tr>
 <tr class="row-collapsible row-collapsed row-with-desc">
 <td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
-<p><span class="icon"><i class="fa fa-lock" title="Fixed at build time"></i></span> <a id="quarkus-smallrye-health_quarkus-smallrye-health-default-health-group"></a> <span class="property-path"><a href="#quarkus-smallrye-health_quarkus-smallrye-health-default-health-group"><code>quarkus.smallrye-health.default-health-group</code></a></span></p>
+<p><span class="icon"><i class="fa fa-lock" title="Fixed at build time"></i></span> <a id="quarkus-smallrye-health_quarkus-smallrye-health-default-health-group"></a> <span class="property-path"><a href="#quarkus-smallrye-health_quarkus-smallrye-health-default-health-group"><code>quarkus.smallrye-health.default-health-group</code></a></span>
+<button class="btn-copy fa fa-clipboard inline-btn-copy" data-clipboard-action="copy" data-clipboard-text='quarkus.smallrye-health.default-health-group' title="Copy to clipboard" do-not-collapse="true"></button></p>
 </div>
 <div id="conf-collapsible-desc-12" class="openblock description description-collapsed">
 <div class="content">
@@ -1232,7 +1284,7 @@ readiness checks are used to tell whether the application is able to process req
 <p>The name of the default health group used when no other health group is defined on the health check.</p>
 </div>
 <div class="paragraph">
-<p>Environment variable: <code id="env-var-8297">QUARKUS_SMALLRYE_HEALTH_DEFAULT_HEALTH_GROUP</code><button class="btn-copy fa fa-clipboard inline-btn-copy" data-clipboard-action="copy" data-clipboard-target="#env-var-8297" title="Copy to clipboard" do-not-collapse="true"></button></p>
+<p>Environment variable: <code id="env-var-8511">QUARKUS_SMALLRYE_HEALTH_DEFAULT_HEALTH_GROUP</code><button class="btn-copy fa fa-clipboard inline-btn-copy" data-clipboard-action="copy" data-clipboard-target="#env-var-8511" title="Copy to clipboard" do-not-collapse="true"></button></p>
 </div>
 </div>
 </div>
@@ -1244,7 +1296,8 @@ readiness checks are used to tell whether the application is able to process req
 </tr>
 <tr class="row-collapsible row-collapsed row-with-desc odd">
 <td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
-<p><span class="icon"><i class="fa fa-lock" title="Fixed at build time"></i></span> <a id="quarkus-smallrye-health_quarkus-smallrye-health-management-enabled"></a> <span class="property-path"><a href="#quarkus-smallrye-health_quarkus-smallrye-health-management-enabled"><code>quarkus.smallrye-health.management.enabled</code></a></span></p>
+<p><span class="icon"><i class="fa fa-lock" title="Fixed at build time"></i></span> <a id="quarkus-smallrye-health_quarkus-smallrye-health-management-enabled"></a> <span class="property-path"><a href="#quarkus-smallrye-health_quarkus-smallrye-health-management-enabled"><code>quarkus.smallrye-health.management.enabled</code></a></span>
+<button class="btn-copy fa fa-clipboard inline-btn-copy" data-clipboard-action="copy" data-clipboard-text='quarkus.smallrye-health.management.enabled' title="Copy to clipboard" do-not-collapse="true"></button></p>
 </div>
 <div id="conf-collapsible-desc-13" class="openblock description description-collapsed">
 <div class="content">
@@ -1252,7 +1305,7 @@ readiness checks are used to tell whether the application is able to process req
 <p>If management interface is turned on the health endpoints and ui will be published under the management interface. This allows you to exclude Health from management by setting the value to false</p>
 </div>
 <div class="paragraph">
-<p>Environment variable: <code id="env-var-8298">QUARKUS_SMALLRYE_HEALTH_MANAGEMENT_ENABLED</code><button class="btn-copy fa fa-clipboard inline-btn-copy" data-clipboard-action="copy" data-clipboard-target="#env-var-8298" title="Copy to clipboard" do-not-collapse="true"></button></p>
+<p>Environment variable: <code id="env-var-8512">QUARKUS_SMALLRYE_HEALTH_MANAGEMENT_ENABLED</code><button class="btn-copy fa fa-clipboard inline-btn-copy" data-clipboard-action="copy" data-clipboard-target="#env-var-8512" title="Copy to clipboard" do-not-collapse="true"></button></p>
 </div>
 </div>
 </div>
@@ -1264,7 +1317,8 @@ readiness checks are used to tell whether the application is able to process req
 </tr>
 <tr class="row-collapsible row-collapsed row-with-desc">
 <td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
-<p><span class="icon"><i class="fa fa-lock" title="Fixed at build time"></i></span> <a id="quarkus-smallrye-health_quarkus-smallrye-health-include-problem-details"></a> <span class="property-path"><a href="#quarkus-smallrye-health_quarkus-smallrye-health-include-problem-details"><code>quarkus.smallrye-health.include-problem-details</code></a></span></p>
+<p><span class="icon"><i class="fa fa-lock" title="Fixed at build time"></i></span> <a id="quarkus-smallrye-health_quarkus-smallrye-health-include-problem-details"></a> <span class="property-path"><a href="#quarkus-smallrye-health_quarkus-smallrye-health-include-problem-details"><code>quarkus.smallrye-health.include-problem-details</code></a></span>
+<button class="btn-copy fa fa-clipboard inline-btn-copy" data-clipboard-action="copy" data-clipboard-text='quarkus.smallrye-health.include-problem-details' title="Copy to clipboard" do-not-collapse="true"></button></p>
 </div>
 <div id="conf-collapsible-desc-14" class="openblock description description-collapsed">
 <div class="content">
@@ -1272,7 +1326,7 @@ readiness checks are used to tell whether the application is able to process req
 <p>Specify the reported DOWN responses should be aligned with RFC 9457 - Problem Details for HTTP APIs.</p>
 </div>
 <div class="paragraph">
-<p>Environment variable: <code id="env-var-8299">QUARKUS_SMALLRYE_HEALTH_INCLUDE_PROBLEM_DETAILS</code><button class="btn-copy fa fa-clipboard inline-btn-copy" data-clipboard-action="copy" data-clipboard-target="#env-var-8299" title="Copy to clipboard" do-not-collapse="true"></button></p>
+<p>Environment variable: <code id="env-var-8513">QUARKUS_SMALLRYE_HEALTH_INCLUDE_PROBLEM_DETAILS</code><button class="btn-copy fa fa-clipboard inline-btn-copy" data-clipboard-action="copy" data-clipboard-target="#env-var-8513" title="Copy to clipboard" do-not-collapse="true"></button></p>
 </div>
 </div>
 </div>
@@ -1284,7 +1338,8 @@ readiness checks are used to tell whether the application is able to process req
 </tr>
 <tr class="row-collapsible row-collapsed row-with-desc odd">
 <td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
-<p><a id="quarkus-smallrye-health_quarkus-smallrye-health-ui-enable"></a> <span class="property-path"><a href="#quarkus-smallrye-health_quarkus-smallrye-health-ui-enable"><code>quarkus.smallrye-health.ui.enable</code></a></span></p>
+<p><a id="quarkus-smallrye-health_quarkus-smallrye-health-ui-enable"></a> <span class="property-path"><a href="#quarkus-smallrye-health_quarkus-smallrye-health-ui-enable"><code>quarkus.smallrye-health.ui.enable</code></a></span>
+<button class="btn-copy fa fa-clipboard inline-btn-copy" data-clipboard-action="copy" data-clipboard-text='quarkus.smallrye-health.ui.enable' title="Copy to clipboard" do-not-collapse="true"></button></p>
 </div>
 <div id="conf-collapsible-desc-15" class="openblock description description-collapsed">
 <div class="content">
@@ -1292,7 +1347,7 @@ readiness checks are used to tell whether the application is able to process req
 <p>If Health UI should be enabled. By default, Health UI is enabled if it is included (see <code>always-include</code>).</p>
 </div>
 <div class="paragraph">
-<p>Environment variable: <code id="env-var-8300">QUARKUS_SMALLRYE_HEALTH_UI_ENABLE</code><button class="btn-copy fa fa-clipboard inline-btn-copy" data-clipboard-action="copy" data-clipboard-target="#env-var-8300" title="Copy to clipboard" do-not-collapse="true"></button></p>
+<p>Environment variable: <code id="env-var-8514">QUARKUS_SMALLRYE_HEALTH_UI_ENABLE</code><button class="btn-copy fa fa-clipboard inline-btn-copy" data-clipboard-action="copy" data-clipboard-target="#env-var-8514" title="Copy to clipboard" do-not-collapse="true"></button></p>
 </div>
 </div>
 </div>
@@ -1304,7 +1359,8 @@ readiness checks are used to tell whether the application is able to process req
 </tr>
 <tr class="row-collapsible row-collapsed row-with-desc">
 <td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
-<p><a id="quarkus-smallrye-health_quarkus-smallrye-health-additional-property-property-name"></a> <span class="property-path"><a href="#quarkus-smallrye-health_quarkus-smallrye-health-additional-property-property-name"><code>quarkus.smallrye-health.additional.property."property-name"</code></a></span></p>
+<p><a id="quarkus-smallrye-health_quarkus-smallrye-health-additional-property-property-name"></a> <span class="property-path"><a href="#quarkus-smallrye-health_quarkus-smallrye-health-additional-property-property-name"><code>quarkus.smallrye-health.additional.property."property-name"</code></a></span>
+<button class="btn-copy fa fa-clipboard inline-btn-copy" data-clipboard-action="copy" data-clipboard-text='quarkus.smallrye-health.additional.property."property-name"' title="Copy to clipboard" do-not-collapse="true"></button></p>
 </div>
 <div id="conf-collapsible-desc-16" class="openblock description description-collapsed">
 <div class="content">
@@ -1312,7 +1368,7 @@ readiness checks are used to tell whether the application is able to process req
 <p>Additional top-level properties to be included in the resulting JSON object.</p>
 </div>
 <div class="paragraph">
-<p>Environment variable: <code id="env-var-8301">QUARKUS_SMALLRYE_HEALTH_ADDITIONAL_PROPERTY__PROPERTY_NAME_</code><button class="btn-copy fa fa-clipboard inline-btn-copy" data-clipboard-action="copy" data-clipboard-target="#env-var-8301" title="Copy to clipboard" do-not-collapse="true"></button></p>
+<p>Environment variable: <code id="env-var-8515">QUARKUS_SMALLRYE_HEALTH_ADDITIONAL_PROPERTY__PROPERTY_NAME_</code><button class="btn-copy fa fa-clipboard inline-btn-copy" data-clipboard-action="copy" data-clipboard-target="#env-var-8515" title="Copy to clipboard" do-not-collapse="true"></button></p>
 </div>
 </div>
 </div>
@@ -1324,7 +1380,8 @@ readiness checks are used to tell whether the application is able to process req
 </tr>
 <tr class="row-collapsible row-collapsed row-with-desc odd">
 <td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
-<p><a id="quarkus-smallrye-health_quarkus-smallrye-health-check-check-name-enabled"></a> <span class="property-path"><a href="#quarkus-smallrye-health_quarkus-smallrye-health-check-check-name-enabled"><code>quarkus.smallrye-health.check."check-name".enabled</code></a></span></p>
+<p><a id="quarkus-smallrye-health_quarkus-smallrye-health-check-check-classname-enabled"></a> <span class="property-path"><a href="#quarkus-smallrye-health_quarkus-smallrye-health-check-check-classname-enabled"><code>quarkus.smallrye-health.check."check-classname".enabled</code></a></span>
+<button class="btn-copy fa fa-clipboard inline-btn-copy" data-clipboard-action="copy" data-clipboard-text='quarkus.smallrye-health.check."check-classname".enabled' title="Copy to clipboard" do-not-collapse="true"></button></p>
 </div>
 <div id="conf-collapsible-desc-17" class="openblock description description-collapsed">
 <div class="content">
@@ -1332,7 +1389,7 @@ readiness checks are used to tell whether the application is able to process req
 <p>Whether the HealthCheck should be enabled.</p>
 </div>
 <div class="paragraph">
-<p>Environment variable: <code id="env-var-8302">QUARKUS_SMALLRYE_HEALTH_CHECK__CHECK_NAME__ENABLED</code><button class="btn-copy fa fa-clipboard inline-btn-copy" data-clipboard-action="copy" data-clipboard-target="#env-var-8302" title="Copy to clipboard" do-not-collapse="true"></button></p>
+<p>Environment variable: <code id="env-var-8516">QUARKUS_SMALLRYE_HEALTH_CHECK__CHECK_CLASSNAME__ENABLED</code><button class="btn-copy fa fa-clipboard inline-btn-copy" data-clipboard-action="copy" data-clipboard-target="#env-var-8516" title="Copy to clipboard" do-not-collapse="true"></button></p>
 </div>
 </div>
 </div>
@@ -1349,7 +1406,8 @@ readiness checks are used to tell whether the application is able to process req
 </tr>
 <tr class="row-collapsible row-collapsed row-with-desc">
 <td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
-<p><span class="icon"><i class="fa fa-lock" title="Fixed at build time"></i></span> <a id="quarkus-smallrye-health_quarkus-smallrye-health-ui-root-path"></a> <span class="property-path"><a href="#quarkus-smallrye-health_quarkus-smallrye-health-ui-root-path"><code>quarkus.smallrye-health.ui.root-path</code></a></span></p>
+<p><span class="icon"><i class="fa fa-lock" title="Fixed at build time"></i></span> <a id="quarkus-smallrye-health_quarkus-smallrye-health-ui-root-path"></a> <span class="property-path"><a href="#quarkus-smallrye-health_quarkus-smallrye-health-ui-root-path"><code>quarkus.smallrye-health.ui.root-path</code></a></span>
+<button class="btn-copy fa fa-clipboard inline-btn-copy" data-clipboard-action="copy" data-clipboard-text='quarkus.smallrye-health.ui.root-path' title="Copy to clipboard" do-not-collapse="true"></button></p>
 </div>
 <div id="conf-collapsible-desc-18" class="openblock description description-collapsed">
 <div class="content">
@@ -1357,7 +1415,7 @@ readiness checks are used to tell whether the application is able to process req
 <p>The path where Health UI is available. The value <code>/</code> is not allowed as it blocks the application from serving anything else. By default, this value will be resolved as a path relative to <code>${quarkus.http.non-application-root-path}</code>.</p>
 </div>
 <div class="paragraph">
-<p>Environment variable: <code id="env-var-8303">QUARKUS_SMALLRYE_HEALTH_UI_ROOT_PATH</code><button class="btn-copy fa fa-clipboard inline-btn-copy" data-clipboard-action="copy" data-clipboard-target="#env-var-8303" title="Copy to clipboard" do-not-collapse="true"></button></p>
+<p>Environment variable: <code id="env-var-8517">QUARKUS_SMALLRYE_HEALTH_UI_ROOT_PATH</code><button class="btn-copy fa fa-clipboard inline-btn-copy" data-clipboard-action="copy" data-clipboard-target="#env-var-8517" title="Copy to clipboard" do-not-collapse="true"></button></p>
 </div>
 </div>
 </div>
@@ -1369,7 +1427,8 @@ readiness checks are used to tell whether the application is able to process req
 </tr>
 <tr class="row-collapsible row-collapsed row-with-desc odd">
 <td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
-<p><span class="icon"><i class="fa fa-lock" title="Fixed at build time"></i></span> <a id="quarkus-smallrye-health_quarkus-smallrye-health-ui-always-include"></a> <span class="property-path"><a href="#quarkus-smallrye-health_quarkus-smallrye-health-ui-always-include"><code>quarkus.smallrye-health.ui.always-include</code></a></span></p>
+<p><span class="icon"><i class="fa fa-lock" title="Fixed at build time"></i></span> <a id="quarkus-smallrye-health_quarkus-smallrye-health-ui-always-include"></a> <span class="property-path"><a href="#quarkus-smallrye-health_quarkus-smallrye-health-ui-always-include"><code>quarkus.smallrye-health.ui.always-include</code></a></span>
+<button class="btn-copy fa fa-clipboard inline-btn-copy" data-clipboard-action="copy" data-clipboard-text='quarkus.smallrye-health.ui.always-include' title="Copy to clipboard" do-not-collapse="true"></button></p>
 </div>
 <div id="conf-collapsible-desc-19" class="openblock description description-collapsed">
 <div class="content">
@@ -1377,7 +1436,7 @@ readiness checks are used to tell whether the application is able to process req
 <p>Always include the UI. By default, this will only be included in dev and test. Setting this to true will also include the UI in Prod</p>
 </div>
 <div class="paragraph">
-<p>Environment variable: <code id="env-var-8304">QUARKUS_SMALLRYE_HEALTH_UI_ALWAYS_INCLUDE</code><button class="btn-copy fa fa-clipboard inline-btn-copy" data-clipboard-action="copy" data-clipboard-target="#env-var-8304" title="Copy to clipboard" do-not-collapse="true"></button></p>
+<p>Environment variable: <code id="env-var-8518">QUARKUS_SMALLRYE_HEALTH_UI_ALWAYS_INCLUDE</code><button class="btn-copy fa fa-clipboard inline-btn-copy" data-clipboard-action="copy" data-clipboard-target="#env-var-8518" title="Copy to clipboard" do-not-collapse="true"></button></p>
 </div>
 </div>
 </div>
@@ -1406,6 +1465,7 @@ readiness checks are used to tell whether the application is able to process req
 <li><a href="#adding-user-specific-data-to-the-health-check-response">Adding user-specific data to the health check response</a></li>
 <li><a href="#context-propagation-into-the-health-check-invocations">Context propagation into the health check invocations</a></li>
 <li><a href="#reactive-health-checks">Reactive health checks</a></li>
+<li><a href="#health-status-change-observers">Health status change observers</a></li>
 <li><a href="#extension-health-checks">Extension health checks</a></li>
 <li><a href="#ui">Health UI</a></li>
 <li><a href="#management-interface">Management interface</a></li>
@@ -1433,6 +1493,9 @@ readiness checks are used to tell whether the application is able to process req
         <li class="reference"><a href="/guides/management-interface-reference">Management interface reference</a></li>
       
         
+        <li class="reference"><a href="/guides/telemetry-micrometer-to-opentelemetry">Micrometer and OpenTelemetry extension</a></li>
+      
+        
         <li class="reference"><a href="/guides/telemetry-micrometer">Micrometer Metrics</a></li>
       
         
@@ -1440,6 +1503,12 @@ readiness checks are used to tell whether the application is able to process req
       
         
         <li class="guide"><a href="/guides/observability-devservices">Observability Dev Services</a></li>
+      
+        
+        <li class="guide"><a href="/guides/observability-devservices-lgtm">Observability Dev Services with Grafana OTel LGTM</a></li>
+      
+        
+        <li class="reference"><a href="/guides/observability">Observability in Quarkus</a></li>
       
         
         <li class="guide"><a href="/guides/smallrye-metrics">SmallRye Metrics</a></li>
@@ -1501,6 +1570,10 @@ readiness checks are used to tell whether the application is able to process req
           
           
             <li><a href="/newsletter" target="_blank">Newsletter</a></li>
+          
+          
+          
+            <li><a href="/userstories" target="_blank">User Stories</a></li>
           
           
           

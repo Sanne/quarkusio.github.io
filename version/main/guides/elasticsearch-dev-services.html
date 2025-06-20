@@ -12,7 +12,7 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <meta http-equiv="Content-Security-Policy" content="
-  connect-src 'self' https://dpm.demdex.net https://adobedc.demdex.net https://route-default-test-mscherer-matamo.apps.ospo-osci.z3b1.p1.openshiftapps.com/ https://search.quarkus.io https://smetrics.redhat.com; 
+  connect-src 'self' https://dpm.demdex.net https://adobedc.demdex.net https://analytics.ossupstream.org/ https://search.quarkus.io https://smetrics.redhat.com; 
   script-src 'self' 'unsafe-inline' 'unsafe-eval'
       
       https://assets.adobedtm.com
@@ -27,13 +27,13 @@
       http://www.googleadservices.com
       https://googleads.g.doubleclick.net
       https://giscus.app
-      https://route-default-test-mscherer-matamo.apps.ospo-osci.z3b1.p1.openshiftapps.com/
+      https://analytics.ossupstream.org/
       https://app.mailjet.com;
 
   style-src 'self' https://fonts.googleapis.com https://use.fontawesome.com; 
   img-src 'self' * data:; 
   media-src 'self'; 
-  frame-src https://redhat.demdex.net https://www.youtube.com https://embed.restream.io https://app.mailjet.com http://xy0p2.mjt.lu https://mj.quarkus.io https://giscus.app; 
+  frame-src https://redhat.demdex.net https://www.youtube.com https://player.restream.io https://app.mailjet.com http://xy0p2.mjt.lu https://mj.quarkus.io https://giscus.app; 
   base-uri 'none'; 
   object-src 'none'; 
   form-action 'none'; 
@@ -100,13 +100,12 @@
         <span href="/about/">Why<i class="fas fa-chevron-down"></i></span>
         <ul class="submenu">
           <li><a href="/about" class="">WHAT IS QUARKUS?</a></li>
-          <li><a href="/container-first" class="">CONTAINER FIRST</a></li>
-          <li><a href="/continuum" class="">VERSATILITY</a></li>
-          <li><a href="/standards" class="">STANDARDS</a></li>
-          <li><a href="/kubernetes-native" class="">KUBERNETES NATIVE</a></li>
-          <li><a href="/performance" class="">PERFORMANCE</a></li>
           <li><a href="/developer-joy" class="">DEVELOPER JOY</a></li>
-          
+          <li><a href="/performance" class="">PERFORMANCE</a></li>
+          <li><a href="/kubernetes-native" class="">KUBERNETES NATIVE</a></li>
+          <li><a href="/standards" class="">STANDARDS</a></li>
+          <li><a href="/versatility" class="">VERSATILITY</a></li>
+          <li><a href="/container-first" class="">CONTAINER FIRST</a></li>          
         </ul>
       </li>
       <li class="dropdown">
@@ -114,6 +113,7 @@
         <ul class="submenu">
           <li><a href="/get-started" class="">GET STARTED</a></li>
           <li><a href="/guides" class="active">DOCUMENTATION</a></li>
+          <li><a href="/userstories/" class="">USER STORIES</a></li>  
           <li><a href="/qtips" class="">"Q" TIP VIDEOS</a></li>          
           <li><a href="/books" class="">BOOKS</a></li>
           </ul>
@@ -189,7 +189,11 @@
         
         
         
-        <option value="latest" >3.17.0 - Latest</option>
+        <option value="latest" >3.23.4 - Latest</option>
+        
+        
+        
+        <option value="3.20" >3.20</option>
         
         
         
@@ -328,7 +332,7 @@ Dev Services will default to Elasticsearch or OpenSearch based on Hibernate Sear
 </div>
 <div class="listingblock">
 <div class="content">
-<pre class="highlightjs highlight"><code class="language-properties hljs" data-lang="properties">quarkus.elasticsearch.devservices.image-name=docker.io/elastic/elasticsearch:8.15.0</code></pre>
+<pre class="highlightjs highlight"><code class="language-properties hljs" data-lang="properties">quarkus.elasticsearch.devservices.image-name=docker.io/elastic/elasticsearch:9.0.2</code></pre>
 </div>
 </div>
 <div class="paragraph">
@@ -483,7 +487,7 @@ to <code>false</code>.</p>
 unless connection configuration (e.g. <code>quarkus.elasticsearch.hosts</code>) is set explicitly.</p>
 </div>
 <div class="paragraph">
-<p>Environment variable: <code id="env-var-53392">QUARKUS_ELASTICSEARCH_DEVSERVICES_ENABLED</code><button class="btn-copy fa fa-clipboard inline-btn-copy" data-clipboard-action="copy" data-clipboard-target="#env-var-53392" title="Copy to clipboard" do-not-collapse="true"></button></p>
+<p>Environment variable: <code id="env-var-62374">QUARKUS_ELASTICSEARCH_DEVSERVICES_ENABLED</code><button class="btn-copy fa fa-clipboard inline-btn-copy" data-clipboard-action="copy" data-clipboard-target="#env-var-62374" title="Copy to clipboard" do-not-collapse="true"></button></p>
 </div>
 </div>
 </div>
@@ -507,7 +511,7 @@ unless connection configuration (e.g. <code>quarkus.elasticsearch.hosts</code>) 
 <p>If not defined, the port will be chosen randomly.</p>
 </div>
 <div class="paragraph">
-<p>Environment variable: <code id="env-var-53393">QUARKUS_ELASTICSEARCH_DEVSERVICES_PORT</code><button class="btn-copy fa fa-clipboard inline-btn-copy" data-clipboard-action="copy" data-clipboard-target="#env-var-53393" title="Copy to clipboard" do-not-collapse="true"></button></p>
+<p>Environment variable: <code id="env-var-62375">QUARKUS_ELASTICSEARCH_DEVSERVICES_PORT</code><button class="btn-copy fa fa-clipboard inline-btn-copy" data-clipboard-action="copy" data-clipboard-target="#env-var-62375" title="Copy to clipboard" do-not-collapse="true"></button></p>
 </div>
 </div>
 </div>
@@ -533,7 +537,7 @@ or by default to the distribution configured in depending extensions (e.g. Hiber
 or by default to <code>elastic</code>.</p>
 </div>
 <div class="paragraph">
-<p>Environment variable: <code id="env-var-53394">QUARKUS_ELASTICSEARCH_DEVSERVICES_DISTRIBUTION</code><button class="btn-copy fa fa-clipboard inline-btn-copy" data-clipboard-action="copy" data-clipboard-target="#env-var-53394" title="Copy to clipboard" do-not-collapse="true"></button></p>
+<p>Environment variable: <code id="env-var-62376">QUARKUS_ELASTICSEARCH_DEVSERVICES_DISTRIBUTION</code><button class="btn-copy fa fa-clipboard inline-btn-copy" data-clipboard-action="copy" data-clipboard-target="#env-var-62376" title="Copy to clipboard" do-not-collapse="true"></button></p>
 </div>
 </div>
 </div>
@@ -561,15 +565,15 @@ or by default to <code>elastic</code>.</p>
 <div class="ulist">
 <ul>
 <li>
-<p>For the <code>elastic</code> distribution: docker.io/elastic/elasticsearch:8.15.0</p>
+<p>For the <code>elastic</code> distribution: docker.io/elastic/elasticsearch:9.0.2</p>
 </li>
 <li>
-<p>For the <code>opensearch</code> distribution: docker.io/opensearchproject/opensearch:2.16.0</p>
+<p>For the <code>opensearch</code> distribution: docker.io/opensearchproject/opensearch:3.0.0</p>
 </li>
 </ul>
 </div>
 <div class="paragraph">
-<p>Environment variable: <code id="env-var-53395">QUARKUS_ELASTICSEARCH_DEVSERVICES_IMAGE_NAME</code><button class="btn-copy fa fa-clipboard inline-btn-copy" data-clipboard-action="copy" data-clipboard-target="#env-var-53395" title="Copy to clipboard" do-not-collapse="true"></button></p>
+<p>Environment variable: <code id="env-var-62377">QUARKUS_ELASTICSEARCH_DEVSERVICES_IMAGE_NAME</code><button class="btn-copy fa fa-clipboard inline-btn-copy" data-clipboard-action="copy" data-clipboard-target="#env-var-62377" title="Copy to clipboard" do-not-collapse="true"></button></p>
 </div>
 </div>
 </div>
@@ -590,7 +594,7 @@ or by default to <code>elastic</code>.</p>
 <p>The value for the ES_JAVA_OPTS env variable.</p>
 </div>
 <div class="paragraph">
-<p>Environment variable: <code id="env-var-53396">QUARKUS_ELASTICSEARCH_DEVSERVICES_JAVA_OPTS</code><button class="btn-copy fa fa-clipboard inline-btn-copy" data-clipboard-action="copy" data-clipboard-target="#env-var-53396" title="Copy to clipboard" do-not-collapse="true"></button></p>
+<p>Environment variable: <code id="env-var-62378">QUARKUS_ELASTICSEARCH_DEVSERVICES_JAVA_OPTS</code><button class="btn-copy fa fa-clipboard inline-btn-copy" data-clipboard-action="copy" data-clipboard-target="#env-var-62378" title="Copy to clipboard" do-not-collapse="true"></button></p>
 </div>
 </div>
 </div>
@@ -620,7 +624,7 @@ or by default to <code>elastic</code>.</p>
 <p>Container sharing is only used in dev mode.</p>
 </div>
 <div class="paragraph">
-<p>Environment variable: <code id="env-var-53397">QUARKUS_ELASTICSEARCH_DEVSERVICES_SHARED</code><button class="btn-copy fa fa-clipboard inline-btn-copy" data-clipboard-action="copy" data-clipboard-target="#env-var-53397" title="Copy to clipboard" do-not-collapse="true"></button></p>
+<p>Environment variable: <code id="env-var-62379">QUARKUS_ELASTICSEARCH_DEVSERVICES_SHARED</code><button class="btn-copy fa fa-clipboard inline-btn-copy" data-clipboard-action="copy" data-clipboard-target="#env-var-62379" title="Copy to clipboard" do-not-collapse="true"></button></p>
 </div>
 </div>
 </div>
@@ -647,7 +651,7 @@ or by default to <code>elastic</code>.</p>
 <p>This property is used when you need multiple shared Elasticsearch servers.</p>
 </div>
 <div class="paragraph">
-<p>Environment variable: <code id="env-var-53398">QUARKUS_ELASTICSEARCH_DEVSERVICES_SERVICE_NAME</code><button class="btn-copy fa fa-clipboard inline-btn-copy" data-clipboard-action="copy" data-clipboard-target="#env-var-53398" title="Copy to clipboard" do-not-collapse="true"></button></p>
+<p>Environment variable: <code id="env-var-62380">QUARKUS_ELASTICSEARCH_DEVSERVICES_SERVICE_NAME</code><button class="btn-copy fa fa-clipboard inline-btn-copy" data-clipboard-action="copy" data-clipboard-target="#env-var-62380" title="Copy to clipboard" do-not-collapse="true"></button></p>
 </div>
 </div>
 </div>
@@ -668,7 +672,7 @@ or by default to <code>elastic</code>.</p>
 <p>Environment variables that are passed to the container.</p>
 </div>
 <div class="paragraph">
-<p>Environment variable: <code id="env-var-53399">QUARKUS_ELASTICSEARCH_DEVSERVICES_CONTAINER_ENV__ENVIRONMENT_VARIABLE_NAME_</code><button class="btn-copy fa fa-clipboard inline-btn-copy" data-clipboard-action="copy" data-clipboard-target="#env-var-53399" title="Copy to clipboard" do-not-collapse="true"></button></p>
+<p>Environment variable: <code id="env-var-62381">QUARKUS_ELASTICSEARCH_DEVSERVICES_CONTAINER_ENV__ENVIRONMENT_VARIABLE_NAME_</code><button class="btn-copy fa fa-clipboard inline-btn-copy" data-clipboard-action="copy" data-clipboard-target="#env-var-62381" title="Copy to clipboard" do-not-collapse="true"></button></p>
 </div>
 </div>
 </div>
@@ -718,7 +722,7 @@ if you enabled it in <code>testcontainers.properties</code>
 but only want to use it for some of your Quarkus applications.</p>
 </div>
 <div class="paragraph">
-<p>Environment variable: <code id="env-var-53400">QUARKUS_ELASTICSEARCH_DEVSERVICES_REUSE</code><button class="btn-copy fa fa-clipboard inline-btn-copy" data-clipboard-action="copy" data-clipboard-target="#env-var-53400" title="Copy to clipboard" do-not-collapse="true"></button></p>
+<p>Environment variable: <code id="env-var-62382">QUARKUS_ELASTICSEARCH_DEVSERVICES_REUSE</code><button class="btn-copy fa fa-clipboard inline-btn-copy" data-clipboard-action="copy" data-clipboard-target="#env-var-62382" title="Copy to clipboard" do-not-collapse="true"></button></p>
 </div>
 </div>
 </div>
@@ -786,6 +790,9 @@ but only want to use it for some of your Quarkus applications.</p>
         <li class="guide"><a href="/version/main/guides/hibernate-search-orm-elasticsearch">Use Hibernate Search with Hibernate ORM and Elasticsearch/OpenSearch</a></li>
       
         
+        <li class="guide"><a href="/version/main/guides/compose-dev-services">Compose Dev Services</a></li>
+      
+        
         <li class="howto"><a href="/version/main/guides/security-openid-connect-dev-services">Dev Services and Dev UI for OpenID Connect (OIDC)</a></li>
       
         
@@ -823,9 +830,6 @@ but only want to use it for some of your Quarkus applications.</p>
       
         
         <li class="guide"><a href="/version/main/guides/mongodb-panache-kotlin">Simplified MongoDB with Panache and Kotlin</a></li>
-      
-        
-        <li class="guide"><a href="/version/main/guides/mongodb">Using the MongoDB Client</a></li>
       </ul>
     </div>
     </div>
@@ -869,6 +873,10 @@ but only want to use it for some of your Quarkus applications.</p>
           
           
             <li><a href="/newsletter" target="_blank">Newsletter</a></li>
+          
+          
+          
+            <li><a href="/userstories" target="_blank">User Stories</a></li>
           
           
           

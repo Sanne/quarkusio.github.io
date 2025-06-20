@@ -12,7 +12,7 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <meta http-equiv="Content-Security-Policy" content="
-  connect-src 'self' https://dpm.demdex.net https://adobedc.demdex.net https://route-default-test-mscherer-matamo.apps.ospo-osci.z3b1.p1.openshiftapps.com/ https://search.quarkus.io https://smetrics.redhat.com; 
+  connect-src 'self' https://dpm.demdex.net https://adobedc.demdex.net https://analytics.ossupstream.org/ https://search.quarkus.io https://smetrics.redhat.com; 
   script-src 'self' 'unsafe-inline' 'unsafe-eval'
       
       https://assets.adobedtm.com
@@ -27,13 +27,13 @@
       http://www.googleadservices.com
       https://googleads.g.doubleclick.net
       https://giscus.app
-      https://route-default-test-mscherer-matamo.apps.ospo-osci.z3b1.p1.openshiftapps.com/
+      https://analytics.ossupstream.org/
       https://app.mailjet.com;
 
   style-src 'self' https://fonts.googleapis.com https://use.fontawesome.com; 
   img-src 'self' * data:; 
   media-src 'self'; 
-  frame-src https://redhat.demdex.net https://www.youtube.com https://embed.restream.io https://app.mailjet.com http://xy0p2.mjt.lu https://mj.quarkus.io https://giscus.app; 
+  frame-src https://redhat.demdex.net https://www.youtube.com https://player.restream.io https://app.mailjet.com http://xy0p2.mjt.lu https://mj.quarkus.io https://giscus.app; 
   base-uri 'none'; 
   object-src 'none'; 
   form-action 'none'; 
@@ -100,13 +100,12 @@
         <span href="/about/">Why<i class="fas fa-chevron-down"></i></span>
         <ul class="submenu">
           <li><a href="/about" class="">WHAT IS QUARKUS?</a></li>
-          <li><a href="/container-first" class="">CONTAINER FIRST</a></li>
-          <li><a href="/continuum" class="">VERSATILITY</a></li>
-          <li><a href="/standards" class="">STANDARDS</a></li>
-          <li><a href="/kubernetes-native" class="">KUBERNETES NATIVE</a></li>
-          <li><a href="/performance" class="">PERFORMANCE</a></li>
           <li><a href="/developer-joy" class="">DEVELOPER JOY</a></li>
-          
+          <li><a href="/performance" class="">PERFORMANCE</a></li>
+          <li><a href="/kubernetes-native" class="">KUBERNETES NATIVE</a></li>
+          <li><a href="/standards" class="">STANDARDS</a></li>
+          <li><a href="/versatility" class="">VERSATILITY</a></li>
+          <li><a href="/container-first" class="">CONTAINER FIRST</a></li>          
         </ul>
       </li>
       <li class="dropdown">
@@ -114,6 +113,7 @@
         <ul class="submenu">
           <li><a href="/get-started" class="">GET STARTED</a></li>
           <li><a href="/guides" class="active">DOCUMENTATION</a></li>
+          <li><a href="/userstories/" class="">USER STORIES</a></li>  
           <li><a href="/qtips" class="">"Q" TIP VIDEOS</a></li>          
           <li><a href="/books" class="">BOOKS</a></li>
           </ul>
@@ -189,7 +189,11 @@
         
         
         
-        <option value="latest" >3.17.0 - Latest</option>
+        <option value="latest" >3.23.4 - Latest</option>
+        
+        
+        
+        <option value="3.20" >3.20</option>
         
         
         
@@ -223,6 +227,9 @@
 <div class="paragraph">
 <p>This guide explains how your Quarkus application can utilize <a href="https://opentelemetry.io/">OpenTelemetry</a> (OTel) to provide
 distributed tracing for interactive web applications.</p>
+</div>
+<div class="paragraph">
+<p>This document is part of the <a href="observability">Observability in Quarkus reference guide</a> which features this and other observability related components.</p>
 </div>
 <div class="admonitionblock note">
 <table>
@@ -677,25 +684,10 @@ hello</code></pre>
 <div class="sect2">
 <h3 id="jdbc"><a class="anchor" href="#jdbc"></a>JDBC</h3>
 <div class="paragraph">
-<p>The <a href="https://github.com/open-telemetry/opentelemetry-java-instrumentation/tree/main/instrumentation/jdbc/library">JDBC instrumentation</a> will add a span for each JDBC queries done by your application, to enable it, add the following dependency to your build file:</p>
-</div>
-<div class="listingblock primary asciidoc-tabs-target-sync-cli asciidoc-tabs-target-sync-maven">
-<div class="title">pom.xml</div>
-<div class="content">
-<pre class="highlightjs highlight"><code class="language-xml hljs" data-lang="xml">&lt;dependency&gt;
-    &lt;groupId&gt;io.opentelemetry.instrumentation&lt;/groupId&gt;
-    &lt;artifactId&gt;opentelemetry-jdbc&lt;/artifactId&gt;
-&lt;/dependency&gt;</code></pre>
-</div>
-</div>
-<div class="listingblock secondary asciidoc-tabs-target-sync-gradle">
-<div class="title">build.gradle</div>
-<div class="content">
-<pre class="highlightjs highlight"><code class="language-gradle hljs" data-lang="gradle">implementation("io.opentelemetry.instrumentation:opentelemetry-jdbc")</code></pre>
-</div>
+<p>The <a href="https://github.com/open-telemetry/opentelemetry-java-instrumentation/tree/main/instrumentation/jdbc/library">JDBC instrumentation</a> bundled with this extension will add a span for each JDBC queries done by your application.</p>
 </div>
 <div class="paragraph">
-<p>As it uses a dedicated JDBC datasource wrapper, you must enable telemetry for your datasource:</p>
+<p>As it uses a dedicated JDBC datasource wrapper, you must enable telemetry for your datasource with the <code>quarkus.datasource.jdbc.telemetry</code> property, as in the following example:</p>
 </div>
 <div class="listingblock">
 <div class="content">
@@ -1121,6 +1113,73 @@ public void tracedWork() {
 </div>
 </div>
 <div class="sect2">
+<h3 id="mutiny"><a class="anchor" href="#mutiny"></a>Mutiny</h3>
+<div class="paragraph">
+<p>Methods returning reactive types can also be annotated with <code>@WithSpan</code> and <code>@AddingSpanAttributes</code> to create a new span or add attributes to the current span.</p>
+</div>
+<div class="paragraph">
+<p>If you need to create spans manually within a mutiny pipeline, use <code>wrapWithSpan</code> method from <code>io.quarkus.opentelemetry.runtime.tracing.mutiny.MutinyTracingHelper</code>.</p>
+</div>
+<div class="paragraph">
+<p>Example. Assuming you have the following pipeline:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-java hljs" data-lang="java">Uni&lt;String&gt; uni = Uni.createFrom().item("hello")
+        //start trace here
+        .onItem().transform(item -&gt; item + " world")
+        .onItem().transform(item -&gt; item + "!")
+        //end trace here
+        .subscribe().with(
+                item -&gt; System.out.println("Received: " + item),
+                failure -&gt; System.out.println("Failed with " + failure)
+        );</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>wrap it like this:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-java hljs" data-lang="java">import static io.quarkus.opentelemetry.runtime.tracing.mutiny.MutinyTracingHelper.wrapWithSpan;
+...
+@Inject
+Tracer tracer;
+...
+Context context = Context.current();
+Uni&lt;String&gt; uni = Uni.createFrom().item("hello")
+        .transformToUni(m -&gt; wrapWithSpan(tracer, Optional.of(context), "my-span-name",
+                                Uni.createFrom().item(m)
+                                    .onItem().transform(item -&gt; item + " world")
+                                    .onItem().transform(item -&gt; item + "!")
+        ))
+        .subscribe().with(
+                item -&gt; System.out.println("Received: " + item),
+                failure -&gt; System.out.println("Failed with " + failure)
+        );</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>for multi-pipelines it works similarly:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-java hljs" data-lang="java">Multi.createFrom().items("Alice", "Bob", "Charlie")
+        .transformToMultiAndConcatenate(m -&gt; TracingHelper.withTrace("my-span-name",
+                                Multi.createFrom().item(m)
+                                    .onItem().transform(name -&gt; "Hello " + name)
+        ))
+        .subscribe().with(
+                item -&gt; System.out.println("Received: " + item),
+                failure -&gt; System.out.println("Failed with " + failure)
+        );</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Instead of <code>transformToMultiAndConcatenate</code> you can use <code>transformToMultiAndMerge</code> if you don&#8217;t care about the order of the items.</p>
+</div>
+</div>
+<div class="sect2">
 <h3 id="quarkus-messaging-kafka"><a class="anchor" href="#quarkus-messaging-kafka"></a>Quarkus Messaging - Kafka</h3>
 <div class="paragraph">
 <p>When using the Quarkus Messaging extension for Kafka,
@@ -1181,13 +1240,16 @@ which retrieves the OpenTelemetry <code>Context</code> to extract the current sp
 <p><a href="https://quarkus.io/guides/redis"><code>quarkus-redis-client</code></a></p>
 </li>
 <li>
-<p><a href="https://quarkus.io/extensions/io.quarkus/quarkus-rest-client-jaxrs"><code>quarkus-rest-client-jaxrs</code></a></p>
-</li>
-<li>
 <p><a href="https://quarkus.io/guides/rest"><code>quarkus-rest</code></a></p>
 </li>
 <li>
-<p><a href="https://quarkus.io/guides/resteasy"><code>quarkus-resteasy-jackson</code></a></p>
+<p><a href="https://quarkus.io/guides/rest"><code>quarkus-rest-client</code></a></p>
+</li>
+<li>
+<p><a href="https://quarkus.io/extensions/io.quarkus/quarkus-rest-client-jaxrs"><code>quarkus-rest-client-jaxrs</code></a></p>
+</li>
+<li>
+<p><a href="https://quarkus.io/guides/resteasy"><code>quarkus-resteasy</code></a></p>
 </li>
 <li>
 <p><a href="https://quarkus.io/guides/resteasy-client"><code>quarkus-resteasy-client</code></a></p>
@@ -1333,6 +1395,7 @@ quarkus.otel.traces.suppress-application-uris=trace,ping,people*</code></pre>
 <ul class="sectlevel2">
 <li><a href="#cdi">CDI</a></li>
 <li><a href="#available-opentelemetry-cdi-injections">Available OpenTelemetry CDI injections</a></li>
+<li><a href="#mutiny">Mutiny</a></li>
 <li><a href="#quarkus-messaging-kafka">Quarkus Messaging - Kafka</a></li>
 <li><a href="#quarkus-security-events">Quarkus Security Events</a></li>
 </ul>
@@ -1355,7 +1418,13 @@ quarkus.otel.traces.suppress-application-uris=trace,ping,people*</code></pre>
       <ul class="related-content">
       
         
+        <li class="guide"><a href="/version/main/guides/centralized-log-management">Centralized log management (Graylog, Logstash, Fluentd)</a></li>
+      
+        
         <li class="tutorial"><a href="/version/main/guides/telemetry-opentracing-to-otel-tutorial">Migrate from OpenTracing to OpenTelemetry tracing</a></li>
+      
+        
+        <li class="reference"><a href="/version/main/guides/observability">Observability in Quarkus</a></li>
       
         
         <li class="reference"><a href="/version/main/guides/opentelemetry">Using OpenTelemetry</a></li>
@@ -1372,7 +1441,16 @@ quarkus.otel.traces.suppress-application-uris=trace,ping,people*</code></pre>
       <ul class="related-content">
       
         
+        <li class="reference"><a href="/version/main/guides/telemetry-micrometer-to-opentelemetry">Micrometer and OpenTelemetry extension</a></li>
+      
+        
         <li class="tutorial"><a href="/version/main/guides/telemetry-opentracing-to-otel-tutorial">Migrate from OpenTracing to OpenTelemetry tracing</a></li>
+      
+        
+        <li class="reference"><a href="/version/main/guides/observability">Observability in Quarkus</a></li>
+      
+        
+        <li class="guide"><a href="/version/main/guides/observability-devservices-lgtm">Observability Dev Services with Grafana OTel LGTM</a></li>
       
         
         <li class="reference"><a href="/version/main/guides/opentelemetry">Using OpenTelemetry</a></li>
@@ -1452,6 +1530,10 @@ quarkus.otel.traces.suppress-application-uris=trace,ping,people*</code></pre>
           
           
             <li><a href="/newsletter" target="_blank">Newsletter</a></li>
+          
+          
+          
+            <li><a href="/userstories" target="_blank">User Stories</a></li>
           
           
           

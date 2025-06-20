@@ -12,7 +12,7 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <meta http-equiv="Content-Security-Policy" content="
-  connect-src 'self' https://dpm.demdex.net https://adobedc.demdex.net https://route-default-test-mscherer-matamo.apps.ospo-osci.z3b1.p1.openshiftapps.com/ https://search.quarkus.io https://smetrics.redhat.com; 
+  connect-src 'self' https://dpm.demdex.net https://adobedc.demdex.net https://analytics.ossupstream.org/ https://search.quarkus.io https://smetrics.redhat.com; 
   script-src 'self' 'unsafe-inline' 'unsafe-eval'
       
       https://assets.adobedtm.com
@@ -27,13 +27,13 @@
       http://www.googleadservices.com
       https://googleads.g.doubleclick.net
       https://giscus.app
-      https://route-default-test-mscherer-matamo.apps.ospo-osci.z3b1.p1.openshiftapps.com/
+      https://analytics.ossupstream.org/
       https://app.mailjet.com;
 
   style-src 'self' https://fonts.googleapis.com https://use.fontawesome.com; 
   img-src 'self' * data:; 
   media-src 'self'; 
-  frame-src https://redhat.demdex.net https://www.youtube.com https://embed.restream.io https://app.mailjet.com http://xy0p2.mjt.lu https://mj.quarkus.io https://giscus.app; 
+  frame-src https://redhat.demdex.net https://www.youtube.com https://player.restream.io https://app.mailjet.com http://xy0p2.mjt.lu https://mj.quarkus.io https://giscus.app; 
   base-uri 'none'; 
   object-src 'none'; 
   form-action 'none'; 
@@ -100,13 +100,12 @@
         <span href="/about/">Why<i class="fas fa-chevron-down"></i></span>
         <ul class="submenu">
           <li><a href="/about" class="">WHAT IS QUARKUS?</a></li>
-          <li><a href="/container-first" class="">CONTAINER FIRST</a></li>
-          <li><a href="/continuum" class="">VERSATILITY</a></li>
-          <li><a href="/standards" class="">STANDARDS</a></li>
-          <li><a href="/kubernetes-native" class="">KUBERNETES NATIVE</a></li>
-          <li><a href="/performance" class="">PERFORMANCE</a></li>
           <li><a href="/developer-joy" class="">DEVELOPER JOY</a></li>
-          
+          <li><a href="/performance" class="">PERFORMANCE</a></li>
+          <li><a href="/kubernetes-native" class="">KUBERNETES NATIVE</a></li>
+          <li><a href="/standards" class="">STANDARDS</a></li>
+          <li><a href="/versatility" class="">VERSATILITY</a></li>
+          <li><a href="/container-first" class="">CONTAINER FIRST</a></li>          
         </ul>
       </li>
       <li class="dropdown">
@@ -114,6 +113,7 @@
         <ul class="submenu">
           <li><a href="/get-started" class="">GET STARTED</a></li>
           <li><a href="/guides" class="active">DOCUMENTATION</a></li>
+          <li><a href="/userstories/" class="">USER STORIES</a></li>  
           <li><a href="/qtips" class="">"Q" TIP VIDEOS</a></li>          
           <li><a href="/books" class="">BOOKS</a></li>
           </ul>
@@ -189,7 +189,11 @@
         
         
         
-        <option value="latest" >3.17.0 - Latest</option>
+        <option value="latest" >3.23.4 - Latest</option>
+        
+        
+        
+        <option value="3.20" >3.20</option>
         
         
         
@@ -970,6 +974,25 @@ the heroes:</p>
 </div>
 <div class="paragraph">
 <p>Above will fetch the film on the event-loop threads, but switch to the worker thread to fetch the heroes.</p>
+</div>
+</div>
+<div class="sect2">
+<h3 id="runonvirtualthread"><a class="anchor" href="#runonvirtualthread"></a>RunOnVirtualThread</h3>
+<div class="paragraph">
+<p>Queries can be run on a virtual thread by adding <code>@RunOnVirtualThread</code> to the method:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-java hljs" data-lang="java">    @Query
+    @Description("Get a Films from a galaxy far far away")
+    @RunOnVirtualThread
+    public Film getFilm(int filmId) {
+        // ...
+    }</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Please note the general guidelines for using <a href="./virtual-threads">virtual threads</a></p>
 </div>
 </div>
 </div>
@@ -2034,7 +2057,7 @@ API <code>evolution</code>.</p>
 <p>The rootPath under which queries will be served. Default to graphql By default, this value will be resolved as a path relative to <code>${quarkus.http.root-path}</code>.</p>
 </div>
 <div class="paragraph">
-<p>Environment variable: <code id="env-var-55647">QUARKUS_SMALLRYE_GRAPHQL_ROOT_PATH</code><button class="btn-copy fa fa-clipboard inline-btn-copy" data-clipboard-action="copy" data-clipboard-target="#env-var-55647" title="Copy to clipboard" do-not-collapse="true"></button></p>
+<p>Environment variable: <code id="env-var-64738">QUARKUS_SMALLRYE_GRAPHQL_ROOT_PATH</code><button class="btn-copy fa fa-clipboard inline-btn-copy" data-clipboard-action="copy" data-clipboard-target="#env-var-64738" title="Copy to clipboard" do-not-collapse="true"></button></p>
 </div>
 </div>
 </div>
@@ -2055,7 +2078,7 @@ API <code>evolution</code>.</p>
 <p>Enable Apollo Federation. If this value is unspecified, then federation will be enabled automatically if any GraphQL Federation annotations are detected in the application.</p>
 </div>
 <div class="paragraph">
-<p>Environment variable: <code id="env-var-55648">QUARKUS_SMALLRYE_GRAPHQL_FEDERATION_ENABLED</code><button class="btn-copy fa fa-clipboard inline-btn-copy" data-clipboard-action="copy" data-clipboard-target="#env-var-55648" title="Copy to clipboard" do-not-collapse="true"></button></p>
+<p>Environment variable: <code id="env-var-64739">QUARKUS_SMALLRYE_GRAPHQL_FEDERATION_ENABLED</code><button class="btn-copy fa fa-clipboard inline-btn-copy" data-clipboard-action="copy" data-clipboard-target="#env-var-64739" title="Copy to clipboard" do-not-collapse="true"></button></p>
 </div>
 </div>
 </div>
@@ -2076,7 +2099,7 @@ API <code>evolution</code>.</p>
 <p>Enable batch resolving for federation. Disabled by default.</p>
 </div>
 <div class="paragraph">
-<p>Environment variable: <code id="env-var-55649">QUARKUS_SMALLRYE_GRAPHQL_FEDERATION_BATCH_RESOLVING_ENABLED</code><button class="btn-copy fa fa-clipboard inline-btn-copy" data-clipboard-action="copy" data-clipboard-target="#env-var-55649" title="Copy to clipboard" do-not-collapse="true"></button></p>
+<p>Environment variable: <code id="env-var-64740">QUARKUS_SMALLRYE_GRAPHQL_FEDERATION_BATCH_RESOLVING_ENABLED</code><button class="btn-copy fa fa-clipboard inline-btn-copy" data-clipboard-action="copy" data-clipboard-target="#env-var-64740" title="Copy to clipboard" do-not-collapse="true"></button></p>
 </div>
 </div>
 </div>
@@ -2097,7 +2120,7 @@ API <code>evolution</code>.</p>
 <p>Enable metrics. By default, this is false. If set to true, a metrics extension is required.</p>
 </div>
 <div class="paragraph">
-<p>Environment variable: <code id="env-var-55650">QUARKUS_SMALLRYE_GRAPHQL_METRICS_ENABLED</code><button class="btn-copy fa fa-clipboard inline-btn-copy" data-clipboard-action="copy" data-clipboard-target="#env-var-55650" title="Copy to clipboard" do-not-collapse="true"></button></p>
+<p>Environment variable: <code id="env-var-64741">QUARKUS_SMALLRYE_GRAPHQL_METRICS_ENABLED</code><button class="btn-copy fa fa-clipboard inline-btn-copy" data-clipboard-action="copy" data-clipboard-target="#env-var-64741" title="Copy to clipboard" do-not-collapse="true"></button></p>
 </div>
 </div>
 </div>
@@ -2118,7 +2141,7 @@ API <code>evolution</code>.</p>
 <p>Enable tracing. By default, this will be enabled if the tracing extension is added.</p>
 </div>
 <div class="paragraph">
-<p>Environment variable: <code id="env-var-55651">QUARKUS_SMALLRYE_GRAPHQL_TRACING_ENABLED</code><button class="btn-copy fa fa-clipboard inline-btn-copy" data-clipboard-action="copy" data-clipboard-target="#env-var-55651" title="Copy to clipboard" do-not-collapse="true"></button></p>
+<p>Environment variable: <code id="env-var-64742">QUARKUS_SMALLRYE_GRAPHQL_TRACING_ENABLED</code><button class="btn-copy fa fa-clipboard inline-btn-copy" data-clipboard-action="copy" data-clipboard-target="#env-var-64742" title="Copy to clipboard" do-not-collapse="true"></button></p>
 </div>
 </div>
 </div>
@@ -2139,7 +2162,7 @@ API <code>evolution</code>.</p>
 <p>Enable eventing. Allow you to receive events on bootstrap and execution.</p>
 </div>
 <div class="paragraph">
-<p>Environment variable: <code id="env-var-55652">QUARKUS_SMALLRYE_GRAPHQL_EVENTS_ENABLED</code><button class="btn-copy fa fa-clipboard inline-btn-copy" data-clipboard-action="copy" data-clipboard-target="#env-var-55652" title="Copy to clipboard" do-not-collapse="true"></button></p>
+<p>Environment variable: <code id="env-var-64743">QUARKUS_SMALLRYE_GRAPHQL_EVENTS_ENABLED</code><button class="btn-copy fa fa-clipboard inline-btn-copy" data-clipboard-action="copy" data-clipboard-target="#env-var-64743" title="Copy to clipboard" do-not-collapse="true"></button></p>
 </div>
 </div>
 </div>
@@ -2160,7 +2183,7 @@ API <code>evolution</code>.</p>
 <p>Enable non-blocking support. Default is true.</p>
 </div>
 <div class="paragraph">
-<p>Environment variable: <code id="env-var-55653">QUARKUS_SMALLRYE_GRAPHQL_NONBLOCKING_ENABLED</code><button class="btn-copy fa fa-clipboard inline-btn-copy" data-clipboard-action="copy" data-clipboard-target="#env-var-55653" title="Copy to clipboard" do-not-collapse="true"></button></p>
+<p>Environment variable: <code id="env-var-64744">QUARKUS_SMALLRYE_GRAPHQL_NONBLOCKING_ENABLED</code><button class="btn-copy fa fa-clipboard inline-btn-copy" data-clipboard-action="copy" data-clipboard-target="#env-var-64744" title="Copy to clipboard" do-not-collapse="true"></button></p>
 </div>
 </div>
 </div>
@@ -2181,7 +2204,7 @@ API <code>evolution</code>.</p>
 <p>Enable GET Requests. Allow queries via HTTP GET.</p>
 </div>
 <div class="paragraph">
-<p>Environment variable: <code id="env-var-55654">QUARKUS_SMALLRYE_GRAPHQL_HTTP_GET_ENABLED</code><button class="btn-copy fa fa-clipboard inline-btn-copy" data-clipboard-action="copy" data-clipboard-target="#env-var-55654" title="Copy to clipboard" do-not-collapse="true"></button></p>
+<p>Environment variable: <code id="env-var-64745">QUARKUS_SMALLRYE_GRAPHQL_HTTP_GET_ENABLED</code><button class="btn-copy fa fa-clipboard inline-btn-copy" data-clipboard-action="copy" data-clipboard-target="#env-var-64745" title="Copy to clipboard" do-not-collapse="true"></button></p>
 </div>
 </div>
 </div>
@@ -2202,7 +2225,7 @@ API <code>evolution</code>.</p>
 <p>Enable Query parameter on POST Requests. Allow POST request to override or supply values in a query parameter.</p>
 </div>
 <div class="paragraph">
-<p>Environment variable: <code id="env-var-55655">QUARKUS_SMALLRYE_GRAPHQL_HTTP_POST_QUERYPARAMETERS_ENABLED</code><button class="btn-copy fa fa-clipboard inline-btn-copy" data-clipboard-action="copy" data-clipboard-target="#env-var-55655" title="Copy to clipboard" do-not-collapse="true"></button></p>
+<p>Environment variable: <code id="env-var-64746">QUARKUS_SMALLRYE_GRAPHQL_HTTP_POST_QUERYPARAMETERS_ENABLED</code><button class="btn-copy fa fa-clipboard inline-btn-copy" data-clipboard-action="copy" data-clipboard-target="#env-var-64746" title="Copy to clipboard" do-not-collapse="true"></button></p>
 </div>
 </div>
 </div>
@@ -2223,7 +2246,7 @@ API <code>evolution</code>.</p>
 <p>Change the type naming strategy. All possible strategies are: default, merge-inner-class, full</p>
 </div>
 <div class="paragraph">
-<p>Environment variable: <code id="env-var-55656">QUARKUS_SMALLRYE_GRAPHQL_AUTO_NAME_STRATEGY</code><button class="btn-copy fa fa-clipboard inline-btn-copy" data-clipboard-action="copy" data-clipboard-target="#env-var-55656" title="Copy to clipboard" do-not-collapse="true"></button></p>
+<p>Environment variable: <code id="env-var-64747">QUARKUS_SMALLRYE_GRAPHQL_AUTO_NAME_STRATEGY</code><button class="btn-copy fa fa-clipboard inline-btn-copy" data-clipboard-action="copy" data-clipboard-target="#env-var-64747" title="Copy to clipboard" do-not-collapse="true"></button></p>
 </div>
 </div>
 </div>
@@ -2244,49 +2267,7 @@ API <code>evolution</code>.</p>
 <p>List of extension fields that should be included in the error response. By default, none will be included. Examples of valid values include [exception,classification,code,description,validationErrorType,queryPath]</p>
 </div>
 <div class="paragraph">
-<p>Environment variable: <code id="env-var-55657">QUARKUS_SMALLRYE_GRAPHQL_ERROR_EXTENSION_FIELDS</code><button class="btn-copy fa fa-clipboard inline-btn-copy" data-clipboard-action="copy" data-clipboard-target="#env-var-55657" title="Copy to clipboard" do-not-collapse="true"></button></p>
-</div>
-</div>
-</div>
-<div class="paragraph description-decoration">
-<p><i class="fa fa-chevron-down"></i><span>Show more</span></p>
-</div></div></td>
-<td class="tableblock halign-left valign-middle"><p class="tableblock">list of string</p></td>
-<td class="tableblock halign-left valign-middle"></td>
-</tr>
-<tr class="row-collapsible row-collapsed row-with-desc">
-<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
-<p><span class="icon"><i class="fa fa-lock" title="Fixed at build time"></i></span> <a id="quarkus-smallrye-graphql_quarkus-smallrye-graphql-show-runtime-exception-message"></a> <span class="property-path"><a href="#quarkus-smallrye-graphql_quarkus-smallrye-graphql-show-runtime-exception-message"><code>quarkus.smallrye-graphql.show-runtime-exception-message</code></a></span>
-<button class="btn-copy fa fa-clipboard inline-btn-copy" data-clipboard-action="copy" data-clipboard-text='quarkus.smallrye-graphql.show-runtime-exception-message' title="Copy to clipboard" do-not-collapse="true"></button></p>
-</div>
-<div id="conf-collapsible-desc-12" class="openblock description description-collapsed">
-<div class="content">
-<div class="paragraph">
-<p>List of Runtime Exceptions class names that should show the error message. By default, Runtime Exception messages will be hidden and a generic <code>Server Error</code> message will be returned.</p>
-</div>
-<div class="paragraph">
-<p>Environment variable: <code id="env-var-55658">QUARKUS_SMALLRYE_GRAPHQL_SHOW_RUNTIME_EXCEPTION_MESSAGE</code><button class="btn-copy fa fa-clipboard inline-btn-copy" data-clipboard-action="copy" data-clipboard-target="#env-var-55658" title="Copy to clipboard" do-not-collapse="true"></button></p>
-</div>
-</div>
-</div>
-<div class="paragraph description-decoration">
-<p><i class="fa fa-chevron-down"></i><span>Show more</span></p>
-</div></div></td>
-<td class="tableblock halign-left valign-middle"><p class="tableblock">list of string</p></td>
-<td class="tableblock halign-left valign-middle"></td>
-</tr>
-<tr class="row-collapsible row-collapsed row-with-desc odd">
-<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
-<p><span class="icon"><i class="fa fa-lock" title="Fixed at build time"></i></span> <a id="quarkus-smallrye-graphql_quarkus-smallrye-graphql-hide-checked-exception-message"></a> <span class="property-path"><a href="#quarkus-smallrye-graphql_quarkus-smallrye-graphql-hide-checked-exception-message"><code>quarkus.smallrye-graphql.hide-checked-exception-message</code></a></span>
-<button class="btn-copy fa fa-clipboard inline-btn-copy" data-clipboard-action="copy" data-clipboard-text='quarkus.smallrye-graphql.hide-checked-exception-message' title="Copy to clipboard" do-not-collapse="true"></button></p>
-</div>
-<div id="conf-collapsible-desc-13" class="openblock description description-collapsed">
-<div class="content">
-<div class="paragraph">
-<p>List of Checked Exceptions class names that should hide the error message. By default, Checked Exception messages will show the exception message.</p>
-</div>
-<div class="paragraph">
-<p>Environment variable: <code id="env-var-55659">QUARKUS_SMALLRYE_GRAPHQL_HIDE_CHECKED_EXCEPTION_MESSAGE</code><button class="btn-copy fa fa-clipboard inline-btn-copy" data-clipboard-action="copy" data-clipboard-target="#env-var-55659" title="Copy to clipboard" do-not-collapse="true"></button></p>
+<p>Environment variable: <code id="env-var-64748">QUARKUS_SMALLRYE_GRAPHQL_ERROR_EXTENSION_FIELDS</code><button class="btn-copy fa fa-clipboard inline-btn-copy" data-clipboard-action="copy" data-clipboard-target="#env-var-64748" title="Copy to clipboard" do-not-collapse="true"></button></p>
 </div>
 </div>
 </div>
@@ -2301,13 +2282,13 @@ API <code>evolution</code>.</p>
 <p><span class="icon"><i class="fa fa-lock" title="Fixed at build time"></i></span> <a id="quarkus-smallrye-graphql_quarkus-smallrye-graphql-default-error-message"></a> <span class="property-path"><a href="#quarkus-smallrye-graphql_quarkus-smallrye-graphql-default-error-message"><code>quarkus.smallrye-graphql.default-error-message</code></a></span>
 <button class="btn-copy fa fa-clipboard inline-btn-copy" data-clipboard-action="copy" data-clipboard-text='quarkus.smallrye-graphql.default-error-message' title="Copy to clipboard" do-not-collapse="true"></button></p>
 </div>
-<div id="conf-collapsible-desc-14" class="openblock description description-collapsed">
+<div id="conf-collapsible-desc-12" class="openblock description description-collapsed">
 <div class="content">
 <div class="paragraph">
 <p>The default error message that will be used for hidden exception messages. Defaults to "Server Error"</p>
 </div>
 <div class="paragraph">
-<p>Environment variable: <code id="env-var-55660">QUARKUS_SMALLRYE_GRAPHQL_DEFAULT_ERROR_MESSAGE</code><button class="btn-copy fa fa-clipboard inline-btn-copy" data-clipboard-action="copy" data-clipboard-target="#env-var-55660" title="Copy to clipboard" do-not-collapse="true"></button></p>
+<p>Environment variable: <code id="env-var-64749">QUARKUS_SMALLRYE_GRAPHQL_DEFAULT_ERROR_MESSAGE</code><button class="btn-copy fa fa-clipboard inline-btn-copy" data-clipboard-action="copy" data-clipboard-target="#env-var-64749" title="Copy to clipboard" do-not-collapse="true"></button></p>
 </div>
 </div>
 </div>
@@ -2322,13 +2303,13 @@ API <code>evolution</code>.</p>
 <p><span class="icon"><i class="fa fa-lock" title="Fixed at build time"></i></span> <a id="quarkus-smallrye-graphql_quarkus-smallrye-graphql-print-data-fetcher-exception"></a> <span class="property-path"><a href="#quarkus-smallrye-graphql_quarkus-smallrye-graphql-print-data-fetcher-exception"><code>quarkus.smallrye-graphql.print-data-fetcher-exception</code></a></span>
 <button class="btn-copy fa fa-clipboard inline-btn-copy" data-clipboard-action="copy" data-clipboard-text='quarkus.smallrye-graphql.print-data-fetcher-exception' title="Copy to clipboard" do-not-collapse="true"></button></p>
 </div>
-<div id="conf-collapsible-desc-15" class="openblock description description-collapsed">
+<div id="conf-collapsible-desc-13" class="openblock description description-collapsed">
 <div class="content">
 <div class="paragraph">
 <p>Print the data fetcher exception to the log file. Default <code>true</code> in dev and test mode, default <code>false</code> in prod.</p>
 </div>
 <div class="paragraph">
-<p>Environment variable: <code id="env-var-55661">QUARKUS_SMALLRYE_GRAPHQL_PRINT_DATA_FETCHER_EXCEPTION</code><button class="btn-copy fa fa-clipboard inline-btn-copy" data-clipboard-action="copy" data-clipboard-target="#env-var-55661" title="Copy to clipboard" do-not-collapse="true"></button></p>
+<p>Environment variable: <code id="env-var-64750">QUARKUS_SMALLRYE_GRAPHQL_PRINT_DATA_FETCHER_EXCEPTION</code><button class="btn-copy fa fa-clipboard inline-btn-copy" data-clipboard-action="copy" data-clipboard-target="#env-var-64750" title="Copy to clipboard" do-not-collapse="true"></button></p>
 </div>
 </div>
 </div>
@@ -2343,13 +2324,13 @@ API <code>evolution</code>.</p>
 <p><span class="icon"><i class="fa fa-lock" title="Fixed at build time"></i></span> <a id="quarkus-smallrye-graphql_quarkus-smallrye-graphql-schema-available"></a> <span class="property-path"><a href="#quarkus-smallrye-graphql_quarkus-smallrye-graphql-schema-available"><code>quarkus.smallrye-graphql.schema-available</code></a></span>
 <button class="btn-copy fa fa-clipboard inline-btn-copy" data-clipboard-action="copy" data-clipboard-text='quarkus.smallrye-graphql.schema-available' title="Copy to clipboard" do-not-collapse="true"></button></p>
 </div>
-<div id="conf-collapsible-desc-16" class="openblock description description-collapsed">
+<div id="conf-collapsible-desc-14" class="openblock description description-collapsed">
 <div class="content">
 <div class="paragraph">
 <p>Make the schema available over HTTP.</p>
 </div>
 <div class="paragraph">
-<p>Environment variable: <code id="env-var-55662">QUARKUS_SMALLRYE_GRAPHQL_SCHEMA_AVAILABLE</code><button class="btn-copy fa fa-clipboard inline-btn-copy" data-clipboard-action="copy" data-clipboard-target="#env-var-55662" title="Copy to clipboard" do-not-collapse="true"></button></p>
+<p>Environment variable: <code id="env-var-64751">QUARKUS_SMALLRYE_GRAPHQL_SCHEMA_AVAILABLE</code><button class="btn-copy fa fa-clipboard inline-btn-copy" data-clipboard-action="copy" data-clipboard-target="#env-var-64751" title="Copy to clipboard" do-not-collapse="true"></button></p>
 </div>
 </div>
 </div>
@@ -2364,13 +2345,13 @@ API <code>evolution</code>.</p>
 <p><span class="icon"><i class="fa fa-lock" title="Fixed at build time"></i></span> <a id="quarkus-smallrye-graphql_quarkus-smallrye-graphql-schema-include-scalars"></a> <span class="property-path"><a href="#quarkus-smallrye-graphql_quarkus-smallrye-graphql-schema-include-scalars"><code>quarkus.smallrye-graphql.schema-include-scalars</code></a></span>
 <button class="btn-copy fa fa-clipboard inline-btn-copy" data-clipboard-action="copy" data-clipboard-text='quarkus.smallrye-graphql.schema-include-scalars' title="Copy to clipboard" do-not-collapse="true"></button></p>
 </div>
-<div id="conf-collapsible-desc-17" class="openblock description description-collapsed">
+<div id="conf-collapsible-desc-15" class="openblock description description-collapsed">
 <div class="content">
 <div class="paragraph">
 <p>Include the Scalar definitions in the schema.</p>
 </div>
 <div class="paragraph">
-<p>Environment variable: <code id="env-var-55663">QUARKUS_SMALLRYE_GRAPHQL_SCHEMA_INCLUDE_SCALARS</code><button class="btn-copy fa fa-clipboard inline-btn-copy" data-clipboard-action="copy" data-clipboard-target="#env-var-55663" title="Copy to clipboard" do-not-collapse="true"></button></p>
+<p>Environment variable: <code id="env-var-64752">QUARKUS_SMALLRYE_GRAPHQL_SCHEMA_INCLUDE_SCALARS</code><button class="btn-copy fa fa-clipboard inline-btn-copy" data-clipboard-action="copy" data-clipboard-target="#env-var-64752" title="Copy to clipboard" do-not-collapse="true"></button></p>
 </div>
 </div>
 </div>
@@ -2385,13 +2366,13 @@ API <code>evolution</code>.</p>
 <p><span class="icon"><i class="fa fa-lock" title="Fixed at build time"></i></span> <a id="quarkus-smallrye-graphql_quarkus-smallrye-graphql-schema-include-schema-definition"></a> <span class="property-path"><a href="#quarkus-smallrye-graphql_quarkus-smallrye-graphql-schema-include-schema-definition"><code>quarkus.smallrye-graphql.schema-include-schema-definition</code></a></span>
 <button class="btn-copy fa fa-clipboard inline-btn-copy" data-clipboard-action="copy" data-clipboard-text='quarkus.smallrye-graphql.schema-include-schema-definition' title="Copy to clipboard" do-not-collapse="true"></button></p>
 </div>
-<div id="conf-collapsible-desc-18" class="openblock description description-collapsed">
+<div id="conf-collapsible-desc-16" class="openblock description description-collapsed">
 <div class="content">
 <div class="paragraph">
 <p>Include the schema internal definition in the schema.</p>
 </div>
 <div class="paragraph">
-<p>Environment variable: <code id="env-var-55664">QUARKUS_SMALLRYE_GRAPHQL_SCHEMA_INCLUDE_SCHEMA_DEFINITION</code><button class="btn-copy fa fa-clipboard inline-btn-copy" data-clipboard-action="copy" data-clipboard-target="#env-var-55664" title="Copy to clipboard" do-not-collapse="true"></button></p>
+<p>Environment variable: <code id="env-var-64753">QUARKUS_SMALLRYE_GRAPHQL_SCHEMA_INCLUDE_SCHEMA_DEFINITION</code><button class="btn-copy fa fa-clipboard inline-btn-copy" data-clipboard-action="copy" data-clipboard-target="#env-var-64753" title="Copy to clipboard" do-not-collapse="true"></button></p>
 </div>
 </div>
 </div>
@@ -2406,13 +2387,13 @@ API <code>evolution</code>.</p>
 <p><span class="icon"><i class="fa fa-lock" title="Fixed at build time"></i></span> <a id="quarkus-smallrye-graphql_quarkus-smallrye-graphql-schema-include-directives"></a> <span class="property-path"><a href="#quarkus-smallrye-graphql_quarkus-smallrye-graphql-schema-include-directives"><code>quarkus.smallrye-graphql.schema-include-directives</code></a></span>
 <button class="btn-copy fa fa-clipboard inline-btn-copy" data-clipboard-action="copy" data-clipboard-text='quarkus.smallrye-graphql.schema-include-directives' title="Copy to clipboard" do-not-collapse="true"></button></p>
 </div>
-<div id="conf-collapsible-desc-19" class="openblock description description-collapsed">
+<div id="conf-collapsible-desc-17" class="openblock description description-collapsed">
 <div class="content">
 <div class="paragraph">
 <p>Include Directives in the schema.</p>
 </div>
 <div class="paragraph">
-<p>Environment variable: <code id="env-var-55665">QUARKUS_SMALLRYE_GRAPHQL_SCHEMA_INCLUDE_DIRECTIVES</code><button class="btn-copy fa fa-clipboard inline-btn-copy" data-clipboard-action="copy" data-clipboard-target="#env-var-55665" title="Copy to clipboard" do-not-collapse="true"></button></p>
+<p>Environment variable: <code id="env-var-64754">QUARKUS_SMALLRYE_GRAPHQL_SCHEMA_INCLUDE_DIRECTIVES</code><button class="btn-copy fa fa-clipboard inline-btn-copy" data-clipboard-action="copy" data-clipboard-target="#env-var-64754" title="Copy to clipboard" do-not-collapse="true"></button></p>
 </div>
 </div>
 </div>
@@ -2427,13 +2408,13 @@ API <code>evolution</code>.</p>
 <p><span class="icon"><i class="fa fa-lock" title="Fixed at build time"></i></span> <a id="quarkus-smallrye-graphql_quarkus-smallrye-graphql-schema-include-introspection-types"></a> <span class="property-path"><a href="#quarkus-smallrye-graphql_quarkus-smallrye-graphql-schema-include-introspection-types"><code>quarkus.smallrye-graphql.schema-include-introspection-types</code></a></span>
 <button class="btn-copy fa fa-clipboard inline-btn-copy" data-clipboard-action="copy" data-clipboard-text='quarkus.smallrye-graphql.schema-include-introspection-types' title="Copy to clipboard" do-not-collapse="true"></button></p>
 </div>
-<div id="conf-collapsible-desc-20" class="openblock description description-collapsed">
+<div id="conf-collapsible-desc-18" class="openblock description description-collapsed">
 <div class="content">
 <div class="paragraph">
 <p>Include Introspection Types in the schema.</p>
 </div>
 <div class="paragraph">
-<p>Environment variable: <code id="env-var-55666">QUARKUS_SMALLRYE_GRAPHQL_SCHEMA_INCLUDE_INTROSPECTION_TYPES</code><button class="btn-copy fa fa-clipboard inline-btn-copy" data-clipboard-action="copy" data-clipboard-target="#env-var-55666" title="Copy to clipboard" do-not-collapse="true"></button></p>
+<p>Environment variable: <code id="env-var-64755">QUARKUS_SMALLRYE_GRAPHQL_SCHEMA_INCLUDE_INTROSPECTION_TYPES</code><button class="btn-copy fa fa-clipboard inline-btn-copy" data-clipboard-action="copy" data-clipboard-target="#env-var-64755" title="Copy to clipboard" do-not-collapse="true"></button></p>
 </div>
 </div>
 </div>
@@ -2448,13 +2429,13 @@ API <code>evolution</code>.</p>
 <p><span class="icon"><i class="fa fa-lock" title="Fixed at build time"></i></span> <a id="quarkus-smallrye-graphql_quarkus-smallrye-graphql-log-payload"></a> <span class="property-path"><a href="#quarkus-smallrye-graphql_quarkus-smallrye-graphql-log-payload"><code>quarkus.smallrye-graphql.log-payload</code></a></span>
 <button class="btn-copy fa fa-clipboard inline-btn-copy" data-clipboard-action="copy" data-clipboard-text='quarkus.smallrye-graphql.log-payload' title="Copy to clipboard" do-not-collapse="true"></button></p>
 </div>
-<div id="conf-collapsible-desc-21" class="openblock description description-collapsed">
+<div id="conf-collapsible-desc-19" class="openblock description description-collapsed">
 <div class="content">
 <div class="paragraph">
 <p>Log the payload (and optionally variables) to System out.</p>
 </div>
 <div class="paragraph">
-<p>Environment variable: <code id="env-var-55667">QUARKUS_SMALLRYE_GRAPHQL_LOG_PAYLOAD</code><button class="btn-copy fa fa-clipboard inline-btn-copy" data-clipboard-action="copy" data-clipboard-target="#env-var-55667" title="Copy to clipboard" do-not-collapse="true"></button></p>
+<p>Environment variable: <code id="env-var-64756">QUARKUS_SMALLRYE_GRAPHQL_LOG_PAYLOAD</code><button class="btn-copy fa fa-clipboard inline-btn-copy" data-clipboard-action="copy" data-clipboard-target="#env-var-64756" title="Copy to clipboard" do-not-collapse="true"></button></p>
 </div>
 </div>
 </div>
@@ -2471,13 +2452,13 @@ API <code>evolution</code>.</p>
 <p><span class="icon"><i class="fa fa-lock" title="Fixed at build time"></i></span> <a id="quarkus-smallrye-graphql_quarkus-smallrye-graphql-unwrap-exceptions"></a> <span class="property-path"><a href="#quarkus-smallrye-graphql_quarkus-smallrye-graphql-unwrap-exceptions"><code>quarkus.smallrye-graphql.unwrap-exceptions</code></a></span>
 <button class="btn-copy fa fa-clipboard inline-btn-copy" data-clipboard-action="copy" data-clipboard-text='quarkus.smallrye-graphql.unwrap-exceptions' title="Copy to clipboard" do-not-collapse="true"></button></p>
 </div>
-<div id="conf-collapsible-desc-22" class="openblock description description-collapsed">
+<div id="conf-collapsible-desc-20" class="openblock description description-collapsed">
 <div class="content">
 <div class="paragraph">
 <p>Exceptions that should be unwrapped (class names).</p>
 </div>
 <div class="paragraph">
-<p>Environment variable: <code id="env-var-55668">QUARKUS_SMALLRYE_GRAPHQL_UNWRAP_EXCEPTIONS</code><button class="btn-copy fa fa-clipboard inline-btn-copy" data-clipboard-action="copy" data-clipboard-target="#env-var-55668" title="Copy to clipboard" do-not-collapse="true"></button></p>
+<p>Environment variable: <code id="env-var-64757">QUARKUS_SMALLRYE_GRAPHQL_UNWRAP_EXCEPTIONS</code><button class="btn-copy fa fa-clipboard inline-btn-copy" data-clipboard-action="copy" data-clipboard-target="#env-var-64757" title="Copy to clipboard" do-not-collapse="true"></button></p>
 </div>
 </div>
 </div>
@@ -2492,13 +2473,13 @@ API <code>evolution</code>.</p>
 <p><span class="icon"><i class="fa fa-lock" title="Fixed at build time"></i></span> <a id="quarkus-smallrye-graphql_quarkus-smallrye-graphql-websocket-subprotocols"></a> <span class="property-path"><a href="#quarkus-smallrye-graphql_quarkus-smallrye-graphql-websocket-subprotocols"><code>quarkus.smallrye-graphql.websocket-subprotocols</code></a></span>
 <button class="btn-copy fa fa-clipboard inline-btn-copy" data-clipboard-action="copy" data-clipboard-text='quarkus.smallrye-graphql.websocket-subprotocols' title="Copy to clipboard" do-not-collapse="true"></button></p>
 </div>
-<div id="conf-collapsible-desc-23" class="openblock description description-collapsed">
+<div id="conf-collapsible-desc-21" class="openblock description description-collapsed">
 <div class="content">
 <div class="paragraph">
 <p>Subprotocols that should be supported by the server for graphql-over-websocket use cases. Allowed subprotocols are "graphql-ws" and "graphql-transport-ws". By default, both are enabled.</p>
 </div>
 <div class="paragraph">
-<p>Environment variable: <code id="env-var-55669">QUARKUS_SMALLRYE_GRAPHQL_WEBSOCKET_SUBPROTOCOLS</code><button class="btn-copy fa fa-clipboard inline-btn-copy" data-clipboard-action="copy" data-clipboard-target="#env-var-55669" title="Copy to clipboard" do-not-collapse="true"></button></p>
+<p>Environment variable: <code id="env-var-64758">QUARKUS_SMALLRYE_GRAPHQL_WEBSOCKET_SUBPROTOCOLS</code><button class="btn-copy fa fa-clipboard inline-btn-copy" data-clipboard-action="copy" data-clipboard-target="#env-var-64758" title="Copy to clipboard" do-not-collapse="true"></button></p>
 </div>
 </div>
 </div>
@@ -2513,13 +2494,13 @@ API <code>evolution</code>.</p>
 <p><span class="icon"><i class="fa fa-lock" title="Fixed at build time"></i></span> <a id="quarkus-smallrye-graphql_quarkus-smallrye-graphql-parser-capture-ignored-chars"></a> <span class="property-path"><a href="#quarkus-smallrye-graphql_quarkus-smallrye-graphql-parser-capture-ignored-chars"><code>quarkus.smallrye-graphql.parser-capture-ignored-chars</code></a></span>
 <button class="btn-copy fa fa-clipboard inline-btn-copy" data-clipboard-action="copy" data-clipboard-text='quarkus.smallrye-graphql.parser-capture-ignored-chars' title="Copy to clipboard" do-not-collapse="true"></button></p>
 </div>
-<div id="conf-collapsible-desc-24" class="openblock description description-collapsed">
+<div id="conf-collapsible-desc-22" class="openblock description description-collapsed">
 <div class="content">
 <div class="paragraph">
 <p>Set to true if ignored chars should be captured as AST nodes. Default to false</p>
 </div>
 <div class="paragraph">
-<p>Environment variable: <code id="env-var-55670">QUARKUS_SMALLRYE_GRAPHQL_PARSER_CAPTURE_IGNORED_CHARS</code><button class="btn-copy fa fa-clipboard inline-btn-copy" data-clipboard-action="copy" data-clipboard-target="#env-var-55670" title="Copy to clipboard" do-not-collapse="true"></button></p>
+<p>Environment variable: <code id="env-var-64759">QUARKUS_SMALLRYE_GRAPHQL_PARSER_CAPTURE_IGNORED_CHARS</code><button class="btn-copy fa fa-clipboard inline-btn-copy" data-clipboard-action="copy" data-clipboard-target="#env-var-64759" title="Copy to clipboard" do-not-collapse="true"></button></p>
 </div>
 </div>
 </div>
@@ -2534,13 +2515,13 @@ API <code>evolution</code>.</p>
 <p><span class="icon"><i class="fa fa-lock" title="Fixed at build time"></i></span> <a id="quarkus-smallrye-graphql_quarkus-smallrye-graphql-parser-capture-line-comments"></a> <span class="property-path"><a href="#quarkus-smallrye-graphql_quarkus-smallrye-graphql-parser-capture-line-comments"><code>quarkus.smallrye-graphql.parser-capture-line-comments</code></a></span>
 <button class="btn-copy fa fa-clipboard inline-btn-copy" data-clipboard-action="copy" data-clipboard-text='quarkus.smallrye-graphql.parser-capture-line-comments' title="Copy to clipboard" do-not-collapse="true"></button></p>
 </div>
-<div id="conf-collapsible-desc-25" class="openblock description description-collapsed">
+<div id="conf-collapsible-desc-23" class="openblock description description-collapsed">
 <div class="content">
 <div class="paragraph">
 <p>Set to true if `graphql.language.Comment`s should be captured as AST nodes</p>
 </div>
 <div class="paragraph">
-<p>Environment variable: <code id="env-var-55671">QUARKUS_SMALLRYE_GRAPHQL_PARSER_CAPTURE_LINE_COMMENTS</code><button class="btn-copy fa fa-clipboard inline-btn-copy" data-clipboard-action="copy" data-clipboard-target="#env-var-55671" title="Copy to clipboard" do-not-collapse="true"></button></p>
+<p>Environment variable: <code id="env-var-64760">QUARKUS_SMALLRYE_GRAPHQL_PARSER_CAPTURE_LINE_COMMENTS</code><button class="btn-copy fa fa-clipboard inline-btn-copy" data-clipboard-action="copy" data-clipboard-target="#env-var-64760" title="Copy to clipboard" do-not-collapse="true"></button></p>
 </div>
 </div>
 </div>
@@ -2555,13 +2536,13 @@ API <code>evolution</code>.</p>
 <p><span class="icon"><i class="fa fa-lock" title="Fixed at build time"></i></span> <a id="quarkus-smallrye-graphql_quarkus-smallrye-graphql-parser-capture-source-location"></a> <span class="property-path"><a href="#quarkus-smallrye-graphql_quarkus-smallrye-graphql-parser-capture-source-location"><code>quarkus.smallrye-graphql.parser-capture-source-location</code></a></span>
 <button class="btn-copy fa fa-clipboard inline-btn-copy" data-clipboard-action="copy" data-clipboard-text='quarkus.smallrye-graphql.parser-capture-source-location' title="Copy to clipboard" do-not-collapse="true"></button></p>
 </div>
-<div id="conf-collapsible-desc-26" class="openblock description description-collapsed">
+<div id="conf-collapsible-desc-24" class="openblock description description-collapsed">
 <div class="content">
 <div class="paragraph">
 <p>Set to true true if `graphql.language.SourceLocation`s should be captured as AST nodes. Default to true</p>
 </div>
 <div class="paragraph">
-<p>Environment variable: <code id="env-var-55672">QUARKUS_SMALLRYE_GRAPHQL_PARSER_CAPTURE_SOURCE_LOCATION</code><button class="btn-copy fa fa-clipboard inline-btn-copy" data-clipboard-action="copy" data-clipboard-target="#env-var-55672" title="Copy to clipboard" do-not-collapse="true"></button></p>
+<p>Environment variable: <code id="env-var-64761">QUARKUS_SMALLRYE_GRAPHQL_PARSER_CAPTURE_SOURCE_LOCATION</code><button class="btn-copy fa fa-clipboard inline-btn-copy" data-clipboard-action="copy" data-clipboard-target="#env-var-64761" title="Copy to clipboard" do-not-collapse="true"></button></p>
 </div>
 </div>
 </div>
@@ -2576,13 +2557,13 @@ API <code>evolution</code>.</p>
 <p><span class="icon"><i class="fa fa-lock" title="Fixed at build time"></i></span> <a id="quarkus-smallrye-graphql_quarkus-smallrye-graphql-parser-max-tokens"></a> <span class="property-path"><a href="#quarkus-smallrye-graphql_quarkus-smallrye-graphql-parser-max-tokens"><code>quarkus.smallrye-graphql.parser-max-tokens</code></a></span>
 <button class="btn-copy fa fa-clipboard inline-btn-copy" data-clipboard-action="copy" data-clipboard-text='quarkus.smallrye-graphql.parser-max-tokens' title="Copy to clipboard" do-not-collapse="true"></button></p>
 </div>
-<div id="conf-collapsible-desc-27" class="openblock description description-collapsed">
+<div id="conf-collapsible-desc-25" class="openblock description description-collapsed">
 <div class="content">
 <div class="paragraph">
 <p>The maximum number of raw tokens the parser will accept, after which an exception will be thrown. Default to 15000</p>
 </div>
 <div class="paragraph">
-<p>Environment variable: <code id="env-var-55673">QUARKUS_SMALLRYE_GRAPHQL_PARSER_MAX_TOKENS</code><button class="btn-copy fa fa-clipboard inline-btn-copy" data-clipboard-action="copy" data-clipboard-target="#env-var-55673" title="Copy to clipboard" do-not-collapse="true"></button></p>
+<p>Environment variable: <code id="env-var-64762">QUARKUS_SMALLRYE_GRAPHQL_PARSER_MAX_TOKENS</code><button class="btn-copy fa fa-clipboard inline-btn-copy" data-clipboard-action="copy" data-clipboard-target="#env-var-64762" title="Copy to clipboard" do-not-collapse="true"></button></p>
 </div>
 </div>
 </div>
@@ -2597,13 +2578,13 @@ API <code>evolution</code>.</p>
 <p><span class="icon"><i class="fa fa-lock" title="Fixed at build time"></i></span> <a id="quarkus-smallrye-graphql_quarkus-smallrye-graphql-parser-max-whitespace-tokens"></a> <span class="property-path"><a href="#quarkus-smallrye-graphql_quarkus-smallrye-graphql-parser-max-whitespace-tokens"><code>quarkus.smallrye-graphql.parser-max-whitespace-tokens</code></a></span>
 <button class="btn-copy fa fa-clipboard inline-btn-copy" data-clipboard-action="copy" data-clipboard-text='quarkus.smallrye-graphql.parser-max-whitespace-tokens' title="Copy to clipboard" do-not-collapse="true"></button></p>
 </div>
-<div id="conf-collapsible-desc-28" class="openblock description description-collapsed">
+<div id="conf-collapsible-desc-26" class="openblock description description-collapsed">
 <div class="content">
 <div class="paragraph">
 <p>The maximum number of raw whitespace tokens the parser will accept, after which an exception will be thrown. Default to 200000</p>
 </div>
 <div class="paragraph">
-<p>Environment variable: <code id="env-var-55674">QUARKUS_SMALLRYE_GRAPHQL_PARSER_MAX_WHITESPACE_TOKENS</code><button class="btn-copy fa fa-clipboard inline-btn-copy" data-clipboard-action="copy" data-clipboard-target="#env-var-55674" title="Copy to clipboard" do-not-collapse="true"></button></p>
+<p>Environment variable: <code id="env-var-64763">QUARKUS_SMALLRYE_GRAPHQL_PARSER_MAX_WHITESPACE_TOKENS</code><button class="btn-copy fa fa-clipboard inline-btn-copy" data-clipboard-action="copy" data-clipboard-target="#env-var-64763" title="Copy to clipboard" do-not-collapse="true"></button></p>
 </div>
 </div>
 </div>
@@ -2618,13 +2599,13 @@ API <code>evolution</code>.</p>
 <p><span class="icon"><i class="fa fa-lock" title="Fixed at build time"></i></span> <a id="quarkus-smallrye-graphql_quarkus-smallrye-graphql-instrumentation-query-complexity"></a> <span class="property-path"><a href="#quarkus-smallrye-graphql_quarkus-smallrye-graphql-instrumentation-query-complexity"><code>quarkus.smallrye-graphql.instrumentation-query-complexity</code></a></span>
 <button class="btn-copy fa fa-clipboard inline-btn-copy" data-clipboard-action="copy" data-clipboard-text='quarkus.smallrye-graphql.instrumentation-query-complexity' title="Copy to clipboard" do-not-collapse="true"></button></p>
 </div>
-<div id="conf-collapsible-desc-29" class="openblock description description-collapsed">
+<div id="conf-collapsible-desc-27" class="openblock description description-collapsed">
 <div class="content">
 <div class="paragraph">
 <p>Abort a query if the total number of data fields queried exceeds the defined limit. Default to no limit</p>
 </div>
 <div class="paragraph">
-<p>Environment variable: <code id="env-var-55675">QUARKUS_SMALLRYE_GRAPHQL_INSTRUMENTATION_QUERY_COMPLEXITY</code><button class="btn-copy fa fa-clipboard inline-btn-copy" data-clipboard-action="copy" data-clipboard-target="#env-var-55675" title="Copy to clipboard" do-not-collapse="true"></button></p>
+<p>Environment variable: <code id="env-var-64764">QUARKUS_SMALLRYE_GRAPHQL_INSTRUMENTATION_QUERY_COMPLEXITY</code><button class="btn-copy fa fa-clipboard inline-btn-copy" data-clipboard-action="copy" data-clipboard-target="#env-var-64764" title="Copy to clipboard" do-not-collapse="true"></button></p>
 </div>
 </div>
 </div>
@@ -2639,13 +2620,13 @@ API <code>evolution</code>.</p>
 <p><span class="icon"><i class="fa fa-lock" title="Fixed at build time"></i></span> <a id="quarkus-smallrye-graphql_quarkus-smallrye-graphql-instrumentation-query-depth"></a> <span class="property-path"><a href="#quarkus-smallrye-graphql_quarkus-smallrye-graphql-instrumentation-query-depth"><code>quarkus.smallrye-graphql.instrumentation-query-depth</code></a></span>
 <button class="btn-copy fa fa-clipboard inline-btn-copy" data-clipboard-action="copy" data-clipboard-text='quarkus.smallrye-graphql.instrumentation-query-depth' title="Copy to clipboard" do-not-collapse="true"></button></p>
 </div>
-<div id="conf-collapsible-desc-30" class="openblock description description-collapsed">
+<div id="conf-collapsible-desc-28" class="openblock description description-collapsed">
 <div class="content">
 <div class="paragraph">
 <p>Abort a query if the total depth of the query exceeds the defined limit. Default to no limit</p>
 </div>
 <div class="paragraph">
-<p>Environment variable: <code id="env-var-55676">QUARKUS_SMALLRYE_GRAPHQL_INSTRUMENTATION_QUERY_DEPTH</code><button class="btn-copy fa fa-clipboard inline-btn-copy" data-clipboard-action="copy" data-clipboard-target="#env-var-55676" title="Copy to clipboard" do-not-collapse="true"></button></p>
+<p>Environment variable: <code id="env-var-64765">QUARKUS_SMALLRYE_GRAPHQL_INSTRUMENTATION_QUERY_DEPTH</code><button class="btn-copy fa fa-clipboard inline-btn-copy" data-clipboard-action="copy" data-clipboard-target="#env-var-64765" title="Copy to clipboard" do-not-collapse="true"></button></p>
 </div>
 </div>
 </div>
@@ -2655,18 +2636,18 @@ API <code>evolution</code>.</p>
 <td class="tableblock halign-left valign-middle"><p class="tableblock">int</p></td>
 <td class="tableblock halign-left valign-middle"></td>
 </tr>
-<tr class="row-collapsible row-collapsed row-with-desc row-hidden odd">
+<tr class="row-collapsible row-collapsed row-with-desc odd">
 <td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
 <p><span class="icon"><i class="fa fa-lock" title="Fixed at build time"></i></span> <a id="quarkus-smallrye-graphql_quarkus-smallrye-graphql-extra-scalars"></a> <span class="property-path"><a href="#quarkus-smallrye-graphql_quarkus-smallrye-graphql-extra-scalars"><code>quarkus.smallrye-graphql.extra-scalars</code></a></span>
 <button class="btn-copy fa fa-clipboard inline-btn-copy" data-clipboard-action="copy" data-clipboard-text='quarkus.smallrye-graphql.extra-scalars' title="Copy to clipboard" do-not-collapse="true"></button></p>
 </div>
-<div id="conf-collapsible-desc-31" class="openblock description description-collapsed">
+<div id="conf-collapsible-desc-29" class="openblock description description-collapsed">
 <div class="content">
 <div class="paragraph">
 <p>Additional scalars to register in the schema. These are taken from the <code>graphql-java-extended-scalars</code> library.</p>
 </div>
 <div class="paragraph">
-<p>Environment variable: <code id="env-var-55677">QUARKUS_SMALLRYE_GRAPHQL_EXTRA_SCALARS</code><button class="btn-copy fa fa-clipboard inline-btn-copy" data-clipboard-action="copy" data-clipboard-target="#env-var-55677" title="Copy to clipboard" do-not-collapse="true"></button></p>
+<p>Environment variable: <code id="env-var-64766">QUARKUS_SMALLRYE_GRAPHQL_EXTRA_SCALARS</code><button class="btn-copy fa fa-clipboard inline-btn-copy" data-clipboard-action="copy" data-clipboard-target="#env-var-64766" title="Copy to clipboard" do-not-collapse="true"></button></p>
 </div>
 </div>
 </div>
@@ -2674,43 +2655,22 @@ API <code>evolution</code>.</p>
 <p><i class="fa fa-chevron-down"></i><span>Show more</span></p>
 </div></div></td>
 <td class="tableblock halign-left valign-middle"><div class="content"><div class="paragraph">
-<p>list of <code>uuid</code></p>
+<p>list of <code>uuid</code>, <code>object</code>, <code>json</code></p>
 </div></div></td>
 <td class="tableblock halign-left valign-middle"></td>
 </tr>
-<tr class="row-collapsible row-collapsed row-with-desc row-hidden">
-<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
-<p><span class="icon"><i class="fa fa-lock" title="Fixed at build time"></i></span> <a id="quarkus-smallrye-graphql_quarkus-smallrye-graphql-exclude-null-fields-in-responses"></a> <span class="property-path"><a href="#quarkus-smallrye-graphql_quarkus-smallrye-graphql-exclude-null-fields-in-responses"><code>quarkus.smallrye-graphql.exclude-null-fields-in-responses</code></a></span>
-<button class="btn-copy fa fa-clipboard inline-btn-copy" data-clipboard-action="copy" data-clipboard-text='quarkus.smallrye-graphql.exclude-null-fields-in-responses' title="Copy to clipboard" do-not-collapse="true"></button></p>
-</div>
-<div id="conf-collapsible-desc-32" class="openblock description description-collapsed">
-<div class="content">
-<div class="paragraph">
-<p>Excludes all the 'null' fields in the GraphQL response&#8217;s <code>data</code> field, except for the non-successfully resolved fields (errors). Disabled by default.</p>
-</div>
-<div class="paragraph">
-<p>Environment variable: <code id="env-var-55678">QUARKUS_SMALLRYE_GRAPHQL_EXCLUDE_NULL_FIELDS_IN_RESPONSES</code><button class="btn-copy fa fa-clipboard inline-btn-copy" data-clipboard-action="copy" data-clipboard-target="#env-var-55678" title="Copy to clipboard" do-not-collapse="true"></button></p>
-</div>
-</div>
-</div>
-<div class="paragraph description-decoration">
-<p><i class="fa fa-chevron-down"></i><span>Show more</span></p>
-</div></div></td>
-<td class="tableblock halign-left valign-middle"><p class="tableblock">boolean</p></td>
-<td class="tableblock halign-left valign-middle"></td>
-</tr>
-<tr class="row-collapsible row-collapsed row-with-desc row-hidden odd">
+<tr class="row-collapsible row-collapsed row-with-desc">
 <td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
 <p><a id="quarkus-smallrye-graphql_quarkus-smallrye-graphql-ui-enable"></a> <span class="property-path"><a href="#quarkus-smallrye-graphql_quarkus-smallrye-graphql-ui-enable"><code>quarkus.smallrye-graphql.ui.enable</code></a></span>
 <button class="btn-copy fa fa-clipboard inline-btn-copy" data-clipboard-action="copy" data-clipboard-text='quarkus.smallrye-graphql.ui.enable' title="Copy to clipboard" do-not-collapse="true"></button></p>
 </div>
-<div id="conf-collapsible-desc-33" class="openblock description description-collapsed">
+<div id="conf-collapsible-desc-30" class="openblock description description-collapsed">
 <div class="content">
 <div class="paragraph">
 <p>If GraphQL UI should be enabled. By default, GraphQL UI is enabled if it is included (see <code>always-include</code>).</p>
 </div>
 <div class="paragraph">
-<p>Environment variable: <code id="env-var-55679">QUARKUS_SMALLRYE_GRAPHQL_UI_ENABLE</code><button class="btn-copy fa fa-clipboard inline-btn-copy" data-clipboard-action="copy" data-clipboard-target="#env-var-55679" title="Copy to clipboard" do-not-collapse="true"></button></p>
+<p>Environment variable: <code id="env-var-64767">QUARKUS_SMALLRYE_GRAPHQL_UI_ENABLE</code><button class="btn-copy fa fa-clipboard inline-btn-copy" data-clipboard-action="copy" data-clipboard-target="#env-var-64767" title="Copy to clipboard" do-not-collapse="true"></button></p>
 </div>
 </div>
 </div>
@@ -2720,18 +2680,18 @@ API <code>evolution</code>.</p>
 <td class="tableblock halign-left valign-middle"><p class="tableblock">boolean</p></td>
 <td class="tableblock halign-left valign-middle"><p class="tableblock"><code>true</code></p></td>
 </tr>
-<tr class="row-collapsible row-collapsed row-with-desc row-hidden">
+<tr class="row-collapsible row-collapsed row-with-desc row-hidden odd">
 <td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
 <p><a id="quarkus-smallrye-graphql_quarkus-smallrye-graphql-field-visibility"></a> <span class="property-path"><a href="#quarkus-smallrye-graphql_quarkus-smallrye-graphql-field-visibility"><code>quarkus.smallrye-graphql.field-visibility</code></a></span>
 <button class="btn-copy fa fa-clipboard inline-btn-copy" data-clipboard-action="copy" data-clipboard-text='quarkus.smallrye-graphql.field-visibility' title="Copy to clipboard" do-not-collapse="true"></button></p>
 </div>
-<div id="conf-collapsible-desc-34" class="openblock description description-collapsed">
+<div id="conf-collapsible-desc-31" class="openblock description description-collapsed">
 <div class="content">
 <div class="paragraph">
 <p>Specifies the field visibility for the GraphQL schema. This configuration item allows you to define comma-separated list of patterns (GraphQLType.GraphQLField). These patterns are used to determine which fields should be excluded from the schema. Special value <code>no-introspection</code> will disable introspection fields. For more info see <a href="https://smallrye.io/smallrye-graphql/docs/schema/field-visibility">graphql-java documentation</a></p>
 </div>
 <div class="paragraph">
-<p>Environment variable: <code id="env-var-55680">QUARKUS_SMALLRYE_GRAPHQL_FIELD_VISIBILITY</code><button class="btn-copy fa fa-clipboard inline-btn-copy" data-clipboard-action="copy" data-clipboard-target="#env-var-55680" title="Copy to clipboard" do-not-collapse="true"></button></p>
+<p>Environment variable: <code id="env-var-64768">QUARKUS_SMALLRYE_GRAPHQL_FIELD_VISIBILITY</code><button class="btn-copy fa fa-clipboard inline-btn-copy" data-clipboard-action="copy" data-clipboard-target="#env-var-64768" title="Copy to clipboard" do-not-collapse="true"></button></p>
 </div>
 </div>
 </div>
@@ -2740,6 +2700,69 @@ API <code>evolution</code>.</p>
 </div></div></td>
 <td class="tableblock halign-left valign-middle"><p class="tableblock">string</p></td>
 <td class="tableblock halign-left valign-middle"><p class="tableblock"><code>default</code></p></td>
+</tr>
+<tr class="row-collapsible row-collapsed row-with-desc row-hidden">
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p><a id="quarkus-smallrye-graphql_quarkus-smallrye-graphql-exclude-null-fields-in-responses"></a> <span class="property-path"><a href="#quarkus-smallrye-graphql_quarkus-smallrye-graphql-exclude-null-fields-in-responses"><code>quarkus.smallrye-graphql.exclude-null-fields-in-responses</code></a></span>
+<button class="btn-copy fa fa-clipboard inline-btn-copy" data-clipboard-action="copy" data-clipboard-text='quarkus.smallrye-graphql.exclude-null-fields-in-responses' title="Copy to clipboard" do-not-collapse="true"></button></p>
+</div>
+<div id="conf-collapsible-desc-32" class="openblock description description-collapsed">
+<div class="content">
+<div class="paragraph">
+<p>Excludes all the 'null' fields in the GraphQL response&#8217;s <code>data</code> field, except for the non-successfully resolved fields (errors). Disabled by default.</p>
+</div>
+<div class="paragraph">
+<p>Environment variable: <code id="env-var-64769">QUARKUS_SMALLRYE_GRAPHQL_EXCLUDE_NULL_FIELDS_IN_RESPONSES</code><button class="btn-copy fa fa-clipboard inline-btn-copy" data-clipboard-action="copy" data-clipboard-target="#env-var-64769" title="Copy to clipboard" do-not-collapse="true"></button></p>
+</div>
+</div>
+</div>
+<div class="paragraph description-decoration">
+<p><i class="fa fa-chevron-down"></i><span>Show more</span></p>
+</div></div></td>
+<td class="tableblock halign-left valign-middle"><p class="tableblock">boolean</p></td>
+<td class="tableblock halign-left valign-middle"></td>
+</tr>
+<tr class="row-collapsible row-collapsed row-with-desc row-hidden odd">
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p><a id="quarkus-smallrye-graphql_quarkus-smallrye-graphql-show-runtime-exception-message"></a> <span class="property-path"><a href="#quarkus-smallrye-graphql_quarkus-smallrye-graphql-show-runtime-exception-message"><code>quarkus.smallrye-graphql.show-runtime-exception-message</code></a></span>
+<button class="btn-copy fa fa-clipboard inline-btn-copy" data-clipboard-action="copy" data-clipboard-text='quarkus.smallrye-graphql.show-runtime-exception-message' title="Copy to clipboard" do-not-collapse="true"></button></p>
+</div>
+<div id="conf-collapsible-desc-33" class="openblock description description-collapsed">
+<div class="content">
+<div class="paragraph">
+<p>List of Runtime Exceptions class names that should show the error message. By default, Runtime Exception messages will be hidden and a generic <code>Server Error</code> message will be returned.</p>
+</div>
+<div class="paragraph">
+<p>Environment variable: <code id="env-var-64770">QUARKUS_SMALLRYE_GRAPHQL_SHOW_RUNTIME_EXCEPTION_MESSAGE</code><button class="btn-copy fa fa-clipboard inline-btn-copy" data-clipboard-action="copy" data-clipboard-target="#env-var-64770" title="Copy to clipboard" do-not-collapse="true"></button></p>
+</div>
+</div>
+</div>
+<div class="paragraph description-decoration">
+<p><i class="fa fa-chevron-down"></i><span>Show more</span></p>
+</div></div></td>
+<td class="tableblock halign-left valign-middle"><p class="tableblock">list of string</p></td>
+<td class="tableblock halign-left valign-middle"></td>
+</tr>
+<tr class="row-collapsible row-collapsed row-with-desc row-hidden">
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p><a id="quarkus-smallrye-graphql_quarkus-smallrye-graphql-hide-checked-exception-message"></a> <span class="property-path"><a href="#quarkus-smallrye-graphql_quarkus-smallrye-graphql-hide-checked-exception-message"><code>quarkus.smallrye-graphql.hide-checked-exception-message</code></a></span>
+<button class="btn-copy fa fa-clipboard inline-btn-copy" data-clipboard-action="copy" data-clipboard-text='quarkus.smallrye-graphql.hide-checked-exception-message' title="Copy to clipboard" do-not-collapse="true"></button></p>
+</div>
+<div id="conf-collapsible-desc-34" class="openblock description description-collapsed">
+<div class="content">
+<div class="paragraph">
+<p>List of Checked Exceptions class names that should hide the error message. By default, Checked Exception messages will show the exception message.</p>
+</div>
+<div class="paragraph">
+<p>Environment variable: <code id="env-var-64771">QUARKUS_SMALLRYE_GRAPHQL_HIDE_CHECKED_EXCEPTION_MESSAGE</code><button class="btn-copy fa fa-clipboard inline-btn-copy" data-clipboard-action="copy" data-clipboard-target="#env-var-64771" title="Copy to clipboard" do-not-collapse="true"></button></p>
+</div>
+</div>
+</div>
+<div class="paragraph description-decoration">
+<p><i class="fa fa-chevron-down"></i><span>Show more</span></p>
+</div></div></td>
+<td class="tableblock halign-left valign-middle"><p class="tableblock">list of string</p></td>
+<td class="tableblock halign-left valign-middle"></td>
 </tr>
 <tr>
 <th class="tableblock halign-left valign-top"><p class="tableblock"><a id="quarkus-smallrye-graphql_section_quarkus-smallrye-graphql-ui"></a> <span class="section-name section-level0"><a href="#quarkus-smallrye-graphql_section_quarkus-smallrye-graphql-ui">SmallRye GraphQL UI configuration</a></span></p></th>
@@ -2757,7 +2780,7 @@ API <code>evolution</code>.</p>
 <p>The path where GraphQL UI is available. The value <code>/</code> is not allowed as it blocks the application from serving anything else. By default, this URL will be resolved as a path relative to <code>${quarkus.http.non-application-root-path}</code>.</p>
 </div>
 <div class="paragraph">
-<p>Environment variable: <code id="env-var-55681">QUARKUS_SMALLRYE_GRAPHQL_UI_ROOT_PATH</code><button class="btn-copy fa fa-clipboard inline-btn-copy" data-clipboard-action="copy" data-clipboard-target="#env-var-55681" title="Copy to clipboard" do-not-collapse="true"></button></p>
+<p>Environment variable: <code id="env-var-64772">QUARKUS_SMALLRYE_GRAPHQL_UI_ROOT_PATH</code><button class="btn-copy fa fa-clipboard inline-btn-copy" data-clipboard-action="copy" data-clipboard-target="#env-var-64772" title="Copy to clipboard" do-not-collapse="true"></button></p>
 </div>
 </div>
 </div>
@@ -2778,7 +2801,7 @@ API <code>evolution</code>.</p>
 <p>Always include the UI. By default, this will only be included in dev and test. Setting this to true will also include the UI in Prod</p>
 </div>
 <div class="paragraph">
-<p>Environment variable: <code id="env-var-55682">QUARKUS_SMALLRYE_GRAPHQL_UI_ALWAYS_INCLUDE</code><button class="btn-copy fa fa-clipboard inline-btn-copy" data-clipboard-action="copy" data-clipboard-target="#env-var-55682" title="Copy to clipboard" do-not-collapse="true"></button></p>
+<p>Environment variable: <code id="env-var-64773">QUARKUS_SMALLRYE_GRAPHQL_UI_ALWAYS_INCLUDE</code><button class="btn-copy fa fa-clipboard inline-btn-copy" data-clipboard-action="copy" data-clipboard-target="#env-var-64773" title="Copy to clipboard" do-not-collapse="true"></button></p>
 </div>
 </div>
 </div>
@@ -2808,6 +2831,7 @@ API <code>evolution</code>.</p>
 <ul class="sectlevel2">
 <li><a href="#batching">Batching</a></li>
 <li><a href="#non-blocking">Non blocking</a></li>
+<li><a href="#runonvirtualthread">RunOnVirtualThread</a></li>
 </ul>
 </li>
 <li><a href="#abstract-types">Abstract Types</a>
@@ -2889,6 +2913,10 @@ API <code>evolution</code>.</p>
           
           
             <li><a href="/newsletter" target="_blank">Newsletter</a></li>
+          
+          
+          
+            <li><a href="/userstories" target="_blank">User Stories</a></li>
           
           
           

@@ -12,7 +12,7 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <meta http-equiv="Content-Security-Policy" content="
-  connect-src 'self' https://dpm.demdex.net https://adobedc.demdex.net https://route-default-test-mscherer-matamo.apps.ospo-osci.z3b1.p1.openshiftapps.com/ https://search.quarkus.io https://smetrics.redhat.com; 
+  connect-src 'self' https://dpm.demdex.net https://adobedc.demdex.net https://analytics.ossupstream.org/ https://search.quarkus.io https://smetrics.redhat.com; 
   script-src 'self' 'unsafe-inline' 'unsafe-eval'
       
       https://assets.adobedtm.com
@@ -27,13 +27,13 @@
       http://www.googleadservices.com
       https://googleads.g.doubleclick.net
       https://giscus.app
-      https://route-default-test-mscherer-matamo.apps.ospo-osci.z3b1.p1.openshiftapps.com/
+      https://analytics.ossupstream.org/
       https://app.mailjet.com;
 
   style-src 'self' https://fonts.googleapis.com https://use.fontawesome.com; 
   img-src 'self' * data:; 
   media-src 'self'; 
-  frame-src https://redhat.demdex.net https://www.youtube.com https://embed.restream.io https://app.mailjet.com http://xy0p2.mjt.lu https://mj.quarkus.io https://giscus.app; 
+  frame-src https://redhat.demdex.net https://www.youtube.com https://player.restream.io https://app.mailjet.com http://xy0p2.mjt.lu https://mj.quarkus.io https://giscus.app; 
   base-uri 'none'; 
   object-src 'none'; 
   form-action 'none'; 
@@ -100,13 +100,12 @@
         <span href="/about/">Why<i class="fas fa-chevron-down"></i></span>
         <ul class="submenu">
           <li><a href="/about" class="">WHAT IS QUARKUS?</a></li>
-          <li><a href="/container-first" class="">CONTAINER FIRST</a></li>
-          <li><a href="/continuum" class="">VERSATILITY</a></li>
-          <li><a href="/standards" class="">STANDARDS</a></li>
-          <li><a href="/kubernetes-native" class="">KUBERNETES NATIVE</a></li>
-          <li><a href="/performance" class="">PERFORMANCE</a></li>
           <li><a href="/developer-joy" class="">DEVELOPER JOY</a></li>
-          
+          <li><a href="/performance" class="">PERFORMANCE</a></li>
+          <li><a href="/kubernetes-native" class="">KUBERNETES NATIVE</a></li>
+          <li><a href="/standards" class="">STANDARDS</a></li>
+          <li><a href="/versatility" class="">VERSATILITY</a></li>
+          <li><a href="/container-first" class="">CONTAINER FIRST</a></li>          
         </ul>
       </li>
       <li class="dropdown">
@@ -114,6 +113,7 @@
         <ul class="submenu">
           <li><a href="/get-started" class="">GET STARTED</a></li>
           <li><a href="/guides" class="active">DOCUMENTATION</a></li>
+          <li><a href="/userstories/" class="">USER STORIES</a></li>  
           <li><a href="/qtips" class="">"Q" TIP VIDEOS</a></li>          
           <li><a href="/books" class="">BOOKS</a></li>
           </ul>
@@ -189,7 +189,11 @@
         
         
         
-        <option value="latest" >3.17.0 - Latest</option>
+        <option value="latest" >3.23.4 - Latest</option>
+        
+        
+        
+        <option value="3.20" >3.20</option>
         
         
         
@@ -266,16 +270,48 @@ Such compression is interesting when:</p>
 <p>the <code>upx</code> command to be available in the system <code>PATH</code>;</p>
 </li>
 <li>
+<p>an explicitly defined <code>quarkus.native.compression.container-image</code>;</p>
+</li>
+<li>
 <p>or to have built the native executable using an in-container build.</p>
 </li>
 </ul>
 </div>
 <div class="paragraph">
+<p>If <code>quarkus.native.compression.container-image</code> is not set explicitly, it will implicitly default to <code>quarkus.native.builder-image</code>.</p>
+</div>
+<div class="paragraph">
 <p>If you have the <code>upx</code> command available on your path, Quarkus uses it.
-Otherwise, if you built the native image using an in-container build (using <code>quarkus.native.container-build=true</code>) and if the builder image provides the <code>upx</code> command, Quarkus compresses the executable from inside the container.</p>
+Otherwise, if you built the native image using an in-container build (using <code>quarkus.native.container-build=true</code>) and if the compression image provides the <code>upx</code> command, Quarkus compresses the executable from inside the container.</p>
+</div>
+<div class="paragraph">
+<p>If you want to force compression to take place in a container, you can set <code>quarkus.native.compression.container-build</code> to <code>true</code> (or <code>false</code> to explicitly not run compression in a container).</p>
 </div>
 <div class="paragraph">
 <p>If you are not in one of these cases, the compression fails.</p>
+</div>
+<div class="paragraph">
+<p>Setting <code>quarkus.native.compression.container-image</code> results in the compression to run in a container.
+If you want to set the variable, but not run the compression in a container, set <code>quakrus.native.compression.container-build</code> explicitly to <code>false</code>.</p>
+</div>
+<div class="admonitionblock important">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-important" title="Important"></i>
+</td>
+<td class="content">
+<div class="title"><code>WORKDIR</code> for the image used for compression</div>
+<div class="paragraph">
+<p>The executable to compress is mounted in directory <code>/project</code>.
+Since the container runs <code>upx</code> in the current working directory, the <code>WORKDIR</code> of the image used for compression must be <code>/project</code>.</p>
+</div>
+</td>
+</tr>
+</table>
+</div>
+<div class="paragraph">
+<p>Compression can be explicitly en-/disabled by setting <code>quarkus.native.compression.enabled</code>.</p>
 </div>
 <div class="admonitionblock important">
 <table>
@@ -462,6 +498,10 @@ quarkus.native.compression.additional-args=--ultra-brute,-v</code></pre>
           
           
             <li><a href="/newsletter" target="_blank">Newsletter</a></li>
+          
+          
+          
+            <li><a href="/userstories" target="_blank">User Stories</a></li>
           
           
           

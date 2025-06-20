@@ -12,7 +12,7 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <meta http-equiv="Content-Security-Policy" content="
-  connect-src 'self' https://dpm.demdex.net https://adobedc.demdex.net https://route-default-test-mscherer-matamo.apps.ospo-osci.z3b1.p1.openshiftapps.com/ https://search.quarkus.io https://smetrics.redhat.com; 
+  connect-src 'self' https://dpm.demdex.net https://adobedc.demdex.net https://analytics.ossupstream.org/ https://search.quarkus.io https://smetrics.redhat.com; 
   script-src 'self' 'unsafe-inline' 'unsafe-eval'
       
       https://assets.adobedtm.com
@@ -27,13 +27,13 @@
       http://www.googleadservices.com
       https://googleads.g.doubleclick.net
       https://giscus.app
-      https://route-default-test-mscherer-matamo.apps.ospo-osci.z3b1.p1.openshiftapps.com/
+      https://analytics.ossupstream.org/
       https://app.mailjet.com;
 
   style-src 'self' https://fonts.googleapis.com https://use.fontawesome.com; 
   img-src 'self' * data:; 
   media-src 'self'; 
-  frame-src https://redhat.demdex.net https://www.youtube.com https://embed.restream.io https://app.mailjet.com http://xy0p2.mjt.lu https://mj.quarkus.io https://giscus.app; 
+  frame-src https://redhat.demdex.net https://www.youtube.com https://player.restream.io https://app.mailjet.com http://xy0p2.mjt.lu https://mj.quarkus.io https://giscus.app; 
   base-uri 'none'; 
   object-src 'none'; 
   form-action 'none'; 
@@ -100,13 +100,12 @@
         <span href="/about/">Why<i class="fas fa-chevron-down"></i></span>
         <ul class="submenu">
           <li><a href="/about" class="">WHAT IS QUARKUS?</a></li>
-          <li><a href="/container-first" class="">CONTAINER FIRST</a></li>
-          <li><a href="/continuum" class="">VERSATILITY</a></li>
-          <li><a href="/standards" class="">STANDARDS</a></li>
-          <li><a href="/kubernetes-native" class="">KUBERNETES NATIVE</a></li>
-          <li><a href="/performance" class="">PERFORMANCE</a></li>
           <li><a href="/developer-joy" class="">DEVELOPER JOY</a></li>
-          
+          <li><a href="/performance" class="">PERFORMANCE</a></li>
+          <li><a href="/kubernetes-native" class="">KUBERNETES NATIVE</a></li>
+          <li><a href="/standards" class="">STANDARDS</a></li>
+          <li><a href="/versatility" class="">VERSATILITY</a></li>
+          <li><a href="/container-first" class="">CONTAINER FIRST</a></li>          
         </ul>
       </li>
       <li class="dropdown">
@@ -114,6 +113,7 @@
         <ul class="submenu">
           <li><a href="/get-started" class="">GET STARTED</a></li>
           <li><a href="/guides" class="active">DOCUMENTATION</a></li>
+          <li><a href="/userstories/" class="">USER STORIES</a></li>  
           <li><a href="/qtips" class="">"Q" TIP VIDEOS</a></li>          
           <li><a href="/books" class="">BOOKS</a></li>
           </ul>
@@ -189,7 +189,11 @@
         
         
         
-        <option value="latest" >3.17.0 - Latest</option>
+        <option value="latest" >3.23.4 - Latest</option>
+        
+        
+        
+        <option value="3.20" >3.20</option>
         
         
         
@@ -798,43 +802,36 @@ public class OpenShiftClientProducer {
 </div>
 </div>
 <div class="paragraph">
-<p>Mock support is also provided in a similar fashion:</p>
+<p>Mock support is also provided in a similar fashion by using the <code>@WithKubernetesTestServer</code> explained in the previous section:</p>
 </div>
 <div class="listingblock">
 <div class="content">
-<pre class="highlightjs highlight"><code class="language-java hljs" data-lang="java">@QuarkusTestResource(OpenShiftMockServerTestResource.class)
+<pre class="highlightjs highlight"><code class="language-java hljs" data-lang="java">@WithKubernetesTestServer
 @QuarkusTest
 public class OpenShiftClientTest {
 
-    @MockServer
-    private OpenShiftMockServer mockServer;
-...</code></pre>
-</div>
-</div>
-<div class="paragraph">
-<p>Or by using the <code>@WithOpenShiftTestServer</code> similar to the <code>@WithKubernetesTestServer</code> explained in the
-previous section:</p>
-</div>
-<div class="listingblock">
-<div class="content">
-<pre class="highlightjs highlight"><code class="language-java hljs" data-lang="java">@WithOpenShiftTestServer
-@QuarkusTest
-public class OpenShiftClientTest {
+    @KubernetesTestServer
+    KubernetesServer mockServer;
+    @Inject
+    OpenShiftClient client;
 
-    @OpenShiftTestServer
-    private OpenShiftServer mockOpenShiftServer;
-...</code></pre>
+    @Test
+    public void testInteractionWithAPIServer() {
+        RestAssured.when().get("/route/test").then()
+                .body("size()", is(2));
+    }
+}</code></pre>
 </div>
 </div>
 <div class="paragraph">
-<p>To use this feature, you have to add a dependency on <code>quarkus-test-openshift-client</code>:</p>
+<p>To use this feature, you have to add a dependency on <code>quarkus-test-kubernetes-client</code>:</p>
 </div>
 <div class="listingblock primary asciidoc-tabs-target-sync-cli asciidoc-tabs-target-sync-maven">
 <div class="title">pom.xml</div>
 <div class="content">
 <pre class="highlightjs highlight"><code class="language-xml hljs" data-lang="xml">&lt;dependency&gt;
     &lt;groupId&gt;io.quarkus&lt;/groupId&gt;
-    &lt;artifactId&gt;quarkus-test-openshift-client&lt;/artifactId&gt;
+    &lt;artifactId&gt;quarkus-test-kubernetes-client&lt;/artifactId&gt;
     &lt;scope&gt;test&lt;/scope&gt;
 &lt;/dependency&gt;</code></pre>
 </div>
@@ -842,7 +839,139 @@ public class OpenShiftClientTest {
 <div class="listingblock secondary asciidoc-tabs-target-sync-gradle">
 <div class="title">build.gradle</div>
 <div class="content">
-<pre class="highlightjs highlight"><code class="language-gradle hljs" data-lang="gradle">testImplementation("io.quarkus:quarkus-test-openshift-client")</code></pre>
+<pre class="highlightjs highlight"><code class="language-gradle hljs" data-lang="gradle">testImplementation("io.quarkus:quarkus-test-kubernetes-client")</code></pre>
+</div>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="optimizing-native-image"><a class="anchor" href="#optimizing-native-image"></a>Optimizing the Native Image</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>The Kubernetes and OpenShift client extensions aim to provide a great <strong>developer experience</strong> while enabling the client to work in <strong>native mode</strong>.
+When building a native image, the Kubernetes Client extension will register all the accessible Kubernetes model classes for reflection.
+Unfortunately, this can lead to large native image sizes and longer build times.</p>
+</div>
+<div class="paragraph">
+<p>Once you&#8217;ve completed your application implementation, if you want to distribute and deploy your application as a <strong>native image</strong>, you should consider reducing its size by following these guidelines.</p>
+</div>
+<div class="sect2">
+<h3 id="use-the-kubernetes-client-extension"><a class="anchor" href="#use-the-kubernetes-client-extension"></a>Use the Kubernetes Client extension</h3>
+<div class="paragraph">
+<p>The <a href="#openshift-client">OpenShift Client</a> provides domain-specific language (DSL) accessors to common OpenShift resources.
+In addition, the extension supplies the necessary project configuration to bring in the OpenShift model type modules.</p>
+</div>
+<div class="paragraph">
+<p>In JVM mode, this works great because, as a developer, you don&#8217;t need to worry about the configuration.
+However, in native mode, by depending on the OpenShift extension you&#8217;re bringing in many resources that your application might not need unnecessarily increasing its size.</p>
+</div>
+<div class="paragraph">
+<p>In this context, it&#8217;s better to depend only on what you need, by adding a dependency to the Kubernetes Client extension and only the minimum OpenShift model dependencies:</p>
+</div>
+<div class="listingblock primary asciidoc-tabs-target-sync-maven">
+<div class="title">pom.xml</div>
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-xml hljs" data-lang="xml">&lt;dependency&gt;
+    &lt;groupId&gt;io.quarkus&lt;/groupId&gt;
+    &lt;artifactId&gt;quarkus-kubernetes-client&lt;/artifactId&gt;
+&lt;/dependency&gt;
+&lt;dependency&gt;
+    &lt;groupId&gt;io.fabric8&lt;/groupId&gt;
+    &lt;artifactId&gt;openshift-model&lt;/artifactId&gt;
+&lt;/dependency&gt;</code></pre>
+</div>
+</div>
+<div class="listingblock secondary asciidoc-tabs-target-sync-gradle">
+<div class="title">build.gradle</div>
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-gradle hljs" data-lang="gradle">implementation("io.quarkus:quarkus-kubernetes-client")
+implementation("io.fabric8:openshift-model")</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>The OpenShift-specific DSL accessors won&#8217;t be available since you&#8217;ll now have a Bean of type <code>KubernetesClient</code> instead of <code>OpenShiftClient</code>.
+However, the Fabric8 Kubernetes Client provides generic entry-points to perform operations on any resource:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight nowrap"><code class="language-java hljs" data-lang="java">// List OpenShift Routes in any namespace
+kubernetesClient
+    .resources(io.fabric8.openshift.api.model.Route.class)
+    .inAnyNamespace().list();
+// Delete an OpenShift Route
+kubernetesClient
+    .resources(io.fabric8.openshift.api.model.Route.class)
+    .inNamespace("default").withName("the-route").delete();
+// Create or replace a new OpenShift Route
+kubernetesClient
+    .resource(new RouteBuilder()/* ... */.build())
+    .inNamespace("default").createOr(NonDeletingOperation::update);</code></pre>
+</div>
+</div>
+</div>
+<div class="sect2">
+<h3 id="depend-only-on-the-modules-you-need"><a class="anchor" href="#depend-only-on-the-modules-you-need"></a>Depend only on the modules you need</h3>
+<div class="paragraph">
+<p>The Kubernetes Client extension has transitive dependencies to all of the vanilla Kubernetes API model types.
+This is very convenient in JVM mode, since you don&#8217;t need to worry about configuring the project.</p>
+</div>
+<div class="paragraph">
+<p>However, in native mode, this implies registering for reflection model types that you very likely won&#8217;t use in your application.
+You can mitigate this by providing a more granular project configuration and depending only on those models you are sure the application uses.</p>
+</div>
+<div class="listingblock primary asciidoc-tabs-target-sync-maven">
+<div class="title">pom.xml</div>
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-xml hljs" data-lang="xml">&lt;dependency&gt;
+    &lt;groupId&gt;io.quarkus&lt;/groupId&gt;
+    &lt;artifactId&gt;quarkus-kubernetes-client&lt;/artifactId&gt;
+&lt;/dependency&gt;
+&lt;dependency&gt;
+    &lt;groupId&gt;io.fabric8&lt;/groupId&gt;
+    &lt;artifactId&gt;kubernetes-client-api&lt;/artifactId&gt;
+    &lt;!-- Exclude all transitive dependencies --&gt;
+    &lt;exclusions&gt;
+        &lt;exclusion&gt;
+            &lt;groupId&gt;io.fabric8&lt;/groupId&gt;
+            &lt;artifactId&gt;*&lt;/artifactId&gt;
+        &lt;/exclusion&gt;
+    &lt;/exclusions&gt;
+&lt;/dependency&gt;
+&lt;!-- Include only those that make sense for your application --&gt;
+&lt;dependency&gt;
+    &lt;groupId&gt;io.fabric8&lt;/groupId&gt;
+    &lt;artifactId&gt;kubernetes-client&lt;/artifactId&gt;
+&lt;/dependency&gt;
+&lt;dependency&gt;
+    &lt;groupId&gt;io.fabric8&lt;/groupId&gt;
+    &lt;artifactId&gt;kubernetes-model-core&lt;/artifactId&gt;
+&lt;/dependency&gt;
+&lt;dependency&gt;
+    &lt;groupId&gt;io.fabric8&lt;/groupId&gt;
+    &lt;artifactId&gt;kubernetes-model-admissionregistration&lt;/artifactId&gt;
+&lt;/dependency&gt;
+&lt;dependency&gt;
+    &lt;groupId&gt;io.fabric8&lt;/groupId&gt;
+    &lt;artifactId&gt;kubernetes-model-apps&lt;/artifactId&gt;
+&lt;/dependency&gt;
+&lt;!-- ... --&gt;</code></pre>
+</div>
+</div>
+<div class="listingblock secondary asciidoc-tabs-target-sync-gradle">
+<div class="title">build.gradle</div>
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-gradle hljs" data-lang="gradle">implementation("quarkus-kubernetes-client")
+implementation("io.fabric8:kubernetes-client-api") {
+    // Exclude all transitive dependencies
+    exclude group: "io.fabric8"
+}
+// Include only those that make sense for your application
+implementation("io.fabric8:kubernetes-client")
+implementation("io.fabric8:kubernetes-model-core")
+implementation("io.fabric8:kubernetes-model-admissionregistration")
+implementation("io.fabric8:kubernetes-model-apps")
+// ...</code></pre>
+</div>
 </div>
 </div>
 </div>
@@ -876,7 +1005,7 @@ public class OpenShiftClientTest {
 <p>Whether the client should trust a self-signed certificate if so presented by the API server</p>
 </div>
 <div class="paragraph">
-<p>Environment variable: <code id="env-var-53956">QUARKUS_KUBERNETES_CLIENT_TRUST_CERTS</code><button class="btn-copy fa fa-clipboard inline-btn-copy" data-clipboard-action="copy" data-clipboard-target="#env-var-53956" title="Copy to clipboard" do-not-collapse="true"></button></p>
+<p>Environment variable: <code id="env-var-62991">QUARKUS_KUBERNETES_CLIENT_TRUST_CERTS</code><button class="btn-copy fa fa-clipboard inline-btn-copy" data-clipboard-action="copy" data-clipboard-target="#env-var-62991" title="Copy to clipboard" do-not-collapse="true"></button></p>
 </div>
 </div>
 </div>
@@ -897,7 +1026,7 @@ public class OpenShiftClientTest {
 <p>URL of the Kubernetes API server</p>
 </div>
 <div class="paragraph">
-<p>Environment variable: <code id="env-var-53957">QUARKUS_KUBERNETES_CLIENT_API_SERVER_URL</code><button class="btn-copy fa fa-clipboard inline-btn-copy" data-clipboard-action="copy" data-clipboard-target="#env-var-53957" title="Copy to clipboard" do-not-collapse="true"></button></p>
+<p>Environment variable: <code id="env-var-62992">QUARKUS_KUBERNETES_CLIENT_API_SERVER_URL</code><button class="btn-copy fa fa-clipboard inline-btn-copy" data-clipboard-action="copy" data-clipboard-target="#env-var-62992" title="Copy to clipboard" do-not-collapse="true"></button></p>
 </div>
 </div>
 </div>
@@ -918,7 +1047,7 @@ public class OpenShiftClientTest {
 <p>Default namespace to use</p>
 </div>
 <div class="paragraph">
-<p>Environment variable: <code id="env-var-53958">QUARKUS_KUBERNETES_CLIENT_NAMESPACE</code><button class="btn-copy fa fa-clipboard inline-btn-copy" data-clipboard-action="copy" data-clipboard-target="#env-var-53958" title="Copy to clipboard" do-not-collapse="true"></button></p>
+<p>Environment variable: <code id="env-var-62993">QUARKUS_KUBERNETES_CLIENT_NAMESPACE</code><button class="btn-copy fa fa-clipboard inline-btn-copy" data-clipboard-action="copy" data-clipboard-target="#env-var-62993" title="Copy to clipboard" do-not-collapse="true"></button></p>
 </div>
 </div>
 </div>
@@ -939,7 +1068,7 @@ public class OpenShiftClientTest {
 <p>CA certificate file</p>
 </div>
 <div class="paragraph">
-<p>Environment variable: <code id="env-var-53959">QUARKUS_KUBERNETES_CLIENT_CA_CERT_FILE</code><button class="btn-copy fa fa-clipboard inline-btn-copy" data-clipboard-action="copy" data-clipboard-target="#env-var-53959" title="Copy to clipboard" do-not-collapse="true"></button></p>
+<p>Environment variable: <code id="env-var-62994">QUARKUS_KUBERNETES_CLIENT_CA_CERT_FILE</code><button class="btn-copy fa fa-clipboard inline-btn-copy" data-clipboard-action="copy" data-clipboard-target="#env-var-62994" title="Copy to clipboard" do-not-collapse="true"></button></p>
 </div>
 </div>
 </div>
@@ -960,7 +1089,7 @@ public class OpenShiftClientTest {
 <p>CA certificate data</p>
 </div>
 <div class="paragraph">
-<p>Environment variable: <code id="env-var-53960">QUARKUS_KUBERNETES_CLIENT_CA_CERT_DATA</code><button class="btn-copy fa fa-clipboard inline-btn-copy" data-clipboard-action="copy" data-clipboard-target="#env-var-53960" title="Copy to clipboard" do-not-collapse="true"></button></p>
+<p>Environment variable: <code id="env-var-62995">QUARKUS_KUBERNETES_CLIENT_CA_CERT_DATA</code><button class="btn-copy fa fa-clipboard inline-btn-copy" data-clipboard-action="copy" data-clipboard-target="#env-var-62995" title="Copy to clipboard" do-not-collapse="true"></button></p>
 </div>
 </div>
 </div>
@@ -981,7 +1110,7 @@ public class OpenShiftClientTest {
 <p>Client certificate file</p>
 </div>
 <div class="paragraph">
-<p>Environment variable: <code id="env-var-53961">QUARKUS_KUBERNETES_CLIENT_CLIENT_CERT_FILE</code><button class="btn-copy fa fa-clipboard inline-btn-copy" data-clipboard-action="copy" data-clipboard-target="#env-var-53961" title="Copy to clipboard" do-not-collapse="true"></button></p>
+<p>Environment variable: <code id="env-var-62996">QUARKUS_KUBERNETES_CLIENT_CLIENT_CERT_FILE</code><button class="btn-copy fa fa-clipboard inline-btn-copy" data-clipboard-action="copy" data-clipboard-target="#env-var-62996" title="Copy to clipboard" do-not-collapse="true"></button></p>
 </div>
 </div>
 </div>
@@ -1002,7 +1131,7 @@ public class OpenShiftClientTest {
 <p>Client certificate data</p>
 </div>
 <div class="paragraph">
-<p>Environment variable: <code id="env-var-53962">QUARKUS_KUBERNETES_CLIENT_CLIENT_CERT_DATA</code><button class="btn-copy fa fa-clipboard inline-btn-copy" data-clipboard-action="copy" data-clipboard-target="#env-var-53962" title="Copy to clipboard" do-not-collapse="true"></button></p>
+<p>Environment variable: <code id="env-var-62997">QUARKUS_KUBERNETES_CLIENT_CLIENT_CERT_DATA</code><button class="btn-copy fa fa-clipboard inline-btn-copy" data-clipboard-action="copy" data-clipboard-target="#env-var-62997" title="Copy to clipboard" do-not-collapse="true"></button></p>
 </div>
 </div>
 </div>
@@ -1023,7 +1152,7 @@ public class OpenShiftClientTest {
 <p>Client key file</p>
 </div>
 <div class="paragraph">
-<p>Environment variable: <code id="env-var-53963">QUARKUS_KUBERNETES_CLIENT_CLIENT_KEY_FILE</code><button class="btn-copy fa fa-clipboard inline-btn-copy" data-clipboard-action="copy" data-clipboard-target="#env-var-53963" title="Copy to clipboard" do-not-collapse="true"></button></p>
+<p>Environment variable: <code id="env-var-62998">QUARKUS_KUBERNETES_CLIENT_CLIENT_KEY_FILE</code><button class="btn-copy fa fa-clipboard inline-btn-copy" data-clipboard-action="copy" data-clipboard-target="#env-var-62998" title="Copy to clipboard" do-not-collapse="true"></button></p>
 </div>
 </div>
 </div>
@@ -1044,7 +1173,7 @@ public class OpenShiftClientTest {
 <p>Client key data</p>
 </div>
 <div class="paragraph">
-<p>Environment variable: <code id="env-var-53964">QUARKUS_KUBERNETES_CLIENT_CLIENT_KEY_DATA</code><button class="btn-copy fa fa-clipboard inline-btn-copy" data-clipboard-action="copy" data-clipboard-target="#env-var-53964" title="Copy to clipboard" do-not-collapse="true"></button></p>
+<p>Environment variable: <code id="env-var-62999">QUARKUS_KUBERNETES_CLIENT_CLIENT_KEY_DATA</code><button class="btn-copy fa fa-clipboard inline-btn-copy" data-clipboard-action="copy" data-clipboard-target="#env-var-62999" title="Copy to clipboard" do-not-collapse="true"></button></p>
 </div>
 </div>
 </div>
@@ -1065,7 +1194,7 @@ public class OpenShiftClientTest {
 <p>Client key algorithm</p>
 </div>
 <div class="paragraph">
-<p>Environment variable: <code id="env-var-53965">QUARKUS_KUBERNETES_CLIENT_CLIENT_KEY_ALGO</code><button class="btn-copy fa fa-clipboard inline-btn-copy" data-clipboard-action="copy" data-clipboard-target="#env-var-53965" title="Copy to clipboard" do-not-collapse="true"></button></p>
+<p>Environment variable: <code id="env-var-63000">QUARKUS_KUBERNETES_CLIENT_CLIENT_KEY_ALGO</code><button class="btn-copy fa fa-clipboard inline-btn-copy" data-clipboard-action="copy" data-clipboard-target="#env-var-63000" title="Copy to clipboard" do-not-collapse="true"></button></p>
 </div>
 </div>
 </div>
@@ -1086,7 +1215,7 @@ public class OpenShiftClientTest {
 <p>Client key passphrase</p>
 </div>
 <div class="paragraph">
-<p>Environment variable: <code id="env-var-53966">QUARKUS_KUBERNETES_CLIENT_CLIENT_KEY_PASSPHRASE</code><button class="btn-copy fa fa-clipboard inline-btn-copy" data-clipboard-action="copy" data-clipboard-target="#env-var-53966" title="Copy to clipboard" do-not-collapse="true"></button></p>
+<p>Environment variable: <code id="env-var-63001">QUARKUS_KUBERNETES_CLIENT_CLIENT_KEY_PASSPHRASE</code><button class="btn-copy fa fa-clipboard inline-btn-copy" data-clipboard-action="copy" data-clipboard-target="#env-var-63001" title="Copy to clipboard" do-not-collapse="true"></button></p>
 </div>
 </div>
 </div>
@@ -1107,7 +1236,7 @@ public class OpenShiftClientTest {
 <p>Kubernetes auth username</p>
 </div>
 <div class="paragraph">
-<p>Environment variable: <code id="env-var-53967">QUARKUS_KUBERNETES_CLIENT_USERNAME</code><button class="btn-copy fa fa-clipboard inline-btn-copy" data-clipboard-action="copy" data-clipboard-target="#env-var-53967" title="Copy to clipboard" do-not-collapse="true"></button></p>
+<p>Environment variable: <code id="env-var-63002">QUARKUS_KUBERNETES_CLIENT_USERNAME</code><button class="btn-copy fa fa-clipboard inline-btn-copy" data-clipboard-action="copy" data-clipboard-target="#env-var-63002" title="Copy to clipboard" do-not-collapse="true"></button></p>
 </div>
 </div>
 </div>
@@ -1128,7 +1257,7 @@ public class OpenShiftClientTest {
 <p>Kubernetes auth password</p>
 </div>
 <div class="paragraph">
-<p>Environment variable: <code id="env-var-53968">QUARKUS_KUBERNETES_CLIENT_PASSWORD</code><button class="btn-copy fa fa-clipboard inline-btn-copy" data-clipboard-action="copy" data-clipboard-target="#env-var-53968" title="Copy to clipboard" do-not-collapse="true"></button></p>
+<p>Environment variable: <code id="env-var-63003">QUARKUS_KUBERNETES_CLIENT_PASSWORD</code><button class="btn-copy fa fa-clipboard inline-btn-copy" data-clipboard-action="copy" data-clipboard-target="#env-var-63003" title="Copy to clipboard" do-not-collapse="true"></button></p>
 </div>
 </div>
 </div>
@@ -1149,7 +1278,7 @@ public class OpenShiftClientTest {
 <p>Kubernetes oauth token</p>
 </div>
 <div class="paragraph">
-<p>Environment variable: <code id="env-var-53969">QUARKUS_KUBERNETES_CLIENT_TOKEN</code><button class="btn-copy fa fa-clipboard inline-btn-copy" data-clipboard-action="copy" data-clipboard-target="#env-var-53969" title="Copy to clipboard" do-not-collapse="true"></button></p>
+<p>Environment variable: <code id="env-var-63004">QUARKUS_KUBERNETES_CLIENT_TOKEN</code><button class="btn-copy fa fa-clipboard inline-btn-copy" data-clipboard-action="copy" data-clipboard-target="#env-var-63004" title="Copy to clipboard" do-not-collapse="true"></button></p>
 </div>
 </div>
 </div>
@@ -1170,7 +1299,7 @@ public class OpenShiftClientTest {
 <p>Watch reconnect interval</p>
 </div>
 <div class="paragraph">
-<p>Environment variable: <code id="env-var-53970">QUARKUS_KUBERNETES_CLIENT_WATCH_RECONNECT_INTERVAL</code><button class="btn-copy fa fa-clipboard inline-btn-copy" data-clipboard-action="copy" data-clipboard-target="#env-var-53970" title="Copy to clipboard" do-not-collapse="true"></button></p>
+<p>Environment variable: <code id="env-var-63005">QUARKUS_KUBERNETES_CLIENT_WATCH_RECONNECT_INTERVAL</code><button class="btn-copy fa fa-clipboard inline-btn-copy" data-clipboard-action="copy" data-clipboard-target="#env-var-63005" title="Copy to clipboard" do-not-collapse="true"></button></p>
 </div>
 </div>
 </div>
@@ -1191,7 +1320,7 @@ public class OpenShiftClientTest {
 <p>Maximum reconnect attempts in case of watch failure By default there is no limit to the number of reconnect attempts</p>
 </div>
 <div class="paragraph">
-<p>Environment variable: <code id="env-var-53971">QUARKUS_KUBERNETES_CLIENT_WATCH_RECONNECT_LIMIT</code><button class="btn-copy fa fa-clipboard inline-btn-copy" data-clipboard-action="copy" data-clipboard-target="#env-var-53971" title="Copy to clipboard" do-not-collapse="true"></button></p>
+<p>Environment variable: <code id="env-var-63006">QUARKUS_KUBERNETES_CLIENT_WATCH_RECONNECT_LIMIT</code><button class="btn-copy fa fa-clipboard inline-btn-copy" data-clipboard-action="copy" data-clipboard-target="#env-var-63006" title="Copy to clipboard" do-not-collapse="true"></button></p>
 </div>
 </div>
 </div>
@@ -1212,7 +1341,7 @@ public class OpenShiftClientTest {
 <p>Maximum amount of time to wait for a connection with the API server to be established</p>
 </div>
 <div class="paragraph">
-<p>Environment variable: <code id="env-var-53972">QUARKUS_KUBERNETES_CLIENT_CONNECTION_TIMEOUT</code><button class="btn-copy fa fa-clipboard inline-btn-copy" data-clipboard-action="copy" data-clipboard-target="#env-var-53972" title="Copy to clipboard" do-not-collapse="true"></button></p>
+<p>Environment variable: <code id="env-var-63007">QUARKUS_KUBERNETES_CLIENT_CONNECTION_TIMEOUT</code><button class="btn-copy fa fa-clipboard inline-btn-copy" data-clipboard-action="copy" data-clipboard-target="#env-var-63007" title="Copy to clipboard" do-not-collapse="true"></button></p>
 </div>
 </div>
 </div>
@@ -1233,7 +1362,7 @@ public class OpenShiftClientTest {
 <p>Maximum amount of time to wait for a request to the API server to be completed</p>
 </div>
 <div class="paragraph">
-<p>Environment variable: <code id="env-var-53973">QUARKUS_KUBERNETES_CLIENT_REQUEST_TIMEOUT</code><button class="btn-copy fa fa-clipboard inline-btn-copy" data-clipboard-action="copy" data-clipboard-target="#env-var-53973" title="Copy to clipboard" do-not-collapse="true"></button></p>
+<p>Environment variable: <code id="env-var-63008">QUARKUS_KUBERNETES_CLIENT_REQUEST_TIMEOUT</code><button class="btn-copy fa fa-clipboard inline-btn-copy" data-clipboard-action="copy" data-clipboard-target="#env-var-63008" title="Copy to clipboard" do-not-collapse="true"></button></p>
 </div>
 </div>
 </div>
@@ -1254,7 +1383,7 @@ public class OpenShiftClientTest {
 <p>Maximum number of retry attempts for API requests that fail with an HTTP code of &gt;= 500</p>
 </div>
 <div class="paragraph">
-<p>Environment variable: <code id="env-var-53974">QUARKUS_KUBERNETES_CLIENT_REQUEST_RETRY_BACKOFF_LIMIT</code><button class="btn-copy fa fa-clipboard inline-btn-copy" data-clipboard-action="copy" data-clipboard-target="#env-var-53974" title="Copy to clipboard" do-not-collapse="true"></button></p>
+<p>Environment variable: <code id="env-var-63009">QUARKUS_KUBERNETES_CLIENT_REQUEST_RETRY_BACKOFF_LIMIT</code><button class="btn-copy fa fa-clipboard inline-btn-copy" data-clipboard-action="copy" data-clipboard-target="#env-var-63009" title="Copy to clipboard" do-not-collapse="true"></button></p>
 </div>
 </div>
 </div>
@@ -1275,7 +1404,7 @@ public class OpenShiftClientTest {
 <p>Time interval between retry attempts for API requests that fail with an HTTP code of &gt;= 500</p>
 </div>
 <div class="paragraph">
-<p>Environment variable: <code id="env-var-53975">QUARKUS_KUBERNETES_CLIENT_REQUEST_RETRY_BACKOFF_INTERVAL</code><button class="btn-copy fa fa-clipboard inline-btn-copy" data-clipboard-action="copy" data-clipboard-target="#env-var-53975" title="Copy to clipboard" do-not-collapse="true"></button></p>
+<p>Environment variable: <code id="env-var-63010">QUARKUS_KUBERNETES_CLIENT_REQUEST_RETRY_BACKOFF_INTERVAL</code><button class="btn-copy fa fa-clipboard inline-btn-copy" data-clipboard-action="copy" data-clipboard-target="#env-var-63010" title="Copy to clipboard" do-not-collapse="true"></button></p>
 </div>
 </div>
 </div>
@@ -1296,7 +1425,7 @@ public class OpenShiftClientTest {
 <p>HTTP proxy used to access the Kubernetes API server</p>
 </div>
 <div class="paragraph">
-<p>Environment variable: <code id="env-var-53976">QUARKUS_KUBERNETES_CLIENT_HTTP_PROXY</code><button class="btn-copy fa fa-clipboard inline-btn-copy" data-clipboard-action="copy" data-clipboard-target="#env-var-53976" title="Copy to clipboard" do-not-collapse="true"></button></p>
+<p>Environment variable: <code id="env-var-63011">QUARKUS_KUBERNETES_CLIENT_HTTP_PROXY</code><button class="btn-copy fa fa-clipboard inline-btn-copy" data-clipboard-action="copy" data-clipboard-target="#env-var-63011" title="Copy to clipboard" do-not-collapse="true"></button></p>
 </div>
 </div>
 </div>
@@ -1317,7 +1446,7 @@ public class OpenShiftClientTest {
 <p>HTTPS proxy used to access the Kubernetes API server</p>
 </div>
 <div class="paragraph">
-<p>Environment variable: <code id="env-var-53977">QUARKUS_KUBERNETES_CLIENT_HTTPS_PROXY</code><button class="btn-copy fa fa-clipboard inline-btn-copy" data-clipboard-action="copy" data-clipboard-target="#env-var-53977" title="Copy to clipboard" do-not-collapse="true"></button></p>
+<p>Environment variable: <code id="env-var-63012">QUARKUS_KUBERNETES_CLIENT_HTTPS_PROXY</code><button class="btn-copy fa fa-clipboard inline-btn-copy" data-clipboard-action="copy" data-clipboard-target="#env-var-63012" title="Copy to clipboard" do-not-collapse="true"></button></p>
 </div>
 </div>
 </div>
@@ -1338,7 +1467,7 @@ public class OpenShiftClientTest {
 <p>Proxy username</p>
 </div>
 <div class="paragraph">
-<p>Environment variable: <code id="env-var-53978">QUARKUS_KUBERNETES_CLIENT_PROXY_USERNAME</code><button class="btn-copy fa fa-clipboard inline-btn-copy" data-clipboard-action="copy" data-clipboard-target="#env-var-53978" title="Copy to clipboard" do-not-collapse="true"></button></p>
+<p>Environment variable: <code id="env-var-63013">QUARKUS_KUBERNETES_CLIENT_PROXY_USERNAME</code><button class="btn-copy fa fa-clipboard inline-btn-copy" data-clipboard-action="copy" data-clipboard-target="#env-var-63013" title="Copy to clipboard" do-not-collapse="true"></button></p>
 </div>
 </div>
 </div>
@@ -1359,7 +1488,7 @@ public class OpenShiftClientTest {
 <p>Proxy password</p>
 </div>
 <div class="paragraph">
-<p>Environment variable: <code id="env-var-53979">QUARKUS_KUBERNETES_CLIENT_PROXY_PASSWORD</code><button class="btn-copy fa fa-clipboard inline-btn-copy" data-clipboard-action="copy" data-clipboard-target="#env-var-53979" title="Copy to clipboard" do-not-collapse="true"></button></p>
+<p>Environment variable: <code id="env-var-63014">QUARKUS_KUBERNETES_CLIENT_PROXY_PASSWORD</code><button class="btn-copy fa fa-clipboard inline-btn-copy" data-clipboard-action="copy" data-clipboard-target="#env-var-63014" title="Copy to clipboard" do-not-collapse="true"></button></p>
 </div>
 </div>
 </div>
@@ -1380,7 +1509,7 @@ public class OpenShiftClientTest {
 <p>IP addresses or hosts to exclude from proxying</p>
 </div>
 <div class="paragraph">
-<p>Environment variable: <code id="env-var-53980">QUARKUS_KUBERNETES_CLIENT_NO_PROXY</code><button class="btn-copy fa fa-clipboard inline-btn-copy" data-clipboard-action="copy" data-clipboard-target="#env-var-53980" title="Copy to clipboard" do-not-collapse="true"></button></p>
+<p>Environment variable: <code id="env-var-63015">QUARKUS_KUBERNETES_CLIENT_NO_PROXY</code><button class="btn-copy fa fa-clipboard inline-btn-copy" data-clipboard-action="copy" data-clipboard-target="#env-var-63015" title="Copy to clipboard" do-not-collapse="true"></button></p>
 </div>
 </div>
 </div>
@@ -1401,7 +1530,7 @@ public class OpenShiftClientTest {
 <p>Enable the generation of the RBAC manifests. If enabled and no other role binding are provided using the properties <code>quarkus.kubernetes.rbac.</code>, it will generate a default role binding using the role "view" and the application service account.</p>
 </div>
 <div class="paragraph">
-<p>Environment variable: <code id="env-var-53981">QUARKUS_KUBERNETES_CLIENT_GENERATE_RBAC</code><button class="btn-copy fa fa-clipboard inline-btn-copy" data-clipboard-action="copy" data-clipboard-target="#env-var-53981" title="Copy to clipboard" do-not-collapse="true"></button></p>
+<p>Environment variable: <code id="env-var-63016">QUARKUS_KUBERNETES_CLIENT_GENERATE_RBAC</code><button class="btn-copy fa fa-clipboard inline-btn-copy" data-clipboard-action="copy" data-clipboard-target="#env-var-63016" title="Copy to clipboard" do-not-collapse="true"></button></p>
 </div>
 </div>
 </div>
@@ -1427,7 +1556,7 @@ public class OpenShiftClientTest {
 <p>If Dev Services for Kubernetes should be used. (default to true) If this is true and kubernetes client is not configured then a kubernetes cluster will be started and will be used.</p>
 </div>
 <div class="paragraph">
-<p>Environment variable: <code id="env-var-53982">QUARKUS_KUBERNETES_CLIENT_DEVSERVICES_ENABLED</code><button class="btn-copy fa fa-clipboard inline-btn-copy" data-clipboard-action="copy" data-clipboard-target="#env-var-53982" title="Copy to clipboard" do-not-collapse="true"></button></p>
+<p>Environment variable: <code id="env-var-63017">QUARKUS_KUBERNETES_CLIENT_DEVSERVICES_ENABLED</code><button class="btn-copy fa fa-clipboard inline-btn-copy" data-clipboard-action="copy" data-clipboard-target="#env-var-63017" title="Copy to clipboard" do-not-collapse="true"></button></p>
 </div>
 </div>
 </div>
@@ -1448,7 +1577,7 @@ public class OpenShiftClientTest {
 <p>The kubernetes api server version to use. If not set, Dev Services for Kubernetes will use the latest supported version of the given flavor. see <a href="https://github.com/dajudge/kindcontainer/blob/master/k8s-versions.json" class="bare">https://github.com/dajudge/kindcontainer/blob/master/k8s-versions.json</a></p>
 </div>
 <div class="paragraph">
-<p>Environment variable: <code id="env-var-53983">QUARKUS_KUBERNETES_CLIENT_DEVSERVICES_API_VERSION</code><button class="btn-copy fa fa-clipboard inline-btn-copy" data-clipboard-action="copy" data-clipboard-target="#env-var-53983" title="Copy to clipboard" do-not-collapse="true"></button></p>
+<p>Environment variable: <code id="env-var-63018">QUARKUS_KUBERNETES_CLIENT_DEVSERVICES_API_VERSION</code><button class="btn-copy fa fa-clipboard inline-btn-copy" data-clipboard-action="copy" data-clipboard-target="#env-var-63018" title="Copy to clipboard" do-not-collapse="true"></button></p>
 </div>
 </div>
 </div>
@@ -1466,10 +1595,10 @@ public class OpenShiftClientTest {
 <div id="conf-collapsible-desc-29" class="openblock description description-collapsed">
 <div class="content">
 <div class="paragraph">
-<p>The flavor to use (kind, k3s or api-only). Default to api-only.</p>
+<p>The flavor to use (kind, k3s or api-only). If not set, Dev Services for Kubernetes will set it to: api-only.</p>
 </div>
 <div class="paragraph">
-<p>Environment variable: <code id="env-var-53984">QUARKUS_KUBERNETES_CLIENT_DEVSERVICES_FLAVOR</code><button class="btn-copy fa fa-clipboard inline-btn-copy" data-clipboard-action="copy" data-clipboard-target="#env-var-53984" title="Copy to clipboard" do-not-collapse="true"></button></p>
+<p>Environment variable: <code id="env-var-63019">QUARKUS_KUBERNETES_CLIENT_DEVSERVICES_FLAVOR</code><button class="btn-copy fa fa-clipboard inline-btn-copy" data-clipboard-action="copy" data-clipboard-target="#env-var-63019" title="Copy to clipboard" do-not-collapse="true"></button></p>
 </div>
 </div>
 </div>
@@ -1479,7 +1608,7 @@ public class OpenShiftClientTest {
 <td class="tableblock halign-left valign-middle"><div class="content"><div class="paragraph">
 <p><span class="asciidoc-tooltip-wrapper"><code>kind</code><span class="asciidoc-tooltip">kind (needs priviledge docker)</span></span>, <span class="asciidoc-tooltip-wrapper"><code>k3s</code><span class="asciidoc-tooltip">k3s (needs priviledge docker)</span></span>, <span class="asciidoc-tooltip-wrapper"><code>api-only</code><span class="asciidoc-tooltip">api only</span></span></p>
 </div></div></td>
-<td class="tableblock halign-left valign-middle"><p class="tableblock"><span class="asciidoc-tooltip-wrapper"><code>api-only</code><span class="asciidoc-tooltip">api only</span></span></p></td>
+<td class="tableblock halign-left valign-middle"></td>
 </tr>
 <tr class="row-collapsible row-collapsed row-with-desc">
 <td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
@@ -1492,7 +1621,7 @@ public class OpenShiftClientTest {
 <p>By default, if a kubeconfig is found, Dev Services for Kubernetes will not start. Set this to true to override the kubeconfig config.</p>
 </div>
 <div class="paragraph">
-<p>Environment variable: <code id="env-var-53985">QUARKUS_KUBERNETES_CLIENT_DEVSERVICES_OVERRIDE_KUBECONFIG</code><button class="btn-copy fa fa-clipboard inline-btn-copy" data-clipboard-action="copy" data-clipboard-target="#env-var-53985" title="Copy to clipboard" do-not-collapse="true"></button></p>
+<p>Environment variable: <code id="env-var-63020">QUARKUS_KUBERNETES_CLIENT_DEVSERVICES_OVERRIDE_KUBECONFIG</code><button class="btn-copy fa fa-clipboard inline-btn-copy" data-clipboard-action="copy" data-clipboard-target="#env-var-63020" title="Copy to clipboard" do-not-collapse="true"></button></p>
 </div>
 </div>
 </div>
@@ -1519,7 +1648,7 @@ public class OpenShiftClientTest {
 <p>Container sharing is only used in dev mode.</p>
 </div>
 <div class="paragraph">
-<p>Environment variable: <code id="env-var-53986">QUARKUS_KUBERNETES_CLIENT_DEVSERVICES_SHARED</code><button class="btn-copy fa fa-clipboard inline-btn-copy" data-clipboard-action="copy" data-clipboard-target="#env-var-53986" title="Copy to clipboard" do-not-collapse="true"></button></p>
+<p>Environment variable: <code id="env-var-63021">QUARKUS_KUBERNETES_CLIENT_DEVSERVICES_SHARED</code><button class="btn-copy fa fa-clipboard inline-btn-copy" data-clipboard-action="copy" data-clipboard-target="#env-var-63021" title="Copy to clipboard" do-not-collapse="true"></button></p>
 </div>
 </div>
 </div>
@@ -1543,7 +1672,7 @@ public class OpenShiftClientTest {
 <p>This property is used when you need multiple shared Kubernetes clusters.</p>
 </div>
 <div class="paragraph">
-<p>Environment variable: <code id="env-var-53987">QUARKUS_KUBERNETES_CLIENT_DEVSERVICES_SERVICE_NAME</code><button class="btn-copy fa fa-clipboard inline-btn-copy" data-clipboard-action="copy" data-clipboard-target="#env-var-53987" title="Copy to clipboard" do-not-collapse="true"></button></p>
+<p>Environment variable: <code id="env-var-63022">QUARKUS_KUBERNETES_CLIENT_DEVSERVICES_SERVICE_NAME</code><button class="btn-copy fa fa-clipboard inline-btn-copy" data-clipboard-action="copy" data-clipboard-target="#env-var-63022" title="Copy to clipboard" do-not-collapse="true"></button></p>
 </div>
 </div>
 </div>
@@ -1564,7 +1693,7 @@ public class OpenShiftClientTest {
 <p>Environment variables that are passed to the container.</p>
 </div>
 <div class="paragraph">
-<p>Environment variable: <code id="env-var-53988">QUARKUS_KUBERNETES_CLIENT_DEVSERVICES_CONTAINER_ENV__ENVIRONMENT_VARIABLE_NAME_</code><button class="btn-copy fa fa-clipboard inline-btn-copy" data-clipboard-action="copy" data-clipboard-target="#env-var-53988" title="Copy to clipboard" do-not-collapse="true"></button></p>
+<p>Environment variable: <code id="env-var-63023">QUARKUS_KUBERNETES_CLIENT_DEVSERVICES_CONTAINER_ENV__ENVIRONMENT_VARIABLE_NAME_</code><button class="btn-copy fa fa-clipboard inline-btn-copy" data-clipboard-action="copy" data-clipboard-target="#env-var-63023" title="Copy to clipboard" do-not-collapse="true"></button></p>
 </div>
 </div>
 </div>
@@ -1634,6 +1763,12 @@ See the <a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/ja
 <li><a href="#note-on-ec-keys">Note on using Elliptic Curve keys</a></li>
 <li><a href="#access-to-the-kubernetes-api">Access to the Kubernetes API</a></li>
 <li><a href="#openshift-client">OpenShift Client</a></li>
+<li><a href="#optimizing-native-image">Optimizing the Native Image</a>
+<ul class="sectlevel2">
+<li><a href="#use-the-kubernetes-client-extension">Use the Kubernetes Client extension</a></li>
+<li><a href="#depend-only-on-the-modules-you-need">Depend only on the modules you need</a></li>
+</ul>
+</li>
 <li><a href="#configuration-reference">Configuration Reference</a></li>
 </ul></div>
     </div>
@@ -1653,13 +1788,25 @@ See the <a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/ja
       <ul class="related-content">
       
         
-        <li class="guide"><a href="/version/main/guides/deploying-to-openshift">Deploying on OpenShift</a></li>
+        <li class="howto"><a href="/version/main/guides/deploying-to-openshift-native-howto">Deploying Quarkus applications compiled to native executables</a></li>
+      
+        
+        <li class="guide"><a href="/version/main/guides/deploying-to-openshift">Deploying Quarkus applications to OpenShift</a></li>
+      
+        
+        <li class="howto"><a href="/version/main/guides/deploying-to-openshift-howto">Deploying Quarkus applications to OpenShift in a single step</a></li>
+      
+        
+        <li class="howto"><a href="/version/main/guides/deploying-to-openshift-docker-howto">Deploying Quarkus Java applications to OpenShift by using a Docker build strategy</a></li>
       
         
         <li class="guide"><a href="/version/main/guides/init-tasks">Initialization tasks</a></li>
       
         
         <li class="guide"><a href="/version/main/guides/kubernetes-config">Kubernetes Config</a></li>
+      
+        
+        <li class="howto"><a href="/version/main/guides/deploying-to-openshift-s2i-howto">Using S2I to deploy Quarkus applications to OpenShift</a></li>
       
         
         <li class="guide"><a href="/version/main/guides/grpc-kubernetes">Deploying your gRPC Service in Kubernetes</a></li>
@@ -1715,6 +1862,10 @@ See the <a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/ja
           
           
             <li><a href="/newsletter" target="_blank">Newsletter</a></li>
+          
+          
+          
+            <li><a href="/userstories" target="_blank">User Stories</a></li>
           
           
           

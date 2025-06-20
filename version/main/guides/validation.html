@@ -12,7 +12,7 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <meta http-equiv="Content-Security-Policy" content="
-  connect-src 'self' https://dpm.demdex.net https://adobedc.demdex.net https://route-default-test-mscherer-matamo.apps.ospo-osci.z3b1.p1.openshiftapps.com/ https://search.quarkus.io https://smetrics.redhat.com; 
+  connect-src 'self' https://dpm.demdex.net https://adobedc.demdex.net https://analytics.ossupstream.org/ https://search.quarkus.io https://smetrics.redhat.com; 
   script-src 'self' 'unsafe-inline' 'unsafe-eval'
       
       https://assets.adobedtm.com
@@ -27,13 +27,13 @@
       http://www.googleadservices.com
       https://googleads.g.doubleclick.net
       https://giscus.app
-      https://route-default-test-mscherer-matamo.apps.ospo-osci.z3b1.p1.openshiftapps.com/
+      https://analytics.ossupstream.org/
       https://app.mailjet.com;
 
   style-src 'self' https://fonts.googleapis.com https://use.fontawesome.com; 
   img-src 'self' * data:; 
   media-src 'self'; 
-  frame-src https://redhat.demdex.net https://www.youtube.com https://embed.restream.io https://app.mailjet.com http://xy0p2.mjt.lu https://mj.quarkus.io https://giscus.app; 
+  frame-src https://redhat.demdex.net https://www.youtube.com https://player.restream.io https://app.mailjet.com http://xy0p2.mjt.lu https://mj.quarkus.io https://giscus.app; 
   base-uri 'none'; 
   object-src 'none'; 
   form-action 'none'; 
@@ -100,13 +100,12 @@
         <span href="/about/">Why<i class="fas fa-chevron-down"></i></span>
         <ul class="submenu">
           <li><a href="/about" class="">WHAT IS QUARKUS?</a></li>
-          <li><a href="/container-first" class="">CONTAINER FIRST</a></li>
-          <li><a href="/continuum" class="">VERSATILITY</a></li>
-          <li><a href="/standards" class="">STANDARDS</a></li>
-          <li><a href="/kubernetes-native" class="">KUBERNETES NATIVE</a></li>
-          <li><a href="/performance" class="">PERFORMANCE</a></li>
           <li><a href="/developer-joy" class="">DEVELOPER JOY</a></li>
-          
+          <li><a href="/performance" class="">PERFORMANCE</a></li>
+          <li><a href="/kubernetes-native" class="">KUBERNETES NATIVE</a></li>
+          <li><a href="/standards" class="">STANDARDS</a></li>
+          <li><a href="/versatility" class="">VERSATILITY</a></li>
+          <li><a href="/container-first" class="">CONTAINER FIRST</a></li>          
         </ul>
       </li>
       <li class="dropdown">
@@ -114,6 +113,7 @@
         <ul class="submenu">
           <li><a href="/get-started" class="">GET STARTED</a></li>
           <li><a href="/guides" class="active">DOCUMENTATION</a></li>
+          <li><a href="/userstories/" class="">USER STORIES</a></li>  
           <li><a href="/qtips" class="">"Q" TIP VIDEOS</a></li>          
           <li><a href="/books" class="">BOOKS</a></li>
           </ul>
@@ -189,7 +189,11 @@
         
         
         
-        <option value="latest" >3.17.0 - Latest</option>
+        <option value="latest" >3.23.4 - Latest</option>
+        
+        
+        
+        <option value="3.20" >3.20</option>
         
         
         
@@ -620,7 +624,7 @@ public class BookService {
 </div>
 </div>
 <div class="paragraph">
-<p>Calling the service in your rest end point triggers the <code>Book</code> validation automatically:</p>
+<p>Calling such service method, e.g. in your rest end point, triggers the <code>Book</code> validation automatically:</p>
 </div>
 <div class="listingblock">
 <div class="content">
@@ -640,11 +644,31 @@ public Result tryMeServiceMethodValidation(Book book) {
 </div>
 <div class="paragraph">
 <p>Note that, if you want to push the validation errors to the frontend, you have to catch the exception and push the information yourselves
-as they will not be automatically pushed to the JSON output.</p>
+as they will not be automatically pushed to the JSON output and will be treated as any other internal server errors.</p>
 </div>
 <div class="paragraph">
-<p>Keep in mind that you usually don&#8217;t want to expose to the public the internals of your services
-- and especially not the validated value contained in the violation object.</p>
+<p>Keep in mind that you usually don&#8217;t want to expose to the public the internals of your services&#8201;&#8212;&#8201;and especially not the validated value contained in the violation object.</p>
+</div>
+<div class="admonitionblock important">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-important" title="Important"></i>
+</td>
+<td class="content">
+<div class="paragraph">
+<p>By default, only failing the validation of the constraints defined for the parameters of the REST endpoints
+will result in bad request responses with a validation report as a part of the response body.
+In any other case, e.g. validation of service methods (be it parameters or return values),
+validation of the return value of a REST endpoint, etc., will result in an internal server error (response status code <code>5xx</code>),
+unless the application code explicitly catches and handles the <code>ConstraintViolationException</code> (or a custom <code>ExceptionMapper</code> is implemented).
+The reasoning behind such behaviour is that only REST endpoint parameters are considered as the user input
+and hence can be treated as a bad request (response status code <code>4xx</code>),
+At the same time, constraint violations in other places result from the application logic execution and, hence, are treated as internal errors.</p>
+</div>
+</td>
+</tr>
+</table>
 </div>
 </div>
 </div>
@@ -907,6 +931,54 @@ Quarkus will check if a bean of this type is available and, if so, it will use i
 </tr>
 </table>
 </div>
+<div class="paragraph">
+<p>When injecting beans relying on the runtime configuration, use <code>@Inject Instance&lt;..&gt;</code>. Since constraints are initialized
+at build time, it is not possible to completely preconfigure the constraint in the <code>initialize(..)</code> method,
+as the runtime information will be missing at that point. The <code>initialize(..)</code> method in such scenarios can still be used
+to read the constraint annotation parameters, and perform any work not relying on the runtime configuration.
+Hence, it is recommended that any heavy configuration work happens as part of the injected bean initialization
+and methods used in the <code>ConstraintValidator#isValid(..)</code> implementation are as fast as possible:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-java hljs" data-lang="java">@ApplicationScoped
+public class MyConstraintValidator implements ConstraintValidator&lt;MyConstraint, String&gt; {
+
+    @Inject
+    Instance&lt;MyService&gt; service;
+
+    @Override
+    public boolean isValid(String value, ConstraintValidatorContext context) {
+        if (value == null) {
+            return true;
+        }
+
+        return service.get().validate(value);
+    }
+}
+
+@ApplicationScoped
+public class MyService {
+
+	private final Predicate&lt;String&gt; validationFunction;
+
+	@Inject
+	public MyService(MyRuntimeConfig config) {
+		// perform all possible "initialization" work, e.g.:
+		if (config.complexValidationEnabled()) {
+			validationFunction = s -&gt; ...
+		} else {
+			validationFunction = String::isBlank;
+		}
+	}
+
+	public boolean validate(String value) {
+		// perform the validation
+		return validationFunction.test(value);
+	}
+}</code></pre>
+</div>
+</div>
 </div>
 </div>
 <div class="sect2">
@@ -1073,7 +1145,8 @@ so that we could register the appropriate classes for reflection.</p>
 <p>To configure the <code>ValidatorFactory</code>, use the exposed configuration properties and the CDI integration.</p>
 </div>
 <div class="paragraph">
-<p>Consequently, the only way to define constraints in Quarkus is by annotating your classes.</p>
+<p>While configuration of the validator factory is not possible through XML, constraint declaration is.
+Quarkus accepts constraints defined by annotations in your classes or in the <code>validation.xml</code>.</p>
 </div>
 </div>
 <div class="sect2">
@@ -1131,7 +1204,7 @@ is called.</p>
 <p>Enable the fail fast mode. When fail fast is enabled the validation will stop on the first constraint violation detected.</p>
 </div>
 <div class="paragraph">
-<p>Environment variable: <code id="env-var-55851">QUARKUS_HIBERNATE_VALIDATOR_FAIL_FAST</code><button class="btn-copy fa fa-clipboard inline-btn-copy" data-clipboard-action="copy" data-clipboard-target="#env-var-55851" title="Copy to clipboard" do-not-collapse="true"></button></p>
+<p>Environment variable: <code id="env-var-64949">QUARKUS_HIBERNATE_VALIDATOR_FAIL_FAST</code><button class="btn-copy fa fa-clipboard inline-btn-copy" data-clipboard-action="copy" data-clipboard-target="#env-var-64949" title="Copy to clipboard" do-not-collapse="true"></button></p>
 </div>
 </div>
 </div>
@@ -1167,7 +1240,7 @@ is called.</p>
 </blockquote>
 </div>
 <div class="paragraph">
-<p>Environment variable: <code id="env-var-55852">QUARKUS_HIBERNATE_VALIDATOR_METHOD_VALIDATION_ALLOW_OVERRIDING_PARAMETER_CONSTRAINTS</code><button class="btn-copy fa fa-clipboard inline-btn-copy" data-clipboard-action="copy" data-clipboard-target="#env-var-55852" title="Copy to clipboard" do-not-collapse="true"></button></p>
+<p>Environment variable: <code id="env-var-64950">QUARKUS_HIBERNATE_VALIDATOR_METHOD_VALIDATION_ALLOW_OVERRIDING_PARAMETER_CONSTRAINTS</code><button class="btn-copy fa fa-clipboard inline-btn-copy" data-clipboard-action="copy" data-clipboard-target="#env-var-64950" title="Copy to clipboard" do-not-collapse="true"></button></p>
 </div>
 </div>
 </div>
@@ -1198,7 +1271,7 @@ is called.</p>
 </blockquote>
 </div>
 <div class="paragraph">
-<p>Environment variable: <code id="env-var-55853">QUARKUS_HIBERNATE_VALIDATOR_METHOD_VALIDATION_ALLOW_PARAMETER_CONSTRAINTS_ON_PARALLEL_METHODS</code><button class="btn-copy fa fa-clipboard inline-btn-copy" data-clipboard-action="copy" data-clipboard-target="#env-var-55853" title="Copy to clipboard" do-not-collapse="true"></button></p>
+<p>Environment variable: <code id="env-var-64951">QUARKUS_HIBERNATE_VALIDATOR_METHOD_VALIDATION_ALLOW_PARAMETER_CONSTRAINTS_ON_PARALLEL_METHODS</code><button class="btn-copy fa fa-clipboard inline-btn-copy" data-clipboard-action="copy" data-clipboard-target="#env-var-64951" title="Copy to clipboard" do-not-collapse="true"></button></p>
 </div>
 </div>
 </div>
@@ -1229,7 +1302,7 @@ is called.</p>
 </blockquote>
 </div>
 <div class="paragraph">
-<p>Environment variable: <code id="env-var-55854">QUARKUS_HIBERNATE_VALIDATOR_METHOD_VALIDATION_ALLOW_MULTIPLE_CASCADED_VALIDATION_ON_RETURN_VALUES</code><button class="btn-copy fa fa-clipboard inline-btn-copy" data-clipboard-action="copy" data-clipboard-target="#env-var-55854" title="Copy to clipboard" do-not-collapse="true"></button></p>
+<p>Environment variable: <code id="env-var-64952">QUARKUS_HIBERNATE_VALIDATOR_METHOD_VALIDATION_ALLOW_MULTIPLE_CASCADED_VALIDATION_ON_RETURN_VALUES</code><button class="btn-copy fa fa-clipboard inline-btn-copy" data-clipboard-action="copy" data-clipboard-target="#env-var-64952" title="Copy to clipboard" do-not-collapse="true"></button></p>
 </div>
 </div>
 </div>
@@ -1261,7 +1334,7 @@ is called.</p>
 <p>In particular, it doesn&#8217;t affect the default EL feature level for custom violations created programmatically in validator implementations. The feature level for those can only be configured directly in the validator implementation.</p>
 </div>
 <div class="paragraph">
-<p>Environment variable: <code id="env-var-55855">QUARKUS_HIBERNATE_VALIDATOR_EXPRESSION_LANGUAGE_CONSTRAINT_EXPRESSION_FEATURE_LEVEL</code><button class="btn-copy fa fa-clipboard inline-btn-copy" data-clipboard-action="copy" data-clipboard-target="#env-var-55855" title="Copy to clipboard" do-not-collapse="true"></button></p>
+<p>Environment variable: <code id="env-var-64953">QUARKUS_HIBERNATE_VALIDATOR_EXPRESSION_LANGUAGE_CONSTRAINT_EXPRESSION_FEATURE_LEVEL</code><button class="btn-copy fa fa-clipboard inline-btn-copy" data-clipboard-action="copy" data-clipboard-target="#env-var-64953" title="Copy to clipboard" do-not-collapse="true"></button></p>
 </div>
 </div>
 </div>
@@ -1347,6 +1420,10 @@ is called.</p>
           
           
             <li><a href="/newsletter" target="_blank">Newsletter</a></li>
+          
+          
+          
+            <li><a href="/userstories" target="_blank">User Stories</a></li>
           
           
           

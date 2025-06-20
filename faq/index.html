@@ -12,7 +12,7 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <meta http-equiv="Content-Security-Policy" content="
-  connect-src 'self' https://dpm.demdex.net https://adobedc.demdex.net https://route-default-test-mscherer-matamo.apps.ospo-osci.z3b1.p1.openshiftapps.com/ https://search.quarkus.io https://smetrics.redhat.com; 
+  connect-src 'self' https://dpm.demdex.net https://adobedc.demdex.net https://analytics.ossupstream.org/ https://search.quarkus.io https://smetrics.redhat.com; 
   script-src 'self' 'unsafe-inline' 'unsafe-eval'
       
       https://assets.adobedtm.com
@@ -27,13 +27,13 @@
       http://www.googleadservices.com
       https://googleads.g.doubleclick.net
       https://giscus.app
-      https://route-default-test-mscherer-matamo.apps.ospo-osci.z3b1.p1.openshiftapps.com/
+      https://analytics.ossupstream.org/
       https://app.mailjet.com;
 
   style-src 'self' https://fonts.googleapis.com https://use.fontawesome.com; 
   img-src 'self' * data:; 
   media-src 'self'; 
-  frame-src https://redhat.demdex.net https://www.youtube.com https://embed.restream.io https://app.mailjet.com http://xy0p2.mjt.lu https://mj.quarkus.io https://giscus.app; 
+  frame-src https://redhat.demdex.net https://www.youtube.com https://player.restream.io https://app.mailjet.com http://xy0p2.mjt.lu https://mj.quarkus.io https://giscus.app; 
   base-uri 'none'; 
   object-src 'none'; 
   form-action 'none'; 
@@ -100,13 +100,12 @@
         <span href="/about/">Why<i class="fas fa-chevron-down"></i></span>
         <ul class="submenu">
           <li><a href="/about" class="">WHAT IS QUARKUS?</a></li>
-          <li><a href="/container-first" class="">CONTAINER FIRST</a></li>
-          <li><a href="/continuum" class="">VERSATILITY</a></li>
-          <li><a href="/standards" class="">STANDARDS</a></li>
-          <li><a href="/kubernetes-native" class="">KUBERNETES NATIVE</a></li>
-          <li><a href="/performance" class="">PERFORMANCE</a></li>
           <li><a href="/developer-joy" class="">DEVELOPER JOY</a></li>
-          
+          <li><a href="/performance" class="">PERFORMANCE</a></li>
+          <li><a href="/kubernetes-native" class="">KUBERNETES NATIVE</a></li>
+          <li><a href="/standards" class="">STANDARDS</a></li>
+          <li><a href="/versatility" class="">VERSATILITY</a></li>
+          <li><a href="/container-first" class="">CONTAINER FIRST</a></li>          
         </ul>
       </li>
       <li class="dropdown">
@@ -114,6 +113,7 @@
         <ul class="submenu">
           <li><a href="/get-started" class="">GET STARTED</a></li>
           <li><a href="/guides" class="">DOCUMENTATION</a></li>
+          <li><a href="/userstories/" class="">USER STORIES</a></li>  
           <li><a href="/qtips" class="">"Q" TIP VIDEOS</a></li>          
           <li><a href="/books" class="">BOOKS</a></li>
           </ul>
@@ -188,7 +188,7 @@
 <h2 id="where-can-i-get-it"><a class="anchor" href="#where-can-i-get-it"></a>Where can I get it?</h2>
 <div class="sectionbody">
 <div class="paragraph">
-<p>Quarkus is published in Maven Central, check out <a href="/extensions">which extensions</a> you need and just import them in your <code>pom.xml</code> to get Quarkus. We recommend you start your Quarkus experience via our <a href="/get-started">Getting Started guides</a>.</p>
+<p>Quarkus is published in Maven Central. We recommend you start your Quarkus experience with our <a href="/get-started">Getting Started guides</a> or by downloading a scaffolded application from <a href="https://code.quarkus.io">code.quarkus.io</a>.</p>
 </div>
 </div>
 </div>
@@ -196,10 +196,12 @@
 <h2 id="quarkus-is-stable"><a class="anchor" href="#quarkus-is-stable"></a>Quarkus is stable?</h2>
 <div class="sectionbody">
 <div class="paragraph">
-<p>Yes, we consider Quarkus stable. Remember 95% of the features Quarkus apps use are provided by the ecosystem like Hibernate ORM, Eclipse Vert.x, Netty, RESTEasy, etc. These libraries are rock solid :)</p>
+<p>Yes, we consider Quarkus stable.
+Quarkus is used in production by a wide range of organizations (see some <a href="blog/tag/user-story/">user stories</a>).
+Remember 95% of the features Quarkus apps use are provided by the ecosystem like Hibernate ORM, Eclipse Vert.x, Netty, RESTEasy, etc. These libraries are rock solid :)</p>
 </div>
 <div class="paragraph">
-<p>You can go to <a href="https://code.quarkus.io/">code.quarkus.io</a> to see if a particular extension is <em>stable</em> (default) or <em>preview</em>.</p>
+<p>You can go to <a href="https://quarkus.io/extensions">quarkus.io/extensions</a> to see if a particular extension is <em>stable</em> (default) or <em>preview</em>.</p>
 </div>
 </div>
 </div>
@@ -233,7 +235,7 @@
 <p><strong>Deprecated</strong>: backward compatibility and presence in the ecosystem is not guaranteed. Such extensions are likely to be replaced or removed in a future version of Quarkus.</p>
 </div>
 <div class="paragraph">
-<p>You can find the extension status on <a href="https://code.quarkus.io">code.quarkus.io</a> or in the extension <a href="/guides/">guides</a>.</p>
+<p>You can find the extension status on <a href="https://quarkus.io/extensions">quarkus.io/extensions</a> or in the extension <a href="/guides/">guides</a>.</p>
 </div>
 </div>
 </div>
@@ -253,7 +255,7 @@
 <p>Quarkus is an open ecosystem and we hope to see all the extensions people need to write their apps. We are working as we speak to allow an extension to be published in separate repos and separate GAVs and thus published in Maven repos independently of Quarkus core. This will greatly simplify the publication process. Expect news soon.</p>
 </div>
 <div class="paragraph">
-<p>The one current restriction is that extensions should work in both OpenJDK and GraalVM native executables. That is the guarantee we give Quarkus users (a cross compilation for their app). We have a <a href="/guides/extension-maturity-matrix">maturity model</a> to improve an extension to be fully "Quarked" and benefit from Quarkus, all done in incremental steps. Just hop on our <a href="https://quarkus.io/community/#discussions">mailing list</a> to discuss your ideas and get help. And you can start reading our <a href="https://quarkus.io/guides/writing-extensions">Writing extensions guide</a> as well or more simply get inspiration from the <a href="https://github.com/quarkusio/quarkus/tree/main/extensions">existing ones</a>.</p>
+<p>The one current restriction is that extensions should work in both OpenJDK and GraalVM native executables. That is the guarantee we give Quarkus users (a cross compilation for their app). We have a <a href="/guides/extension-maturity-matrix">maturity model</a> to improve an extension to be fully "Quarked" and benefit from Quarkus, all done in incremental steps. Just hop on our <a href="https://quarkus.io/community/#discussions">mailing list</a> to discuss your ideas and get help. And you can start reading our <a href="https://quarkus.io/guides/writing-extensions">Writing extensions guide</a> as well or more simply get inspiration from the <a href="https://quarkus.io/extensions">existing ones</a>.</p>
 </div>
 </div>
 </div>
@@ -343,6 +345,10 @@
           
           
             <li><a href="/newsletter" target="_blank">Newsletter</a></li>
+          
+          
+          
+            <li><a href="/userstories" target="_blank">User Stories</a></li>
           
           
           

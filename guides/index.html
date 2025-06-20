@@ -12,7 +12,7 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <meta http-equiv="Content-Security-Policy" content="
-  connect-src 'self' https://dpm.demdex.net https://adobedc.demdex.net https://route-default-test-mscherer-matamo.apps.ospo-osci.z3b1.p1.openshiftapps.com/ https://search.quarkus.io https://smetrics.redhat.com; 
+  connect-src 'self' https://dpm.demdex.net https://adobedc.demdex.net https://analytics.ossupstream.org/ https://search.quarkus.io https://smetrics.redhat.com; 
   script-src 'self' 'unsafe-inline' 'unsafe-eval'
       
       https://assets.adobedtm.com
@@ -27,13 +27,13 @@
       http://www.googleadservices.com
       https://googleads.g.doubleclick.net
       https://giscus.app
-      https://route-default-test-mscherer-matamo.apps.ospo-osci.z3b1.p1.openshiftapps.com/
+      https://analytics.ossupstream.org/
       https://app.mailjet.com;
 
   style-src 'self' https://fonts.googleapis.com https://use.fontawesome.com; 
   img-src 'self' * data:; 
   media-src 'self'; 
-  frame-src https://redhat.demdex.net https://www.youtube.com https://embed.restream.io https://app.mailjet.com http://xy0p2.mjt.lu https://mj.quarkus.io https://giscus.app; 
+  frame-src https://redhat.demdex.net https://www.youtube.com https://player.restream.io https://app.mailjet.com http://xy0p2.mjt.lu https://mj.quarkus.io https://giscus.app; 
   base-uri 'none'; 
   object-src 'none'; 
   form-action 'none'; 
@@ -104,13 +104,12 @@
         <span href="/about/">Why<i class="fas fa-chevron-down"></i></span>
         <ul class="submenu">
           <li><a href="/about" class="">WHAT IS QUARKUS?</a></li>
-          <li><a href="/container-first" class="">CONTAINER FIRST</a></li>
-          <li><a href="/continuum" class="">VERSATILITY</a></li>
-          <li><a href="/standards" class="">STANDARDS</a></li>
-          <li><a href="/kubernetes-native" class="">KUBERNETES NATIVE</a></li>
-          <li><a href="/performance" class="">PERFORMANCE</a></li>
           <li><a href="/developer-joy" class="">DEVELOPER JOY</a></li>
-          
+          <li><a href="/performance" class="">PERFORMANCE</a></li>
+          <li><a href="/kubernetes-native" class="">KUBERNETES NATIVE</a></li>
+          <li><a href="/standards" class="">STANDARDS</a></li>
+          <li><a href="/versatility" class="">VERSATILITY</a></li>
+          <li><a href="/container-first" class="">CONTAINER FIRST</a></li>          
         </ul>
       </li>
       <li class="dropdown">
@@ -118,6 +117,7 @@
         <ul class="submenu">
           <li><a href="/get-started" class="">GET STARTED</a></li>
           <li><a href="/guides" class="active">DOCUMENTATION</a></li>
+          <li><a href="/userstories/" class="">USER STORIES</a></li>  
           <li><a href="/qtips" class="">"Q" TIP VIDEOS</a></li>          
           <li><a href="/books" class="">BOOKS</a></li>
           </ul>
@@ -200,8 +200,11 @@
             <option value="main" >Main - SNAPSHOT
             </option>
             
-            <option value="latest" selected>3.17.0 -
+            <option value="latest" selected>3.23.4 -
               Latest
+            </option>
+            
+            <option value="3.20" >3.20
             </option>
             
             <option value="3.15" >3.15
@@ -395,25 +398,6 @@
           
 
 <qs-guide type="tutorial"
-          title="Getting started with Security by using Basic authentication and Jakarta Persistence"
-          url="/guides/security-getting-started-tutorial"
-          summary="<p>Get started with Quarkus Security by securing your Quarkus application endpoints with the built-in Quarkus Basic authentication and the Jakarta Persistence identity provider, enabling role-based access control.</p>
-"
-          keywords=""
-          categories="getting-started, security"
-          origin=""
->
-  <!-- WE KEEP PART OF THE CONTENT FOR SEO -->
-  <h4><a href="/guides/security-getting-started-tutorial" >Getting started with Security by using Basic authentication and Jakarta Persistence</a></h4>
-  <div class="description"><p>Get started with Quarkus Security by securing your Quarkus application endpoints with the built-in Quarkus Basic authentication and the Jakarta Persistence identity provider, enabling role-based access control.</p>
-</div>
-</qs-guide>
-
-
-          
-          
-
-<qs-guide type="tutorial"
           title="Getting started with WebSockets Next"
           url="/guides/websockets-next-tutorial"
           summary="<p>This guide explains how your Quarkus application can utilize web sockets to create interactive web applications.</p>
@@ -425,6 +409,25 @@
   <!-- WE KEEP PART OF THE CONTENT FOR SEO -->
   <h4><a href="/guides/websockets-next-tutorial" >Getting started with WebSockets Next</a></h4>
   <div class="description"><p>This guide explains how your Quarkus application can utilize web sockets to create interactive web applications.</p>
+</div>
+</qs-guide>
+
+
+          
+          
+
+<qs-guide type="tutorial"
+          title="Getting started with security by using Basic authentication and Jakarta Persistence"
+          url="/guides/security-getting-started-tutorial"
+          summary="<p>Get started with Quarkus Security by securing your Quarkus application endpoints with the built-in Quarkus Basic authentication and the Jakarta Persistence identity provider, enabling role-based access control.</p>
+"
+          keywords=""
+          categories="getting-started, security"
+          origin=""
+>
+  <!-- WE KEEP PART OF THE CONTENT FOR SEO -->
+  <h4><a href="/guides/security-getting-started-tutorial" >Getting started with security by using Basic authentication and Jakarta Persistence</a></h4>
+  <div class="description"><p>Get started with Quarkus Security by securing your Quarkus application endpoints with the built-in Quarkus Basic authentication and the Jakarta Persistence identity provider, enabling role-based access control.</p>
 </div>
 </qs-guide>
 
@@ -618,6 +621,63 @@
           
 
 <qs-guide type="howto"
+          title="Deploying Quarkus Java applications to OpenShift by using a Docker build strategy"
+          url="/guides/deploying-to-openshift-docker-howto"
+          summary="<p>This guide describes how to build and deploy a Quarkus application on OpenShift by using the Docker build strategy.</p>
+"
+          keywords=""
+          categories="cloud, native"
+          origin=""
+>
+  <!-- WE KEEP PART OF THE CONTENT FOR SEO -->
+  <h4><a href="/guides/deploying-to-openshift-docker-howto" >Deploying Quarkus Java applications to OpenShift by using a Docker build strategy</a></h4>
+  <div class="description"><p>This guide describes how to build and deploy a Quarkus application on OpenShift by using the Docker build strategy.</p>
+</div>
+</qs-guide>
+
+
+          
+          
+
+<qs-guide type="howto"
+          title="Deploying Quarkus applications compiled to native executables"
+          url="/guides/deploying-to-openshift-native-howto"
+          summary="<p>This guide describes how to deploy a Quarkus application to OpenShift compiled to native executables.</p>
+"
+          keywords=""
+          categories="cloud, native"
+          origin=""
+>
+  <!-- WE KEEP PART OF THE CONTENT FOR SEO -->
+  <h4><a href="/guides/deploying-to-openshift-native-howto" >Deploying Quarkus applications compiled to native executables</a></h4>
+  <div class="description"><p>This guide describes how to deploy a Quarkus application to OpenShift compiled to native executables.</p>
+</div>
+</qs-guide>
+
+
+          
+          
+
+<qs-guide type="howto"
+          title="Deploying Quarkus applications to OpenShift in a single step"
+          url="/guides/deploying-to-openshift-howto"
+          summary="<p>This guide describes how to build and deploy a Quarkus application to OpenShift in a single step.</p>
+"
+          keywords=""
+          categories="cloud, native"
+          origin=""
+>
+  <!-- WE KEEP PART OF THE CONTENT FOR SEO -->
+  <h4><a href="/guides/deploying-to-openshift-howto" >Deploying Quarkus applications to OpenShift in a single step</a></h4>
+  <div class="description"><p>This guide describes how to build and deploy a Quarkus application to OpenShift in a single step.</p>
+</div>
+</qs-guide>
+
+
+          
+          
+
+<qs-guide type="howto"
           title="Dev Services and Dev UI for OpenID Connect (OIDC)"
           url="/guides/security-openid-connect-dev-services"
           summary="<p>You can use Dev Services for Keycloak and the Dev UI for the OpenID Connect (OIDC) Keycloak provider and adapt these services for other OpenID Connect providers.</p>
@@ -734,15 +794,15 @@
 <qs-guide type="howto"
           title="Using OpenID Connect (OIDC) and Keycloak to centralize authorization"
           url="/guides/security-keycloak-authorization"
-          summary="<p>Learn how to enable bearer token authorization in your Quarkus application using Keycloak Authorization Services for secure access to protected resources.</p>
+          summary="<p>Learn how to enable bearer token authorization in your Quarkus application by using Keycloak Authorization Services for secure access to protected resources.</p>
 "
-          keywords="sso oidc security keycloak"
+          keywords="sso, oidc, security, keycloak"
           categories="security"
           origin=""
 >
   <!-- WE KEEP PART OF THE CONTENT FOR SEO -->
   <h4><a href="/guides/security-keycloak-authorization" >Using OpenID Connect (OIDC) and Keycloak to centralize authorization</a></h4>
-  <div class="description"><p>Learn how to enable bearer token authorization in your Quarkus application using Keycloak Authorization Services for secure access to protected resources.</p>
+  <div class="description"><p>Learn how to enable bearer token authorization in your Quarkus application by using Keycloak Authorization Services for secure access to protected resources.</p>
 </div>
 </qs-guide>
 
@@ -770,9 +830,28 @@
           
 
 <qs-guide type="howto"
+          title="Using S2I to deploy Quarkus applications to OpenShift"
+          url="/guides/deploying-to-openshift-s2i-howto"
+          summary="<p>This guide describes how to build and deploy a Quarkus application on OpenShift by using Source-to-Image (S2I).</p>
+"
+          keywords=""
+          categories="cloud, native"
+          origin=""
+>
+  <!-- WE KEEP PART OF THE CONTENT FOR SEO -->
+  <h4><a href="/guides/deploying-to-openshift-s2i-howto" >Using S2I to deploy Quarkus applications to OpenShift</a></h4>
+  <div class="description"><p>This guide describes how to build and deploy a Quarkus application on OpenShift by using Source-to-Image (S2I).</p>
+</div>
+</qs-guide>
+
+
+          
+          
+
+<qs-guide type="howto"
           title="Writing a Dev Service"
           url="/guides/extension-writing-dev-service"
-          summary="
+          summary="<p>Learn how to develop a Dev Service for your extension in order to replace an external service in development mode.</p>
 "
           keywords=""
           categories="writing-extensions"
@@ -780,7 +859,7 @@
 >
   <!-- WE KEEP PART OF THE CONTENT FOR SEO -->
   <h4><a href="/guides/extension-writing-dev-service" >Writing a Dev Service</a></h4>
-  <div class="description">
+  <div class="description"><p>Learn how to develop a Dev Service for your extension in order to replace an external service in development mode.</p>
 </div>
 </qs-guide>
 
@@ -791,7 +870,7 @@
 <qs-guide type="howto"
           title="YAML configuration"
           url="/guides/config-yaml"
-          summary="<p>Optionally, use <code class="language-plaintext highlighter-rouge">application.yaml</code> instead of <code class="language-plaintext highlighter-rouge">application.properties</code> to configure your application.</p>
+          summary="<p>Optionally, use application.yaml instead of application.properties to configure your application.</p>
 "
           keywords=""
           categories="core"
@@ -799,7 +878,7 @@
 >
   <!-- WE KEEP PART OF THE CONTENT FOR SEO -->
   <h4><a href="/guides/config-yaml" >YAML configuration</a></h4>
-  <div class="description"><p>Optionally, use <code class="language-plaintext highlighter-rouge">application.yaml</code> instead of <code class="language-plaintext highlighter-rouge">application.properties</code> to configure your application.</p>
+  <div class="description"><p>Optionally, use application.yaml instead of application.properties to configure your application.</p>
 </div>
 </qs-guide>
 
@@ -890,25 +969,6 @@
   <!-- WE KEEP PART OF THE CONTENT FOR SEO -->
   <h4><a href="/guides/security-openid-connect-providers" >Configuring Well-Known OpenID Connect Providers</a></h4>
   <div class="description"><p>This document explains how to configure well-known social OIDC and OAuth2 providers.</p>
-</div>
-</qs-guide>
-
-
-          
-          
-
-<qs-guide type="concepts"
-          title="Cross-origin resource sharing"
-          url="/guides/security-cors"
-          summary="<p>Cross-origin resource sharing (CORS) is an HTTP-header-based mechanism that allows a server to indicate any origins other than its own, from which a browser should permit loading resources.</p>
-"
-          keywords="cors, http"
-          categories="security, web"
-          origin=""
->
-  <!-- WE KEEP PART OF THE CONTENT FOR SEO -->
-  <h4><a href="/guides/security-cors" >Cross-origin resource sharing</a></h4>
-  <div class="description"><p>Cross-origin resource sharing (CORS) is an HTTP-header-based mechanism that allows a server to indicate any origins other than its own, from which a browser should permit loading resources.</p>
 </div>
 </qs-guide>
 
@@ -1012,6 +1072,25 @@
           
 
 <qs-guide type="concepts"
+          title="Quarkus OpenId Connect (OIDC) Expanded Configuration Reference"
+          url="/guides/security-oidc-expanded-configuration"
+          summary="<p>Quarkus OIDC quarkus-oidc extension provides a comprehensive, highly adaptable and configurable OIDC and OAuth2 adapter implementation.</p>
+"
+          keywords=""
+          categories="security"
+          origin=""
+>
+  <!-- WE KEEP PART OF THE CONTENT FOR SEO -->
+  <h4><a href="/guides/security-oidc-expanded-configuration" >Quarkus OpenId Connect (OIDC) Expanded Configuration Reference</a></h4>
+  <div class="description"><p>Quarkus OIDC quarkus-oidc extension provides a comprehensive, highly adaptable and configurable OIDC and OAuth2 adapter implementation.</p>
+</div>
+</qs-guide>
+
+
+          
+          
+
+<qs-guide type="concepts"
           title="Quarkus Security architecture"
           url="/guides/security-architecture"
           summary="<p>The Quarkus Security architecture provides several built-in authentication mechanisms and is highly customizable.</p>
@@ -1098,196 +1177,6 @@
           <p>Technical Resource that covers tools, components, and commands. The encyclopedia for Quarkus.</p>
         </div>
         <div class="grid-wrapper">
-          
-          
-
-<qs-guide type="reference"
-          title="Access Git repositories with JGit"
-          url="https://quarkiverse.github.io/quarkiverse-docs/quarkus-jgit/dev/index.html"
-          summary="<p>This guide explains how you can access Git repositories with JGit.</p>
-"
-          keywords=""
-          categories="miscellaneous"
-          origin="quarkiverse-hub"
->
-  <!-- WE KEEP PART OF THE CONTENT FOR SEO -->
-  <h4><a href="https://quarkiverse.github.io/quarkiverse-docs/quarkus-jgit/dev/index.html" target="_blank" >Access Git repositories with JGit</a></h4>
-  <div class="description"><p>This guide explains how you can access Git repositories with JGit.</p>
-</div>
-</qs-guide>
-
-
-          
-          
-
-<qs-guide type="reference"
-          title="Access Google Cloud services"
-          url="https://quarkiverse.github.io/quarkiverse-docs/quarkus-google-cloud-services/main/index.html"
-          summary="<p>This guide covers how to use multiple GCP services.</p>
-"
-          keywords=""
-          categories="cloud"
-          origin="quarkiverse-hub"
->
-  <!-- WE KEEP PART OF THE CONTENT FOR SEO -->
-  <h4><a href="https://quarkiverse.github.io/quarkiverse-docs/quarkus-google-cloud-services/main/index.html" target="_blank" >Access Google Cloud services</a></h4>
-  <div class="description"><p>This guide covers how to use multiple GCP services.</p>
-</div>
-</qs-guide>
-
-
-          
-          
-
-<qs-guide type="reference"
-          title="Amazon DynamoDB"
-          url="https://quarkiverse.github.io/quarkiverse-docs/quarkus-amazon-services/dev/amazon-dynamodb.html"
-          summary="<p>This guide covers how to use the Amazon DynamoDB database in Quarkus.</p>
-"
-          keywords=""
-          categories="data, cloud"
-          origin="quarkiverse-hub"
->
-  <!-- WE KEEP PART OF THE CONTENT FOR SEO -->
-  <h4><a href="https://quarkiverse.github.io/quarkiverse-docs/quarkus-amazon-services/dev/amazon-dynamodb.html" target="_blank" >Amazon DynamoDB</a></h4>
-  <div class="description"><p>This guide covers how to use the Amazon DynamoDB database in Quarkus.</p>
-</div>
-</qs-guide>
-
-
-          
-          
-
-<qs-guide type="reference"
-          title="Amazon IAM"
-          url="https://quarkiverse.github.io/quarkiverse-docs/quarkus-amazon-services/dev/amazon-iam.html"
-          summary="<p>This guide covers how to use the Amazon Identity and Access Management in Quarkus.</p>
-"
-          keywords=""
-          categories="cloud"
-          origin="quarkiverse-hub"
->
-  <!-- WE KEEP PART OF THE CONTENT FOR SEO -->
-  <h4><a href="https://quarkiverse.github.io/quarkiverse-docs/quarkus-amazon-services/dev/amazon-iam.html" target="_blank" >Amazon IAM</a></h4>
-  <div class="description"><p>This guide covers how to use the Amazon Identity and Access Management in Quarkus.</p>
-</div>
-</qs-guide>
-
-
-          
-          
-
-<qs-guide type="reference"
-          title="Amazon KMS"
-          url="https://quarkiverse.github.io/quarkiverse-docs/quarkus-amazon-services/dev/amazon-kms.html"
-          summary="<p>This guide covers how to use the Amazon Key Management Service in Quarkus.</p>
-"
-          keywords=""
-          categories="cloud"
-          origin="quarkiverse-hub"
->
-  <!-- WE KEEP PART OF THE CONTENT FOR SEO -->
-  <h4><a href="https://quarkiverse.github.io/quarkiverse-docs/quarkus-amazon-services/dev/amazon-kms.html" target="_blank" >Amazon KMS</a></h4>
-  <div class="description"><p>This guide covers how to use the Amazon Key Management Service in Quarkus.</p>
-</div>
-</qs-guide>
-
-
-          
-          
-
-<qs-guide type="reference"
-          title="Amazon S3"
-          url="https://quarkiverse.github.io/quarkiverse-docs/quarkus-amazon-services/dev/amazon-s3.html"
-          summary="<p>This guide covers how to use the Amazon S3 cloud storage in Quarkus.</p>
-"
-          keywords=""
-          categories="data, cloud"
-          origin="quarkiverse-hub"
->
-  <!-- WE KEEP PART OF THE CONTENT FOR SEO -->
-  <h4><a href="https://quarkiverse.github.io/quarkiverse-docs/quarkus-amazon-services/dev/amazon-s3.html" target="_blank" >Amazon S3</a></h4>
-  <div class="description"><p>This guide covers how to use the Amazon S3 cloud storage in Quarkus.</p>
-</div>
-</qs-guide>
-
-
-          
-          
-
-<qs-guide type="reference"
-          title="Amazon SES"
-          url="https://quarkiverse.github.io/quarkiverse-docs/quarkus-amazon-services/dev/amazon-ses.html"
-          summary="<p>This guide covers how to use the Amazon Simple Email Service in Quarkus.</p>
-"
-          keywords=""
-          categories="cloud"
-          origin="quarkiverse-hub"
->
-  <!-- WE KEEP PART OF THE CONTENT FOR SEO -->
-  <h4><a href="https://quarkiverse.github.io/quarkiverse-docs/quarkus-amazon-services/dev/amazon-ses.html" target="_blank" >Amazon SES</a></h4>
-  <div class="description"><p>This guide covers how to use the Amazon Simple Email Service in Quarkus.</p>
-</div>
-</qs-guide>
-
-
-          
-          
-
-<qs-guide type="reference"
-          title="Amazon SNS"
-          url="https://quarkiverse.github.io/quarkiverse-docs/quarkus-amazon-services/dev/amazon-sns.html"
-          summary="<p>This guide covers how to use the Amazon Simple Notification Service in Quarkus.</p>
-"
-          keywords=""
-          categories="cloud"
-          origin="quarkiverse-hub"
->
-  <!-- WE KEEP PART OF THE CONTENT FOR SEO -->
-  <h4><a href="https://quarkiverse.github.io/quarkiverse-docs/quarkus-amazon-services/dev/amazon-sns.html" target="_blank" >Amazon SNS</a></h4>
-  <div class="description"><p>This guide covers how to use the Amazon Simple Notification Service in Quarkus.</p>
-</div>
-</qs-guide>
-
-
-          
-          
-
-<qs-guide type="reference"
-          title="Amazon SQS"
-          url="https://quarkiverse.github.io/quarkiverse-docs/quarkus-amazon-services/dev/amazon-sqs.html"
-          summary="<p>This guide covers how to use the Amazon Simple Queue Service in Quarkus.</p>
-"
-          keywords=""
-          categories="cloud"
-          origin="quarkiverse-hub"
->
-  <!-- WE KEEP PART OF THE CONTENT FOR SEO -->
-  <h4><a href="https://quarkiverse.github.io/quarkiverse-docs/quarkus-amazon-services/dev/amazon-sqs.html" target="_blank" >Amazon SQS</a></h4>
-  <div class="description"><p>This guide covers how to use the Amazon Simple Queue Service in Quarkus.</p>
-</div>
-</qs-guide>
-
-
-          
-          
-
-<qs-guide type="reference"
-          title="Amazon SSM"
-          url="https://quarkiverse.github.io/quarkiverse-docs/quarkus-amazon-services/dev/amazon-ssm.html"
-          summary="<p>This guide covers how to use the AWS Systems Manager in Quarkus.</p>
-"
-          keywords=""
-          categories="cloud"
-          origin="quarkiverse-hub"
->
-  <!-- WE KEEP PART OF THE CONTENT FOR SEO -->
-  <h4><a href="https://quarkiverse.github.io/quarkiverse-docs/quarkus-amazon-services/dev/amazon-ssm.html" target="_blank" >Amazon SSM</a></h4>
-  <div class="description"><p>This guide covers how to use the AWS Systems Manager in Quarkus.</p>
-</div>
-</qs-guide>
-
-
           
           
 
@@ -1387,44 +1276,6 @@
           
 
 <qs-guide type="reference"
-          title="Consume Configuration from Consul"
-          url="https://quarkiverse.github.io/quarkiverse-docs/quarkus-config-extensions/dev/consul.html"
-          summary="<p>This guide explains how your Quarkus application can read configuration properties at runtime from Consul.</p>
-"
-          keywords=""
-          categories="miscellaneous"
-          origin="quarkiverse-hub"
->
-  <!-- WE KEEP PART OF THE CONTENT FOR SEO -->
-  <h4><a href="https://quarkiverse.github.io/quarkiverse-docs/quarkus-config-extensions/dev/consul.html" target="_blank" >Consume Configuration from Consul</a></h4>
-  <div class="description"><p>This guide explains how your Quarkus application can read configuration properties at runtime from Consul.</p>
-</div>
-</qs-guide>
-
-
-          
-          
-
-<qs-guide type="reference"
-          title="Consume Configuration from Google Cloud Secret Manager"
-          url="https://quarkiverse.github.io/quarkiverse-docs/quarkus-google-cloud-services/main/secretmanager.html"
-          summary="<p>This guide covers how to use GCP Secret Manager in Quarkus to consume configuration properties directly or via your <code class="language-plaintext highlighter-rouge">application.properties</code>.</p>
-"
-          keywords=""
-          categories="miscellaneous"
-          origin="quarkiverse-hub"
->
-  <!-- WE KEEP PART OF THE CONTENT FOR SEO -->
-  <h4><a href="https://quarkiverse.github.io/quarkiverse-docs/quarkus-google-cloud-services/main/secretmanager.html" target="_blank" >Consume Configuration from Google Cloud Secret Manager</a></h4>
-  <div class="description"><p>This guide covers how to use GCP Secret Manager in Quarkus to consume configuration properties directly or via your <code class="language-plaintext highlighter-rouge">application.properties</code>.</p>
-</div>
-</qs-guide>
-
-
-          
-          
-
-<qs-guide type="reference"
           title="Contexts and Dependency Injection"
           url="/guides/cdi-reference"
           summary="<p>Go more in depth into the Quarkus implementation of CDI.</p>
@@ -1444,131 +1295,17 @@
           
 
 <qs-guide type="reference"
-          title="Extracting Content with Apache Tika"
-          url="https://quarkiverse.github.io/quarkiverse-docs/quarkus-tika/dev/index.html"
-          summary="<p>Learn more about how you extract content from documents using the Apache Tika toolkit.</p>
+          title="Cross-Origin Resource Sharing (CORS)"
+          url="/guides/security-cors"
+          summary="<p>Enable and configure CORS in Quarkus to specify allowed origins, methods, and headers, guiding browsers in handling cross-origin requests safely.</p>
 "
-          keywords=""
-          categories="miscellaneous"
-          origin="quarkiverse-hub"
+          keywords="cors, http, configuration, security, headers"
+          categories="security, web"
+          origin=""
 >
   <!-- WE KEEP PART OF THE CONTENT FOR SEO -->
-  <h4><a href="https://quarkiverse.github.io/quarkiverse-docs/quarkus-tika/dev/index.html" target="_blank" >Extracting Content with Apache Tika</a></h4>
-  <div class="description"><p>Learn more about how you extract content from documents using the Apache Tika toolkit.</p>
-</div>
-</qs-guide>
-
-
-          
-          
-
-<qs-guide type="reference"
-          title="Google Cloud BigQuery"
-          url="https://quarkiverse.github.io/quarkiverse-docs/quarkus-google-cloud-services/main/bigquery.html"
-          summary="<p>This guide covers how to use GCP BigQuery in Quarkus.</p>
-"
-          keywords=""
-          categories="data"
-          origin="quarkiverse-hub"
->
-  <!-- WE KEEP PART OF THE CONTENT FOR SEO -->
-  <h4><a href="https://quarkiverse.github.io/quarkiverse-docs/quarkus-google-cloud-services/main/bigquery.html" target="_blank" >Google Cloud BigQuery</a></h4>
-  <div class="description"><p>This guide covers how to use GCP BigQuery in Quarkus.</p>
-</div>
-</qs-guide>
-
-
-          
-          
-
-<qs-guide type="reference"
-          title="Google Cloud Bigtable"
-          url="https://quarkiverse.github.io/quarkiverse-docs/quarkus-google-cloud-services/main/bigtable.html"
-          summary="<p>This guide covers how to use GCP Bigtable in Quarkus.</p>
-"
-          keywords=""
-          categories="data"
-          origin="quarkiverse-hub"
->
-  <!-- WE KEEP PART OF THE CONTENT FOR SEO -->
-  <h4><a href="https://quarkiverse.github.io/quarkiverse-docs/quarkus-google-cloud-services/main/bigtable.html" target="_blank" >Google Cloud Bigtable</a></h4>
-  <div class="description"><p>This guide covers how to use GCP Bigtable in Quarkus.</p>
-</div>
-</qs-guide>
-
-
-          
-          
-
-<qs-guide type="reference"
-          title="Google Cloud Firestore"
-          url="https://quarkiverse.github.io/quarkiverse-docs/quarkus-google-cloud-services/main/firestore.html"
-          summary="<p>This guide covers how to use GCP Firestore in Quarkus.</p>
-"
-          keywords=""
-          categories="data"
-          origin="quarkiverse-hub"
->
-  <!-- WE KEEP PART OF THE CONTENT FOR SEO -->
-  <h4><a href="https://quarkiverse.github.io/quarkiverse-docs/quarkus-google-cloud-services/main/firestore.html" target="_blank" >Google Cloud Firestore</a></h4>
-  <div class="description"><p>This guide covers how to use GCP Firestore in Quarkus.</p>
-</div>
-</qs-guide>
-
-
-          
-          
-
-<qs-guide type="reference"
-          title="Google Cloud PubSub"
-          url="https://quarkiverse.github.io/quarkiverse-docs/quarkus-google-cloud-services/main/pubsub.html"
-          summary="<p>This guide covers how to use GCP PubSub in Quarkus.</p>
-"
-          keywords=""
-          categories="messaging"
-          origin="quarkiverse-hub"
->
-  <!-- WE KEEP PART OF THE CONTENT FOR SEO -->
-  <h4><a href="https://quarkiverse.github.io/quarkiverse-docs/quarkus-google-cloud-services/main/pubsub.html" target="_blank" >Google Cloud PubSub</a></h4>
-  <div class="description"><p>This guide covers how to use GCP PubSub in Quarkus.</p>
-</div>
-</qs-guide>
-
-
-          
-          
-
-<qs-guide type="reference"
-          title="Google Cloud Spanner"
-          url="https://quarkiverse.github.io/quarkiverse-docs/quarkus-google-cloud-services/main/spanner.html"
-          summary="<p>This guide covers how to use GCP Spanner in Quarkus.</p>
-"
-          keywords=""
-          categories="data"
-          origin="quarkiverse-hub"
->
-  <!-- WE KEEP PART OF THE CONTENT FOR SEO -->
-  <h4><a href="https://quarkiverse.github.io/quarkiverse-docs/quarkus-google-cloud-services/main/spanner.html" target="_blank" >Google Cloud Spanner</a></h4>
-  <div class="description"><p>This guide covers how to use GCP Spanner in Quarkus.</p>
-</div>
-</qs-guide>
-
-
-          
-          
-
-<qs-guide type="reference"
-          title="Google Cloud Storage"
-          url="https://quarkiverse.github.io/quarkiverse-docs/quarkus-google-cloud-services/main/storage.html"
-          summary="<p>This guide covers how to use GCP Storage in Quarkus.</p>
-"
-          keywords=""
-          categories="data"
-          origin="quarkiverse-hub"
->
-  <!-- WE KEEP PART OF THE CONTENT FOR SEO -->
-  <h4><a href="https://quarkiverse.github.io/quarkiverse-docs/quarkus-google-cloud-services/main/storage.html" target="_blank" >Google Cloud Storage</a></h4>
-  <div class="description"><p>This guide covers how to use GCP Storage in Quarkus.</p>
+  <h4><a href="/guides/security-cors" >Cross-Origin Resource Sharing (CORS)</a></h4>
+  <div class="description"><p>Enable and configure CORS in Quarkus to specify allowed origins, methods, and headers, guiding browsers in handling cross-origin requests safely.</p>
 </div>
 </qs-guide>
 
@@ -1729,6 +1466,25 @@
           
 
 <qs-guide type="reference"
+          title="Micrometer and OpenTelemetry extension"
+          url="/guides/telemetry-micrometer-to-opentelemetry"
+          summary="<p>Guide to send Micrometer data to OpenTelemetry.</p>
+"
+          keywords=""
+          categories="observability"
+          origin=""
+>
+  <!-- WE KEEP PART OF THE CONTENT FOR SEO -->
+  <h4><a href="/guides/telemetry-micrometer-to-opentelemetry" >Micrometer and OpenTelemetry extension</a></h4>
+  <div class="description"><p>Guide to send Micrometer data to OpenTelemetry.</p>
+</div>
+</qs-guide>
+
+
+          
+          
+
+<qs-guide type="reference"
           title="Native Reference Guide"
           url="/guides/native-reference"
           summary="<p>This guide is a companion to the Building a Native Executable, Using SSL With Native Images, and Writing Native Applications, guides.</p>
@@ -1748,17 +1504,17 @@
           
 
 <qs-guide type="reference"
-          title="Neo4j Client"
-          url="https://quarkiverse.github.io/quarkiverse-docs/quarkus-neo4j/dev/index.html"
-          summary="<p>This guide covers how to use the Neo4j graph database in Quarkus.</p>
+          title="Observability in Quarkus"
+          url="/guides/observability"
+          summary="<p>This guide explains how your Quarkus application can utilize OpenTelemetry to provide observability for interactive web applications.</p>
 "
           keywords=""
-          categories="data"
-          origin="quarkiverse-hub"
+          categories="observability"
+          origin=""
 >
   <!-- WE KEEP PART OF THE CONTENT FOR SEO -->
-  <h4><a href="https://quarkiverse.github.io/quarkiverse-docs/quarkus-neo4j/dev/index.html" target="_blank" >Neo4j Client</a></h4>
-  <div class="description"><p>This guide covers how to use the Neo4j graph database in Quarkus.</p>
+  <h4><a href="/guides/observability" >Observability in Quarkus</a></h4>
+  <div class="description"><p>This guide explains how your Quarkus application can utilize OpenTelemetry to provide observability for interactive web applications.</p>
 </div>
 </qs-guide>
 
@@ -2014,82 +1770,6 @@
           
 
 <qs-guide type="reference"
-          title="Testing your Quarkus web application with Playwright"
-          url="https://docs.quarkiverse.io/quarkus-playwright/dev/index.html"
-          summary="<p>This guide covers how to test your Quarkus web application with Playwright.</p>
-"
-          keywords=""
-          categories="web"
-          origin="quarkiverse-hub"
->
-  <!-- WE KEEP PART OF THE CONTENT FOR SEO -->
-  <h4><a href="https://docs.quarkiverse.io/quarkus-playwright/dev/index.html" target="_blank" >Testing your Quarkus web application with Playwright</a></h4>
-  <div class="description"><p>This guide covers how to test your Quarkus web application with Playwright.</p>
-</div>
-</qs-guide>
-
-
-          
-          
-
-<qs-guide type="reference"
-          title="Using HTTP with Reactive Messaging"
-          url="https://quarkiverse.github.io/quarkiverse-docs/quarkus-reactive-messaging-http/dev/reactive-messaging-http.html"
-          summary="<p>This guide demonstrates how your Quarkus application can utilize SmallRye Reactive Messaging to consume and produce HTTP messages.</p>
-"
-          keywords=""
-          categories="messaging"
-          origin="quarkiverse-hub"
->
-  <!-- WE KEEP PART OF THE CONTENT FOR SEO -->
-  <h4><a href="https://quarkiverse.github.io/quarkiverse-docs/quarkus-reactive-messaging-http/dev/reactive-messaging-http.html" target="_blank" >Using HTTP with Reactive Messaging</a></h4>
-  <div class="description"><p>This guide demonstrates how your Quarkus application can utilize SmallRye Reactive Messaging to consume and produce HTTP messages.</p>
-</div>
-</qs-guide>
-
-
-          
-          
-
-<qs-guide type="reference"
-          title="Using HashiCorp Vault with Databases"
-          url="https://quarkiverse.github.io/quarkiverse-docs/quarkus-vault/dev/vault-datasource.html"
-          summary="<p>Keep confidential your database credentials by storing them in Vault.</p>
-"
-          keywords=""
-          categories="security"
-          origin="quarkiverse-hub"
->
-  <!-- WE KEEP PART OF THE CONTENT FOR SEO -->
-  <h4><a href="https://quarkiverse.github.io/quarkiverse-docs/quarkus-vault/dev/vault-datasource.html" target="_blank" >Using HashiCorp Vault with Databases</a></h4>
-  <div class="description"><p>Keep confidential your database credentials by storing them in Vault.</p>
-</div>
-</qs-guide>
-
-
-          
-          
-
-<qs-guide type="reference"
-          title="Using HashiCorp Vault’s PKI Secret Engine"
-          url="https://quarkiverse.github.io/quarkiverse-docs/quarkus-vault/dev/vault-pki.html"
-          summary="<p>Generate X.509 certificates with Vault’s PKI Secret Engine.</p>
-"
-          keywords=""
-          categories="security"
-          origin="quarkiverse-hub"
->
-  <!-- WE KEEP PART OF THE CONTENT FOR SEO -->
-  <h4><a href="https://quarkiverse.github.io/quarkiverse-docs/quarkus-vault/dev/vault-pki.html" target="_blank" >Using HashiCorp Vault’s PKI Secret Engine</a></h4>
-  <div class="description"><p>Generate X.509 certificates with Vault’s PKI Secret Engine.</p>
-</div>
-</qs-guide>
-
-
-          
-          
-
-<qs-guide type="reference"
           title="Using OpenTelemetry"
           url="/guides/opentelemetry"
           summary="<p>This guide explains how your Quarkus application can utilize OpenTelemetry to provide observability for interactive web applications.</p>
@@ -2101,120 +1781,6 @@
   <!-- WE KEEP PART OF THE CONTENT FOR SEO -->
   <h4><a href="/guides/opentelemetry" >Using OpenTelemetry</a></h4>
   <div class="description"><p>This guide explains how your Quarkus application can utilize OpenTelemetry to provide observability for interactive web applications.</p>
-</div>
-</qs-guide>
-
-
-          
-          
-
-<qs-guide type="reference"
-          title="Using Quinoa to plug npm-compatible web applications"
-          url="https://docs.quarkiverse.io/quarkus-quinoa/dev/index.html"
-          summary="<p>This guide covers how to develop, build and serve your npm-compatible web applications such as React, Angular, Vue, Lit, Svelte, Astro, SolidJS, and others alongside Quarkus.</p>
-"
-          keywords=""
-          categories="web"
-          origin="quarkiverse-hub"
->
-  <!-- WE KEEP PART OF THE CONTENT FOR SEO -->
-  <h4><a href="https://docs.quarkiverse.io/quarkus-quinoa/dev/index.html" target="_blank" >Using Quinoa to plug npm-compatible web applications</a></h4>
-  <div class="description"><p>This guide covers how to develop, build and serve your npm-compatible web applications such as React, Angular, Vue, Lit, Svelte, Astro, SolidJS, and others alongside Quarkus.</p>
-</div>
-</qs-guide>
-
-
-          
-          
-
-<qs-guide type="reference"
-          title="Using Sentry to Monitor your Logs"
-          url="https://quarkiverse.github.io/quarkiverse-docs/quarkus-logging-sentry/dev/index.html"
-          summary="<p>This guide explains how to use Sentry to monitor your application and be notified when exceptions occur.</p>
-"
-          keywords=""
-          categories="observability"
-          origin="quarkiverse-hub"
->
-  <!-- WE KEEP PART OF THE CONTENT FOR SEO -->
-  <h4><a href="https://quarkiverse.github.io/quarkiverse-docs/quarkus-logging-sentry/dev/index.html" target="_blank" >Using Sentry to Monitor your Logs</a></h4>
-  <div class="description"><p>This guide explains how to use Sentry to monitor your application and be notified when exceptions occur.</p>
-</div>
-</qs-guide>
-
-
-          
-          
-
-<qs-guide type="reference"
-          title="Using Vault"
-          url="https://quarkiverse.github.io/quarkiverse-docs/quarkus-vault/dev/index.html"
-          summary="<p>This guide explains how you can use HashiCorp Vault to securely store your credentials in Quarkus.</p>
-"
-          keywords=""
-          categories="security"
-          origin="quarkiverse-hub"
->
-  <!-- WE KEEP PART OF THE CONTENT FOR SEO -->
-  <h4><a href="https://quarkiverse.github.io/quarkiverse-docs/quarkus-vault/dev/index.html" target="_blank" >Using Vault</a></h4>
-  <div class="description"><p>This guide explains how you can use HashiCorp Vault to securely store your credentials in Quarkus.</p>
-</div>
-</qs-guide>
-
-
-          
-          
-
-<qs-guide type="reference"
-          title="Using Vault Transit Secret Engine"
-          url="https://quarkiverse.github.io/quarkiverse-docs/quarkus-vault/dev/vault-transit.html"
-          summary="<p>This guide explains how you can use HashiCorp Vault for “encryption as a service”.</p>
-"
-          keywords=""
-          categories="security"
-          origin="quarkiverse-hub"
->
-  <!-- WE KEEP PART OF THE CONTENT FOR SEO -->
-  <h4><a href="https://quarkiverse.github.io/quarkiverse-docs/quarkus-vault/dev/vault-transit.html" target="_blank" >Using Vault Transit Secret Engine</a></h4>
-  <div class="description"><p>This guide explains how you can use HashiCorp Vault for “encryption as a service”.</p>
-</div>
-</qs-guide>
-
-
-          
-          
-
-<qs-guide type="reference"
-          title="Using WebSockets with Reactive Messaging"
-          url="https://quarkiverse.github.io/quarkiverse-docs/quarkus-reactive-messaging-http/dev/reactive-messaging-websocket.html"
-          summary="<p>This guide demonstrates how your Quarkus application can utilize SmallRye Reactive Messaging to consume and produce messages via WebSockets.</p>
-"
-          keywords=""
-          categories="messaging"
-          origin="quarkiverse-hub"
->
-  <!-- WE KEEP PART OF THE CONTENT FOR SEO -->
-  <h4><a href="https://quarkiverse.github.io/quarkiverse-docs/quarkus-reactive-messaging-http/dev/reactive-messaging-websocket.html" target="_blank" >Using WebSockets with Reactive Messaging</a></h4>
-  <div class="description"><p>This guide demonstrates how your Quarkus application can utilize SmallRye Reactive Messaging to consume and produce messages via WebSockets.</p>
-</div>
-</qs-guide>
-
-
-          
-          
-
-<qs-guide type="reference"
-          title="Using the Web Bundler to bundle and minify scripts, styles, and packages"
-          url="https://docs.quarkiverse.io/quarkus-web-bundler/dev/index.html"
-          summary="<p>This guide covers how to set up bundling and minification (with source-map) for your web app scripts (JS, JSX, TS, TSX), dependencies (jQuery, htmx, Bootstrap, Lit etc.), and styles (CSS, SCSS, SASS).</p>
-"
-          keywords=""
-          categories="web"
-          origin="quarkiverse-hub"
->
-  <!-- WE KEEP PART OF THE CONTENT FOR SEO -->
-  <h4><a href="https://docs.quarkiverse.io/quarkus-web-bundler/dev/index.html" target="_blank" >Using the Web Bundler to bundle and minify scripts, styles, and packages</a></h4>
-  <div class="description"><p>This guide covers how to set up bundling and minification (with source-map) for your web app scripts (JS, JSX, TS, TSX), dependencies (jQuery, htmx, Bootstrap, Lit etc.), and styles (CSS, SCSS, SASS).</p>
 </div>
 </qs-guide>
 
@@ -2291,25 +1857,6 @@
   <!-- WE KEEP PART OF THE CONTENT FOR SEO -->
   <h4><a href="/guides/websockets-next-reference" >WebSockets Next reference guide</a></h4>
   <div class="description"><p>The quarkus-websockets-next extension provides a modern declarative API to define WebSocket server and client endpoints.</p>
-</div>
-</qs-guide>
-
-
-          
-          
-
-<qs-guide type="reference"
-          title="Working with HashiCorp Vault’s Authentication"
-          url="https://quarkiverse.github.io/quarkiverse-docs/quarkus-vault/dev/vault-auth.html"
-          summary="<p>This guide explains the various methods supported by Quarkus to authenticate to your Vault.</p>
-"
-          keywords=""
-          categories="security"
-          origin="quarkiverse-hub"
->
-  <!-- WE KEEP PART OF THE CONTENT FOR SEO -->
-  <h4><a href="https://quarkiverse.github.io/quarkiverse-docs/quarkus-vault/dev/vault-auth.html" target="_blank" >Working with HashiCorp Vault’s Authentication</a></h4>
-  <div class="description"><p>This guide explains the various methods supported by Quarkus to authenticate to your Vault.</p>
 </div>
 </qs-guide>
 
@@ -2429,7 +1976,7 @@
 <qs-guide type="guides"
           title="Accessing application properties with Spring Boot properties API"
           url="/guides/spring-boot-properties"
-          summary="<p>Use Spring Boot’s <code class="language-plaintext highlighter-rouge">@ConfigurationProperties</code> in place of MicroProfile Config annotations</p>
+          summary="<p>Use Spring Boot’s @ConfigurationProperties in place of MicroProfile Config annotations</p>
 "
           keywords=""
           categories="compatibility"
@@ -2437,7 +1984,7 @@
 >
   <!-- WE KEEP PART OF THE CONTENT FOR SEO -->
   <h4><a href="/guides/spring-boot-properties" >Accessing application properties with Spring Boot properties API</a></h4>
-  <div class="description"><p>Use Spring Boot’s <code class="language-plaintext highlighter-rouge">@ConfigurationProperties</code> in place of MicroProfile Config annotations</p>
+  <div class="description"><p>Use Spring Boot’s @ConfigurationProperties in place of MicroProfile Config annotations</p>
 </div>
 </qs-guide>
 
@@ -2674,17 +2221,17 @@
           
 
 <qs-guide type="guides"
-          title="Build, Sign and Encrypt JSON Web Tokens"
+          title="Build, sign, and encrypt JSON Web Tokens"
           url="/guides/security-jwt-build"
-          summary="<p>According to RFC7519, JSON Web Token (JWT) is a compact, URL-safe means of representing claims which are encoded as a JSON object that is used as the payload of a JSON Web Signature (JWS) structure or as the plaintext of a JSON Web Encryption (JWE) structure, enabling the claims to be digitally signed or integrity protected with a Message Authentication Code(MAC) and/or encrypted.</p>
+          summary="<p>JSON Web Token (JWT) is defined by the RFC 7519 specification as a compact, URL-safe means of representing claims.</p>
 "
           keywords=""
           categories="security"
           origin=""
 >
   <!-- WE KEEP PART OF THE CONTENT FOR SEO -->
-  <h4><a href="/guides/security-jwt-build" >Build, Sign and Encrypt JSON Web Tokens</a></h4>
-  <div class="description"><p>According to RFC7519, JSON Web Token (JWT) is a compact, URL-safe means of representing claims which are encoded as a JSON object that is used as the payload of a JSON Web Signature (JWS) structure or as the plaintext of a JSON Web Encryption (JWE) structure, enabling the claims to be digitally signed or integrity protected with a Message Authentication Code(MAC) and/or encrypted.</p>
+  <h4><a href="/guides/security-jwt-build" >Build, sign, and encrypt JSON Web Tokens</a></h4>
+  <div class="description"><p>JSON Web Token (JWT) is defined by the RFC 7519 specification as a compact, URL-safe means of representing claims.</p>
 </div>
 </qs-guide>
 
@@ -2752,7 +2299,7 @@
 <qs-guide type="guides"
           title="Centralized log management (Graylog, Logstash, Fluentd)"
           url="/guides/centralized-log-management"
-          summary="<p>This guide explains how to centralize your logs with Logstash or Fluentd using the Graylog Extended Log Format (GELF).</p>
+          summary="<p>This guide explains how to centralize your logs with Graylog, Logstash or Fluentd.</p>
 "
           keywords=""
           categories="observability"
@@ -2760,7 +2307,7 @@
 >
   <!-- WE KEEP PART OF THE CONTENT FOR SEO -->
   <h4><a href="/guides/centralized-log-management" >Centralized log management (Graylog, Logstash, Fluentd)</a></h4>
-  <div class="description"><p>This guide explains how to centralize your logs with Logstash or Fluentd using the Graylog Extended Log Format (GELF).</p>
+  <div class="description"><p>This guide explains how to centralize your logs with Graylog, Logstash or Fluentd.</p>
 </div>
 </qs-guide>
 
@@ -2780,6 +2327,25 @@
   <!-- WE KEEP PART OF THE CONTENT FOR SEO -->
   <h4><a href="/guides/picocli" >Command Mode with Picocli</a></h4>
   <div class="description"><p>Simplify command line applications creation with the Picocli extension.</p>
+</div>
+</qs-guide>
+
+
+          
+          
+
+<qs-guide type="guides"
+          title="Compose Dev Services"
+          url="/guides/compose-dev-services"
+          summary="<p>Configure custom Dev Services using Docker or Podman Compose.</p>
+"
+          keywords=""
+          categories="core"
+          origin=""
+>
+  <!-- WE KEEP PART OF THE CONTENT FOR SEO -->
+  <h4><a href="/guides/compose-dev-services" >Compose Dev Services</a></h4>
+  <div class="description"><p>Configure custom Dev Services using Docker or Podman Compose.</p>
 </div>
 </qs-guide>
 
@@ -2959,17 +2525,36 @@
           
 
 <qs-guide type="guides"
-          title="Deploying on OpenShift"
+          title="Defining and executing business rules with Drools"
+          url="/guides/drools"
+          summary="<p>Drools is the most used rule engine implementation in the Java ecosystem.</p>
+"
+          keywords=""
+          categories=""
+          origin=""
+>
+  <!-- WE KEEP PART OF THE CONTENT FOR SEO -->
+  <h4><a href="/guides/drools" >Defining and executing business rules with Drools</a></h4>
+  <div class="description"><p>Drools is the most used rule engine implementation in the Java ecosystem.</p>
+</div>
+</qs-guide>
+
+
+          
+          
+
+<qs-guide type="guides"
+          title="Deploying Quarkus applications to OpenShift"
           url="/guides/deploying-to-openshift"
-          summary="<p>This guide covers how to deploy a native application on OpenShift.</p>
+          summary="<p>This guide describes the deployment of Quarkus applications to OpenShift.</p>
 "
           keywords=""
           categories="cloud, native"
           origin=""
 >
   <!-- WE KEEP PART OF THE CONTENT FOR SEO -->
-  <h4><a href="/guides/deploying-to-openshift" >Deploying on OpenShift</a></h4>
-  <div class="description"><p>This guide covers how to deploy a native application on OpenShift.</p>
+  <h4><a href="/guides/deploying-to-openshift" >Deploying Quarkus applications to OpenShift</a></h4>
+  <div class="description"><p>This guide describes the deployment of Quarkus applications to OpenShift.</p>
 </div>
 </qs-guide>
 
@@ -4025,15 +3610,15 @@
 <qs-guide type="guides"
           title="Observability Dev Services with Grafana OTel LGTM"
           url="/guides/observability-devservices-lgtm"
-          summary="<p>OTel-LGTM is all-in-one Docker image containing OpenTelemetry’s OTLP as the protocol to transport metrics, tracing and logging data to an OpenTelemetry Collector which then stores signals data into Prometheus (metrics), Tempo (traces) and Loki (logs), only to have it visualized by Grafana.</p>
+          summary="<p>Instructions on how to use Grafana Otel LGTM</p>
 "
           keywords=""
-          categories=""
+          categories="observability"
           origin=""
 >
   <!-- WE KEEP PART OF THE CONTENT FOR SEO -->
   <h4><a href="/guides/observability-devservices-lgtm" >Observability Dev Services with Grafana OTel LGTM</a></h4>
-  <div class="description"><p>OTel-LGTM is all-in-one Docker image containing OpenTelemetry’s OTLP as the protocol to transport metrics, tracing and logging data to an OpenTelemetry Collector which then stores signals data into Prometheus (metrics), Tempo (traces) and Loki (logs), only to have it visualized by Grafana.</p>
+  <div class="description"><p>Instructions on how to use Grafana Otel LGTM</p>
 </div>
 </qs-guide>
 
@@ -5051,7 +4636,7 @@
 <qs-guide type="guides"
           title="Using JWT RBAC"
           url="/guides/security-jwt"
-          summary="<p>This guide explains how your application can utilize SmallRye JWT to provide secured access to the Jakarta REST endpoints.</p>
+          summary="<p>This guide explains how your application can use SmallRye JWT to provide secured access to the Jakarta REST endpoints.</p>
 "
           keywords=""
           categories="security"
@@ -5059,7 +4644,7 @@
 >
   <!-- WE KEEP PART OF THE CONTENT FOR SEO -->
   <h4><a href="/guides/security-jwt" >Using JWT RBAC</a></h4>
-  <div class="description"><p>This guide explains how your application can utilize SmallRye JWT to provide secured access to the Jakarta REST endpoints.</p>
+  <div class="description"><p>This guide explains how your application can use SmallRye JWT to provide secured access to the Jakarta REST endpoints.</p>
 </div>
 </qs-guide>
 
@@ -5203,7 +4788,7 @@
 <qs-guide type="guides"
           title="Using OpenTelemetry Logging"
           url="/guides/opentelemetry-logging"
-          summary="<p>This guide explains how your Quarkus application can utilize OpenTelemetry Logging to provide distributed logging for interactive web applications.</p>
+          summary="<p>This guide explains how your Quarkus application can utilize OpenTelemetry Logging to provide centralised logging for interactive web applications.</p>
 "
           keywords=""
           categories="observability"
@@ -5211,7 +4796,7 @@
 >
   <!-- WE KEEP PART OF THE CONTENT FOR SEO -->
   <h4><a href="/guides/opentelemetry-logging" >Using OpenTelemetry Logging</a></h4>
-  <div class="description"><p>This guide explains how your Quarkus application can utilize OpenTelemetry Logging to provide distributed logging for interactive web applications.</p>
+  <div class="description"><p>This guide explains how your Quarkus application can utilize OpenTelemetry Logging to provide centralised logging for interactive web applications.</p>
 </div>
 </qs-guide>
 
@@ -5429,7 +5014,7 @@
           
 
 <qs-guide type="guides"
-          title="Using WebSockets"
+          title="Using WebSockets with Undertow"
           url="/guides/websockets"
           summary="<p>This guide explains how your Quarkus application can utilize web sockets to create interactive web applications.</p>
 "
@@ -5438,7 +5023,7 @@
           origin=""
 >
   <!-- WE KEEP PART OF THE CONTENT FOR SEO -->
-  <h4><a href="/guides/websockets" >Using WebSockets</a></h4>
+  <h4><a href="/guides/websockets" >Using WebSockets with Undertow</a></h4>
   <div class="description"><p>This guide explains how your Quarkus application can utilize web sockets to create interactive web applications.</p>
 </div>
 </qs-guide>
@@ -5816,6 +5401,10 @@
           
           
             <li><a href="/newsletter" target="_blank">Newsletter</a></li>
+          
+          
+          
+            <li><a href="/userstories" target="_blank">User Stories</a></li>
           
           
           

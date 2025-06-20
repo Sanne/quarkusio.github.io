@@ -12,7 +12,7 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <meta http-equiv="Content-Security-Policy" content="
-  connect-src 'self' https://dpm.demdex.net https://adobedc.demdex.net https://route-default-test-mscherer-matamo.apps.ospo-osci.z3b1.p1.openshiftapps.com/ https://search.quarkus.io https://smetrics.redhat.com; 
+  connect-src 'self' https://dpm.demdex.net https://adobedc.demdex.net https://analytics.ossupstream.org/ https://search.quarkus.io https://smetrics.redhat.com; 
   script-src 'self' 'unsafe-inline' 'unsafe-eval'
       
       https://assets.adobedtm.com
@@ -27,13 +27,13 @@
       http://www.googleadservices.com
       https://googleads.g.doubleclick.net
       https://giscus.app
-      https://route-default-test-mscherer-matamo.apps.ospo-osci.z3b1.p1.openshiftapps.com/
+      https://analytics.ossupstream.org/
       https://app.mailjet.com;
 
   style-src 'self' https://fonts.googleapis.com https://use.fontawesome.com; 
   img-src 'self' * data:; 
   media-src 'self'; 
-  frame-src https://redhat.demdex.net https://www.youtube.com https://embed.restream.io https://app.mailjet.com http://xy0p2.mjt.lu https://mj.quarkus.io https://giscus.app; 
+  frame-src https://redhat.demdex.net https://www.youtube.com https://player.restream.io https://app.mailjet.com http://xy0p2.mjt.lu https://mj.quarkus.io https://giscus.app; 
   base-uri 'none'; 
   object-src 'none'; 
   form-action 'none'; 
@@ -100,13 +100,12 @@
         <span href="/about/">Why<i class="fas fa-chevron-down"></i></span>
         <ul class="submenu">
           <li><a href="/about" class="">WHAT IS QUARKUS?</a></li>
-          <li><a href="/container-first" class="">CONTAINER FIRST</a></li>
-          <li><a href="/continuum" class="">VERSATILITY</a></li>
-          <li><a href="/standards" class="">STANDARDS</a></li>
-          <li><a href="/kubernetes-native" class="">KUBERNETES NATIVE</a></li>
-          <li><a href="/performance" class="">PERFORMANCE</a></li>
           <li><a href="/developer-joy" class="">DEVELOPER JOY</a></li>
-          
+          <li><a href="/performance" class="">PERFORMANCE</a></li>
+          <li><a href="/kubernetes-native" class="">KUBERNETES NATIVE</a></li>
+          <li><a href="/standards" class="">STANDARDS</a></li>
+          <li><a href="/versatility" class="">VERSATILITY</a></li>
+          <li><a href="/container-first" class="">CONTAINER FIRST</a></li>          
         </ul>
       </li>
       <li class="dropdown">
@@ -114,6 +113,7 @@
         <ul class="submenu">
           <li><a href="/get-started" class="">GET STARTED</a></li>
           <li><a href="/guides" class="active">DOCUMENTATION</a></li>
+          <li><a href="/userstories/" class="">USER STORIES</a></li>  
           <li><a href="/qtips" class="">"Q" TIP VIDEOS</a></li>          
           <li><a href="/books" class="">BOOKS</a></li>
           </ul>
@@ -189,7 +189,11 @@
         
         
         
-        <option value="latest" >3.17.0 - Latest</option>
+        <option value="latest" >3.23.4 - Latest</option>
+        
+        
+        
+        <option value="3.20" >3.20</option>
         
         
         
@@ -268,7 +272,7 @@ cd security-csrf-prevention</code></pre>
 <div class="title">Maven</div>
 <div class="listingblock">
 <div class="content">
-<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">mvn io.quarkus.platform:quarkus-maven-plugin:3.15.2:create \
+<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">mvn io.quarkus.platform:quarkus-maven-plugin:3.15.5:create \
     -DprojectGroupId=org.acme \
     -DprojectArtifactId=security-csrf-prevention \
     -Dextensions='rest-csrf' \
@@ -717,7 +721,7 @@ public class UserNameResource {
 <p>If filter is enabled.</p>
 </div>
 <div class="paragraph">
-<p>Environment variable: <code id="env-var-30352">QUARKUS_REST_CSRF_ENABLED</code><button class="btn-copy fa fa-clipboard inline-btn-copy" data-clipboard-action="copy" data-clipboard-target="#env-var-30352" title="Copy to clipboard" do-not-collapse="true"></button></p>
+<p>Environment variable: <code id="env-var-30584">QUARKUS_REST_CSRF_ENABLED</code><button class="btn-copy fa fa-clipboard inline-btn-copy" data-clipboard-action="copy" data-clipboard-target="#env-var-30584" title="Copy to clipboard" do-not-collapse="true"></button></p>
 </div>
 </div>
 </div>
@@ -737,7 +741,7 @@ public class UserNameResource {
 <p>Form field name which keeps a CSRF token.</p>
 </div>
 <div class="paragraph">
-<p>Environment variable: <code id="env-var-30353">QUARKUS_REST_CSRF_FORM_FIELD_NAME</code><button class="btn-copy fa fa-clipboard inline-btn-copy" data-clipboard-action="copy" data-clipboard-target="#env-var-30353" title="Copy to clipboard" do-not-collapse="true"></button></p>
+<p>Environment variable: <code id="env-var-30585">QUARKUS_REST_CSRF_FORM_FIELD_NAME</code><button class="btn-copy fa fa-clipboard inline-btn-copy" data-clipboard-action="copy" data-clipboard-target="#env-var-30585" title="Copy to clipboard" do-not-collapse="true"></button></p>
 </div>
 </div>
 </div>
@@ -757,7 +761,7 @@ public class UserNameResource {
 <p>Token header which can provide a CSRF token.</p>
 </div>
 <div class="paragraph">
-<p>Environment variable: <code id="env-var-30354">QUARKUS_REST_CSRF_TOKEN_HEADER_NAME</code><button class="btn-copy fa fa-clipboard inline-btn-copy" data-clipboard-action="copy" data-clipboard-target="#env-var-30354" title="Copy to clipboard" do-not-collapse="true"></button></p>
+<p>Environment variable: <code id="env-var-30586">QUARKUS_REST_CSRF_TOKEN_HEADER_NAME</code><button class="btn-copy fa fa-clipboard inline-btn-copy" data-clipboard-action="copy" data-clipboard-target="#env-var-30586" title="Copy to clipboard" do-not-collapse="true"></button></p>
 </div>
 </div>
 </div>
@@ -777,7 +781,7 @@ public class UserNameResource {
 <p>CSRF cookie name.</p>
 </div>
 <div class="paragraph">
-<p>Environment variable: <code id="env-var-30355">QUARKUS_REST_CSRF_COOKIE_NAME</code><button class="btn-copy fa fa-clipboard inline-btn-copy" data-clipboard-action="copy" data-clipboard-target="#env-var-30355" title="Copy to clipboard" do-not-collapse="true"></button></p>
+<p>Environment variable: <code id="env-var-30587">QUARKUS_REST_CSRF_COOKIE_NAME</code><button class="btn-copy fa fa-clipboard inline-btn-copy" data-clipboard-action="copy" data-clipboard-target="#env-var-30587" title="Copy to clipboard" do-not-collapse="true"></button></p>
 </div>
 </div>
 </div>
@@ -797,7 +801,7 @@ public class UserNameResource {
 <p>CSRF cookie max age.</p>
 </div>
 <div class="paragraph">
-<p>Environment variable: <code id="env-var-30356">QUARKUS_REST_CSRF_COOKIE_MAX_AGE</code><button class="btn-copy fa fa-clipboard inline-btn-copy" data-clipboard-action="copy" data-clipboard-target="#env-var-30356" title="Copy to clipboard" do-not-collapse="true"></button></p>
+<p>Environment variable: <code id="env-var-30588">QUARKUS_REST_CSRF_COOKIE_MAX_AGE</code><button class="btn-copy fa fa-clipboard inline-btn-copy" data-clipboard-action="copy" data-clipboard-target="#env-var-30588" title="Copy to clipboard" do-not-collapse="true"></button></p>
 </div>
 </div>
 </div>
@@ -817,7 +821,7 @@ public class UserNameResource {
 <p>CSRF cookie path.</p>
 </div>
 <div class="paragraph">
-<p>Environment variable: <code id="env-var-30357">QUARKUS_REST_CSRF_COOKIE_PATH</code><button class="btn-copy fa fa-clipboard inline-btn-copy" data-clipboard-action="copy" data-clipboard-target="#env-var-30357" title="Copy to clipboard" do-not-collapse="true"></button></p>
+<p>Environment variable: <code id="env-var-30589">QUARKUS_REST_CSRF_COOKIE_PATH</code><button class="btn-copy fa fa-clipboard inline-btn-copy" data-clipboard-action="copy" data-clipboard-target="#env-var-30589" title="Copy to clipboard" do-not-collapse="true"></button></p>
 </div>
 </div>
 </div>
@@ -837,7 +841,7 @@ public class UserNameResource {
 <p>CSRF cookie domain.</p>
 </div>
 <div class="paragraph">
-<p>Environment variable: <code id="env-var-30358">QUARKUS_REST_CSRF_COOKIE_DOMAIN</code><button class="btn-copy fa fa-clipboard inline-btn-copy" data-clipboard-action="copy" data-clipboard-target="#env-var-30358" title="Copy to clipboard" do-not-collapse="true"></button></p>
+<p>Environment variable: <code id="env-var-30590">QUARKUS_REST_CSRF_COOKIE_DOMAIN</code><button class="btn-copy fa fa-clipboard inline-btn-copy" data-clipboard-action="copy" data-clipboard-target="#env-var-30590" title="Copy to clipboard" do-not-collapse="true"></button></p>
 </div>
 </div>
 </div>
@@ -857,7 +861,7 @@ public class UserNameResource {
 <p>If enabled the CSRF cookie will have its 'secure' parameter set to 'true' when HTTP is used. It may be necessary when running behind an SSL terminating reverse proxy. The cookie will always be secure if HTTPS is used even if this property is set to false.</p>
 </div>
 <div class="paragraph">
-<p>Environment variable: <code id="env-var-30359">QUARKUS_REST_CSRF_COOKIE_FORCE_SECURE</code><button class="btn-copy fa fa-clipboard inline-btn-copy" data-clipboard-action="copy" data-clipboard-target="#env-var-30359" title="Copy to clipboard" do-not-collapse="true"></button></p>
+<p>Environment variable: <code id="env-var-30591">QUARKUS_REST_CSRF_COOKIE_FORCE_SECURE</code><button class="btn-copy fa fa-clipboard inline-btn-copy" data-clipboard-action="copy" data-clipboard-target="#env-var-30591" title="Copy to clipboard" do-not-collapse="true"></button></p>
 </div>
 </div>
 </div>
@@ -877,7 +881,7 @@ public class UserNameResource {
 <p>Set the HttpOnly attribute to prevent access to the cookie via JavaScript.</p>
 </div>
 <div class="paragraph">
-<p>Environment variable: <code id="env-var-30360">QUARKUS_REST_CSRF_COOKIE_HTTP_ONLY</code><button class="btn-copy fa fa-clipboard inline-btn-copy" data-clipboard-action="copy" data-clipboard-target="#env-var-30360" title="Copy to clipboard" do-not-collapse="true"></button></p>
+<p>Environment variable: <code id="env-var-30592">QUARKUS_REST_CSRF_COOKIE_HTTP_ONLY</code><button class="btn-copy fa fa-clipboard inline-btn-copy" data-clipboard-action="copy" data-clipboard-target="#env-var-30592" title="Copy to clipboard" do-not-collapse="true"></button></p>
 </div>
 </div>
 </div>
@@ -897,7 +901,7 @@ public class UserNameResource {
 <p>Create CSRF token only if the HTTP GET relative request path matches one of the paths configured with this property. Use a comma to separate multiple path values.</p>
 </div>
 <div class="paragraph">
-<p>Environment variable: <code id="env-var-30361">QUARKUS_REST_CSRF_CREATE_TOKEN_PATH</code><button class="btn-copy fa fa-clipboard inline-btn-copy" data-clipboard-action="copy" data-clipboard-target="#env-var-30361" title="Copy to clipboard" do-not-collapse="true"></button></p>
+<p>Environment variable: <code id="env-var-30593">QUARKUS_REST_CSRF_CREATE_TOKEN_PATH</code><button class="btn-copy fa fa-clipboard inline-btn-copy" data-clipboard-action="copy" data-clipboard-target="#env-var-30593" title="Copy to clipboard" do-not-collapse="true"></button></p>
 </div>
 </div>
 </div>
@@ -917,7 +921,7 @@ public class UserNameResource {
 <p>Random CSRF token size in bytes.</p>
 </div>
 <div class="paragraph">
-<p>Environment variable: <code id="env-var-30362">QUARKUS_REST_CSRF_TOKEN_SIZE</code><button class="btn-copy fa fa-clipboard inline-btn-copy" data-clipboard-action="copy" data-clipboard-target="#env-var-30362" title="Copy to clipboard" do-not-collapse="true"></button></p>
+<p>Environment variable: <code id="env-var-30594">QUARKUS_REST_CSRF_TOKEN_SIZE</code><button class="btn-copy fa fa-clipboard inline-btn-copy" data-clipboard-action="copy" data-clipboard-target="#env-var-30594" title="Copy to clipboard" do-not-collapse="true"></button></p>
 </div>
 </div>
 </div>
@@ -937,7 +941,7 @@ public class UserNameResource {
 <p>CSRF token HMAC signature key, if this key is set then it must be at least 32 characters long.</p>
 </div>
 <div class="paragraph">
-<p>Environment variable: <code id="env-var-30363">QUARKUS_REST_CSRF_TOKEN_SIGNATURE_KEY</code><button class="btn-copy fa fa-clipboard inline-btn-copy" data-clipboard-action="copy" data-clipboard-target="#env-var-30363" title="Copy to clipboard" do-not-collapse="true"></button></p>
+<p>Environment variable: <code id="env-var-30595">QUARKUS_REST_CSRF_TOKEN_SIGNATURE_KEY</code><button class="btn-copy fa fa-clipboard inline-btn-copy" data-clipboard-action="copy" data-clipboard-target="#env-var-30595" title="Copy to clipboard" do-not-collapse="true"></button></p>
 </div>
 </div>
 </div>
@@ -957,7 +961,7 @@ public class UserNameResource {
 <p>Verify CSRF token in the CSRF filter. If you prefer then you can disable this property and compare CSRF form and cookie parameters in the application code using JAX-RS jakarta.ws.rs.FormParam which refers to the <code>form-field-name</code> form property and jakarta.ws.rs.CookieParam which refers to the <code>RestCsrfConfig#cookieName</code> cookie. Note that even if the CSRF token verification in the CSRF filter is disabled, the filter will still perform checks to ensure the token is available, has the correct <code>token-size</code> in bytes and that the Content-Type HTTP header is either 'application/x-www-form-urlencoded' or 'multipart/form-data'.</p>
 </div>
 <div class="paragraph">
-<p>Environment variable: <code id="env-var-30364">QUARKUS_REST_CSRF_VERIFY_TOKEN</code><button class="btn-copy fa fa-clipboard inline-btn-copy" data-clipboard-action="copy" data-clipboard-target="#env-var-30364" title="Copy to clipboard" do-not-collapse="true"></button></p>
+<p>Environment variable: <code id="env-var-30596">QUARKUS_REST_CSRF_VERIFY_TOKEN</code><button class="btn-copy fa fa-clipboard inline-btn-copy" data-clipboard-action="copy" data-clipboard-target="#env-var-30596" title="Copy to clipboard" do-not-collapse="true"></button></p>
 </div>
 </div>
 </div>
@@ -977,7 +981,7 @@ public class UserNameResource {
 <p>Require that only 'application/x-www-form-urlencoded' or 'multipart/form-data' body is accepted for the token verification to proceed. Disable this property for the CSRF filter to avoid verifying the token for POST requests with other content types. This property is only effective if <code>verify-token</code> property is enabled and <code>token-header-name</code> is not configured.</p>
 </div>
 <div class="paragraph">
-<p>Environment variable: <code id="env-var-30365">QUARKUS_REST_CSRF_REQUIRE_FORM_URL_ENCODED</code><button class="btn-copy fa fa-clipboard inline-btn-copy" data-clipboard-action="copy" data-clipboard-target="#env-var-30365" title="Copy to clipboard" do-not-collapse="true"></button></p>
+<p>Environment variable: <code id="env-var-30597">QUARKUS_REST_CSRF_REQUIRE_FORM_URL_ENCODED</code><button class="btn-copy fa fa-clipboard inline-btn-copy" data-clipboard-action="copy" data-clipboard-target="#env-var-30597" title="Copy to clipboard" do-not-collapse="true"></button></p>
 </div>
 </div>
 </div>
@@ -1179,6 +1183,10 @@ See the <a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/ja
           
           
             <li><a href="/newsletter" target="_blank">Newsletter</a></li>
+          
+          
+          
+            <li><a href="/userstories" target="_blank">User Stories</a></li>
           
           
           

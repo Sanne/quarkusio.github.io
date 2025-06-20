@@ -12,7 +12,7 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <meta http-equiv="Content-Security-Policy" content="
-  connect-src 'self' https://dpm.demdex.net https://adobedc.demdex.net https://route-default-test-mscherer-matamo.apps.ospo-osci.z3b1.p1.openshiftapps.com/ https://search.quarkus.io https://smetrics.redhat.com; 
+  connect-src 'self' https://dpm.demdex.net https://adobedc.demdex.net https://analytics.ossupstream.org/ https://search.quarkus.io https://smetrics.redhat.com; 
   script-src 'self' 'unsafe-inline' 'unsafe-eval'
       
       https://assets.adobedtm.com
@@ -27,13 +27,13 @@
       http://www.googleadservices.com
       https://googleads.g.doubleclick.net
       https://giscus.app
-      https://route-default-test-mscherer-matamo.apps.ospo-osci.z3b1.p1.openshiftapps.com/
+      https://analytics.ossupstream.org/
       https://app.mailjet.com;
 
   style-src 'self' https://fonts.googleapis.com https://use.fontawesome.com; 
   img-src 'self' * data:; 
   media-src 'self'; 
-  frame-src https://redhat.demdex.net https://www.youtube.com https://embed.restream.io https://app.mailjet.com http://xy0p2.mjt.lu https://mj.quarkus.io https://giscus.app; 
+  frame-src https://redhat.demdex.net https://www.youtube.com https://player.restream.io https://app.mailjet.com http://xy0p2.mjt.lu https://mj.quarkus.io https://giscus.app; 
   base-uri 'none'; 
   object-src 'none'; 
   form-action 'none'; 
@@ -100,13 +100,12 @@
         <span href="/about/">Why<i class="fas fa-chevron-down"></i></span>
         <ul class="submenu">
           <li><a href="/about" class="">WHAT IS QUARKUS?</a></li>
-          <li><a href="/container-first" class="">CONTAINER FIRST</a></li>
-          <li><a href="/continuum" class="">VERSATILITY</a></li>
-          <li><a href="/standards" class="">STANDARDS</a></li>
-          <li><a href="/kubernetes-native" class="">KUBERNETES NATIVE</a></li>
-          <li><a href="/performance" class="">PERFORMANCE</a></li>
           <li><a href="/developer-joy" class="">DEVELOPER JOY</a></li>
-          
+          <li><a href="/performance" class="">PERFORMANCE</a></li>
+          <li><a href="/kubernetes-native" class="">KUBERNETES NATIVE</a></li>
+          <li><a href="/standards" class="">STANDARDS</a></li>
+          <li><a href="/versatility" class="">VERSATILITY</a></li>
+          <li><a href="/container-first" class="">CONTAINER FIRST</a></li>          
         </ul>
       </li>
       <li class="dropdown">
@@ -114,6 +113,7 @@
         <ul class="submenu">
           <li><a href="/get-started" class="">GET STARTED</a></li>
           <li><a href="/guides" class="active">DOCUMENTATION</a></li>
+          <li><a href="/userstories/" class="">USER STORIES</a></li>  
           <li><a href="/qtips" class="">"Q" TIP VIDEOS</a></li>          
           <li><a href="/books" class="">BOOKS</a></li>
           </ul>
@@ -189,7 +189,11 @@
         
         
         
-        <option value="latest" >3.17.0 - Latest</option>
+        <option value="latest" >3.23.4 - Latest</option>
+        
+        
+        
+        <option value="3.20" >3.20</option>
         
         
         
@@ -309,15 +313,33 @@ JwtClaimsBuilder builder5 = Jwt.claims(token);</code></pre>
 <p>The API is fluent so you can initialize the builder as part of a fluent sequence.</p>
 </div>
 <div class="paragraph">
-<p>The builder automatically sets the following claims if they are not explicitly configured:
-- <code>iat</code> (issued at): Current time
-- <code>exp</code> (expires at): Five minutes from the current time (customizable with the <code>smallrye.jwt.new-token.lifespan</code> property)
-- <code>jti</code> (unique token identifier)</p>
+<p>The builder automatically sets the following claims if they are not explicitly configured:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p><code>iat</code> (issued at): Current time</p>
+</li>
+<li>
+<p><code>exp</code> (expires at): Five minutes from the current time (customizable with the <code>smallrye.jwt.new-token.lifespan</code> property)</p>
+</li>
+<li>
+<p><code>jti</code> (unique token identifier)</p>
+</li>
+</ul>
 </div>
 <div class="paragraph">
-<p>You can configure the following properties globally to avoid setting them directly in the builder:
-- <code>smallrye.jwt.new-token.issuer</code>: Specifies the default issuer.
-- <code>smallrye.jwt.new-token.audience</code>: Specifies the default audience.</p>
+<p>You can configure the following properties globally to avoid setting them directly in the builder:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p><code>smallrye.jwt.new-token.issuer</code>: Specifies the default issuer.</p>
+</li>
+<li>
+<p><code>smallrye.jwt.new-token.audience</code>: Specifies the default audience.</p>
+</li>
+</ul>
 </div>
 <div class="paragraph">
 <p>After initializing and setting claims, the next step is to decide how to secure the claims.</p>
@@ -766,6 +788,11 @@ String jwt = Jwt.claim("sensitiveClaim", getSensitiveClaim()).innerSign(signingK
 <td class="tableblock halign-left valign-top"><p class="tableblock">Set this property to <code>true</code> for <code>smallrye.jwt.new-token.issuer</code> and <code>smallrye.jwt.new-token.audience</code> values to override the already initialized <code>iss</code> (issuer) and <code>aud</code> (audience) claims.</p></td>
 </tr>
 <tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>smallrye.jwt.new-token.add-default-claims</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>true</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Set this property to <code>false</code> to disable an automatic addition of the <code>iat</code> (issued at), <code>exp</code> (expiration time) and <code>jti</code> (token identifier) claims when such claims have not already been set.</p></td>
+</tr>
+<tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code><code>smallrye.jwt.keystore.type</code></code></p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code><code>JKS</code></code></p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">This property can be used to customize a keystore type if either <code>smallrye.jwt.sign.key.location</code> or <code>smallrye.jwt.encrypt.key.location</code> or both of these properties point to a <code>KeyStore</code> file. If it is not set then the file name will be checked to determine the keystore type before defaulting to <code>JKS</code>.</p></td>
@@ -881,7 +908,7 @@ String jwt = Jwt.claim("sensitiveClaim", getSensitiveClaim()).innerSign(signingK
         <li class="howto"><a href="/version/main/guides/security-basic-authentication-howto">Enable Basic authentication</a></li>
       
         
-        <li class="tutorial"><a href="/version/main/guides/security-getting-started-tutorial">Getting started with Security by using Basic authentication and Jakarta Persistence</a></li>
+        <li class="tutorial"><a href="/version/main/guides/security-getting-started-tutorial">Getting started with security by using Basic authentication and Jakarta Persistence</a></li>
       
         
         <li class="concepts"><a href="/version/main/guides/security-identity-providers">Identity providers</a></li>
@@ -914,7 +941,7 @@ String jwt = Jwt.claim("sensitiveClaim", getSensitiveClaim()).innerSign(signingK
         <li class="tutorial"><a href="/version/main/guides/security-oidc-code-flow-authentication-tutorial">Protect a web application by using OpenID Connect (OIDC) authorization code flow</a></li>
       
         
-        <li class="concepts"><a href="/version/main/guides/security-architecture">Quarkus Security architecture</a></li>
+        <li class="concepts"><a href="/version/main/guides/security-oidc-expanded-configuration">Quarkus OpenId Connect (OIDC) Expanded Configuration Reference</a></li>
       </ul>
     </div>
     </div>
@@ -958,6 +985,10 @@ String jwt = Jwt.claim("sensitiveClaim", getSensitiveClaim()).innerSign(signingK
           
           
             <li><a href="/newsletter" target="_blank">Newsletter</a></li>
+          
+          
+          
+            <li><a href="/userstories" target="_blank">User Stories</a></li>
           
           
           

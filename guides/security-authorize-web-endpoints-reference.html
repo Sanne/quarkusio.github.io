@@ -12,7 +12,7 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <meta http-equiv="Content-Security-Policy" content="
-  connect-src 'self' https://dpm.demdex.net https://adobedc.demdex.net https://route-default-test-mscherer-matamo.apps.ospo-osci.z3b1.p1.openshiftapps.com/ https://search.quarkus.io https://smetrics.redhat.com; 
+  connect-src 'self' https://dpm.demdex.net https://adobedc.demdex.net https://analytics.ossupstream.org/ https://search.quarkus.io https://smetrics.redhat.com; 
   script-src 'self' 'unsafe-inline' 'unsafe-eval'
       
       https://assets.adobedtm.com
@@ -27,13 +27,13 @@
       http://www.googleadservices.com
       https://googleads.g.doubleclick.net
       https://giscus.app
-      https://route-default-test-mscherer-matamo.apps.ospo-osci.z3b1.p1.openshiftapps.com/
+      https://analytics.ossupstream.org/
       https://app.mailjet.com;
 
   style-src 'self' https://fonts.googleapis.com https://use.fontawesome.com; 
   img-src 'self' * data:; 
   media-src 'self'; 
-  frame-src https://redhat.demdex.net https://www.youtube.com https://embed.restream.io https://app.mailjet.com http://xy0p2.mjt.lu https://mj.quarkus.io https://giscus.app; 
+  frame-src https://redhat.demdex.net https://www.youtube.com https://player.restream.io https://app.mailjet.com http://xy0p2.mjt.lu https://mj.quarkus.io https://giscus.app; 
   base-uri 'none'; 
   object-src 'none'; 
   form-action 'none'; 
@@ -100,13 +100,12 @@
         <span href="/about/">Why<i class="fas fa-chevron-down"></i></span>
         <ul class="submenu">
           <li><a href="/about" class="">WHAT IS QUARKUS?</a></li>
-          <li><a href="/container-first" class="">CONTAINER FIRST</a></li>
-          <li><a href="/continuum" class="">VERSATILITY</a></li>
-          <li><a href="/standards" class="">STANDARDS</a></li>
-          <li><a href="/kubernetes-native" class="">KUBERNETES NATIVE</a></li>
-          <li><a href="/performance" class="">PERFORMANCE</a></li>
           <li><a href="/developer-joy" class="">DEVELOPER JOY</a></li>
-          
+          <li><a href="/performance" class="">PERFORMANCE</a></li>
+          <li><a href="/kubernetes-native" class="">KUBERNETES NATIVE</a></li>
+          <li><a href="/standards" class="">STANDARDS</a></li>
+          <li><a href="/versatility" class="">VERSATILITY</a></li>
+          <li><a href="/container-first" class="">CONTAINER FIRST</a></li>          
         </ul>
       </li>
       <li class="dropdown">
@@ -114,6 +113,7 @@
         <ul class="submenu">
           <li><a href="/get-started" class="">GET STARTED</a></li>
           <li><a href="/guides" class="active">DOCUMENTATION</a></li>
+          <li><a href="/userstories/" class="">USER STORIES</a></li>  
           <li><a href="/qtips" class="">"Q" TIP VIDEOS</a></li>          
           <li><a href="/books" class="">BOOKS</a></li>
           </ul>
@@ -189,7 +189,11 @@
         
         
         
-        <option value="latest" selected>3.17.0 - Latest</option>
+        <option value="latest" selected>3.23.4 - Latest</option>
+        
+        
+        
+        <option value="3.20" >3.20</option>
         
         
         
@@ -415,9 +419,9 @@ public class CustomNamedHttpSecPolicy implements HttpSecurityPolicy {
     public Uni&lt;CheckResult&gt; checkPermission(RoutingContext event, Uni&lt;SecurityIdentity&gt; identity,
             AuthorizationRequestContext requestContext) {
         if (customRequestAuthorization(event)) {
-            return Uni.createFrom().item(CheckResult.PERMIT);
+            return CheckResult.permit();
         }
-        return Uni.createFrom().item(CheckResult.DENY);
+        return CheckResult.deny();
     }
 
     @Override
@@ -506,6 +510,18 @@ Just do not implement the <code>io.quarkus.vertx.http.runtime.security.HttpSecur
 </td>
 </tr>
 </table>
+</div>
+</div>
+<div class="sect2">
+<h3 id="policy-active-cdi-request-context"><a class="anchor" href="#policy-active-cdi-request-context"></a>Inject <code>@RequestScoped</code> beans into <code>HttpSecurityPolicy</code></h3>
+<div class="paragraph">
+<p><code>@RequestScoped</code> beans can only be injected when the <a href="cdi-reference#request-context-lifecycle">CDI request context</a> is active.
+The context can be activated by users, for example with the <code>@ActivateRequestContext</code>, however authorization happens before Quarkus prepares some <code>@RequestScoped</code> beans.
+We recommend to let Quarkus activate and prepare CDI request context for you.
+For example, consider a situation where you want to inject a bean from the Jakarta REST context, such as the <code>jakarta.ws.rs.core.UriInfo</code> bean.
+In this case, you must apply the <code>HttpSecurityPolicy</code> to Jakarta REST endpoints. This can be achieved in one of the following ways:
+* Use the <code>@AuthorizationPolicy</code> security annotation.
+* Set the <code>quarkus.http.auth.permission.custom1.applies-to=jaxrs</code> configuration property.</p>
 </div>
 </div>
 <div class="sect2">
@@ -1016,7 +1032,7 @@ based on the common security annotations <code>@RolesAllowed</code>, <code>@Deny
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><strong><code>@AuthorizationPolicy</code></strong></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Specifies named <code>io.quarkus.vertx.http.runtime.security.HttpSecurityPolicy</code> that should authorize access to the specified endpoints.HttpSecurityPolicy.
+<td class="tableblock halign-left valign-top"><p class="tableblock">Specifies named <code>io.quarkus.vertx.http.runtime.security.HttpSecurityPolicy</code> that should authorize access to the specified Jakarta REST endpoints.
 Named HttpSecurityPolicy can be used for general authorization checks as demonstrated by <a href="#authorization-policy-example">Example of custom named HttpSecurityPolicy bound to a Jakarta REST endpoint</a>.</p></td>
 </tr>
 </tbody>
@@ -1899,6 +1915,60 @@ Annotate a permission checker method with the <code>io.smallrye.common.annotatio
 </tr>
 </table>
 </div>
+<div class="paragraph">
+<p>Matching between the <code>@PermissionsAllowed</code> values and the <code>@PermissionChecker</code> value is based on string equality as shown in the example below:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-java hljs" data-lang="java">package org.acme.security;
+
+import io.quarkus.security.PermissionChecker;
+import io.quarkus.security.PermissionsAllowed;
+import jakarta.enterprise.context.ApplicationScoped;
+
+@ApplicationScoped
+public class FileService {
+
+    @PermissionsAllowed({ "delete:all", "delete:dir" }) <i class="conum" data-value="1"></i><b>(1)</b>
+    void deleteDirectory(Path directoryPath) {
+        // delete directory
+    }
+
+    @PermissionsAllowed(value = { "delete:service", "delete:file" }, inclusive = true) <i class="conum" data-value="2"></i><b>(2)</b>
+    void deleteServiceFile(Path serviceFilePath) {
+        // delete service file
+    }
+
+    @PermissionChecker("delete:all")
+    boolean canDeleteAllDirectories(SecurityIdentity identity) {
+        String filePermissions = identity.getAttribute("user-group-file-permissions");
+        return filePermissions != null &amp;&amp; filePermissions.contains("w");
+    }
+
+    @PermissionChecker("delete:service")
+    boolean canDeleteService(SecurityIdentity identity) {
+        return identity.hasRole("admin");
+    }
+
+    @PermissionChecker("delete:file")
+    boolean canDeleteFile(Path serviceFilePath) {
+        return serviceFilePath != null &amp;&amp; !serviceFilePath.endsWith("critical");
+    }
+}</code></pre>
+</div>
+</div>
+<div class="colist arabic">
+<table>
+<tr>
+<td><i class="conum" data-value="1"></i><b>1</b></td>
+<td>The permission checker method <code>canDeleteAllDirectories</code> grants access to the <code>deleteDirectory</code> because the <code>delete:all</code> values are equal.</td>
+</tr>
+<tr>
+<td><i class="conum" data-value="2"></i><b>2</b></td>
+<td>There must be exactly two permission checker methods, one for the <code>delete:service</code> permission and other for the <code>delete:file</code> permission.</td>
+</tr>
+</table>
+</div>
 </div>
 <div class="sect3">
 <h4 id="permission-meta-annotation"><a class="anchor" href="#permission-meta-annotation"></a>Create permission meta-annotations</h4>
@@ -2103,6 +2173,7 @@ Ability to reference <code>@BeanParam</code> fields with the <code>@PermissionsA
 <li><a href="#authorization-using-configuration">Authorization using configuration</a>
 <ul class="sectlevel2">
 <li><a href="#custom-http-security-policy">Custom HttpSecurityPolicy</a></li>
+<li><a href="#policy-active-cdi-request-context">Inject <code>@RequestScoped</code> beans into <code>HttpSecurityPolicy</code></a></li>
 <li><a href="#matching-on-paths-and-methods">Matching on paths and methods</a></li>
 <li><a href="#matching-a-path-but-not-a-method">Matching a path but not a method</a></li>
 <li><a href="#matching-multiple-paths">Matching multiple paths: longest path wins</a></li>
@@ -2136,13 +2207,13 @@ Ability to reference <code>@BeanParam</code> fields with the <code>@PermissionsA
         <li class="concepts"><a href="/guides/security-basic-authentication">Basic authentication</a></li>
       
         
-        <li class="concepts"><a href="/guides/security-cors">Cross-origin resource sharing</a></li>
+        <li class="reference"><a href="/guides/security-cors">Cross-Origin Resource Sharing (CORS)</a></li>
       
         
         <li class="howto"><a href="/guides/security-basic-authentication-howto">Enable Basic authentication</a></li>
       
         
-        <li class="tutorial"><a href="/guides/security-getting-started-tutorial">Getting started with Security by using Basic authentication and Jakarta Persistence</a></li>
+        <li class="tutorial"><a href="/guides/security-getting-started-tutorial">Getting started with security by using Basic authentication and Jakarta Persistence</a></li>
       
         
         <li class="reference"><a href="/guides/http-reference">HTTP Reference</a></li>
@@ -2183,7 +2254,7 @@ Ability to reference <code>@BeanParam</code> fields with the <code>@PermissionsA
         <li class="howto"><a href="/guides/security-basic-authentication-howto">Enable Basic authentication</a></li>
       
         
-        <li class="tutorial"><a href="/guides/security-getting-started-tutorial">Getting started with Security by using Basic authentication and Jakarta Persistence</a></li>
+        <li class="tutorial"><a href="/guides/security-getting-started-tutorial">Getting started with security by using Basic authentication and Jakarta Persistence</a></li>
       
         
         <li class="tutorial"><a href="/guides/security-oidc-code-flow-authentication-tutorial">Protect a web application by using OpenID Connect (OIDC) authorization code flow</a></li>
@@ -2204,7 +2275,7 @@ Ability to reference <code>@BeanParam</code> fields with the <code>@PermissionsA
         <li class="concepts"><a href="/guides/security-authentication-mechanisms">Authentication mechanisms in Quarkus</a></li>
       
         
-        <li class="guide"><a href="/guides/security-jwt-build">Build, Sign and Encrypt JSON Web Tokens</a></li>
+        <li class="guide"><a href="/guides/security-jwt-build">Build, sign, and encrypt JSON Web Tokens</a></li>
       
         
         <li class="concepts"><a href="/guides/security-openid-connect-providers">Configuring Well-Known OpenID Connect Providers</a></li>
@@ -2275,6 +2346,10 @@ Ability to reference <code>@BeanParam</code> fields with the <code>@PermissionsA
           
           
             <li><a href="/newsletter" target="_blank">Newsletter</a></li>
+          
+          
+          
+            <li><a href="/userstories" target="_blank">User Stories</a></li>
           
           
           

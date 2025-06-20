@@ -12,7 +12,7 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <meta http-equiv="Content-Security-Policy" content="
-  connect-src 'self' https://dpm.demdex.net https://adobedc.demdex.net https://route-default-test-mscherer-matamo.apps.ospo-osci.z3b1.p1.openshiftapps.com/ https://search.quarkus.io https://smetrics.redhat.com; 
+  connect-src 'self' https://dpm.demdex.net https://adobedc.demdex.net https://analytics.ossupstream.org/ https://search.quarkus.io https://smetrics.redhat.com; 
   script-src 'self' 'unsafe-inline' 'unsafe-eval'
       
       https://assets.adobedtm.com
@@ -27,13 +27,13 @@
       http://www.googleadservices.com
       https://googleads.g.doubleclick.net
       https://giscus.app
-      https://route-default-test-mscherer-matamo.apps.ospo-osci.z3b1.p1.openshiftapps.com/
+      https://analytics.ossupstream.org/
       https://app.mailjet.com;
 
   style-src 'self' https://fonts.googleapis.com https://use.fontawesome.com; 
   img-src 'self' * data:; 
   media-src 'self'; 
-  frame-src https://redhat.demdex.net https://www.youtube.com https://embed.restream.io https://app.mailjet.com http://xy0p2.mjt.lu https://mj.quarkus.io https://giscus.app; 
+  frame-src https://redhat.demdex.net https://www.youtube.com https://player.restream.io https://app.mailjet.com http://xy0p2.mjt.lu https://mj.quarkus.io https://giscus.app; 
   base-uri 'none'; 
   object-src 'none'; 
   form-action 'none'; 
@@ -100,13 +100,12 @@
         <span href="/about/">Why<i class="fas fa-chevron-down"></i></span>
         <ul class="submenu">
           <li><a href="/about" class="">WHAT IS QUARKUS?</a></li>
-          <li><a href="/container-first" class="">CONTAINER FIRST</a></li>
-          <li><a href="/continuum" class="">VERSATILITY</a></li>
-          <li><a href="/standards" class="">STANDARDS</a></li>
-          <li><a href="/kubernetes-native" class="">KUBERNETES NATIVE</a></li>
-          <li><a href="/performance" class="">PERFORMANCE</a></li>
           <li><a href="/developer-joy" class="">DEVELOPER JOY</a></li>
-          
+          <li><a href="/performance" class="">PERFORMANCE</a></li>
+          <li><a href="/kubernetes-native" class="">KUBERNETES NATIVE</a></li>
+          <li><a href="/standards" class="">STANDARDS</a></li>
+          <li><a href="/versatility" class="">VERSATILITY</a></li>
+          <li><a href="/container-first" class="">CONTAINER FIRST</a></li>          
         </ul>
       </li>
       <li class="dropdown">
@@ -114,6 +113,7 @@
         <ul class="submenu">
           <li><a href="/get-started" class="">GET STARTED</a></li>
           <li><a href="/guides" class="">DOCUMENTATION</a></li>
+          <li><a href="/userstories/" class="">USER STORIES</a></li>  
           <li><a href="/qtips" class="">"Q" TIP VIDEOS</a></li>          
           <li><a href="/books" class="">BOOKS</a></li>
           </ul>
@@ -164,24 +164,60 @@
 </div>
 
   <div class="content">
-    <div class="title-band">
-  
-  
-  
-  <h1 class="title">infinispan</h1>
-  <h3 class="mb-0"></h3>
-</div>
-
-
-<div class="full-width-version-bg grey align-self">
+    <div class="full-width-breadcrumb-bg align-self">
   <div class="width-12-12">
-      <p class="returnlink"><a href="/blog">Blogs</a> <i class="fas fa-chevron-right"></i> infinispan</p>
+      <p class="returnlink"><a href="/blog">Blog</a> <i class="fas fa-chevron-right"></i> infinispan</p>
   </div>
 </div>
 
 <div class="grid-wrapper blog-page">
   <div class="grid__item width-9-12 width-12-12-m">
     <h2 class="title">Tagged posts: 'infinispan'</h2>
+    
+      
+      <div class="blog-list-item grid-wrapper">
+        <div class="grid__item width-12-12">
+          <div class="post-title">
+            <a href="/blog/quarkus-infinispan-embedded/">Quarkus Infinispan Embedded extension</a>
+          </div>
+          <div class="post-date small">
+            December 18, 2024 
+            
+              <span class="tags">tags:<a href="/blog/tag/infinispan">#infinispan</a><a href="/blog/tag/cache">#cache</a><a href="/blog/tag/library">#library</a></span>
+            
+          </div>
+        </div>
+        <div class="grid__item width-8-12 width-12-12-m byline-wrapper">
+          
+            <img class="headshot" src="https://www.gravatar.com/avatar/096859ac29b8e7fabb99790ae1a63e4f">
+          
+          <p class="byline">By <a href="/author/karesti">Katia Aresti</a></p>
+        </div>
+        <div class="grid__item width-12-12">
+          
+            <p>Quarkus Infinispan Embedded extension release</p>
+          
+        </div>
+        <div class="grid__item width-8-12 read-more small"><a href="/blog/quarkus-infinispan-embedded/">Read More &rsaquo;</a></div>
+        <div class="grid__item width-4-12 width-12-12-m share-post"><div class="share-page">
+  <a class="share-linkedin" href="https://www.linkedin.com/shareArticle?mini=true&url=https://quarkus.io/blog/quarkus-infinispan-embedded/&title=Quarkus Infinispan Embedded extension" rel="nofollow" target="_blank" title="Share on LinkedIn">
+    <i class="fa-brands fa-linkedin fa-xl"></i>
+  </a>
+  <a class="share-x" href="https://x.com/intent/tweet?text=Quarkus Infinispan Embedded extension&url=https://quarkus.io/blog/quarkus-infinispan-embedded/&via=quarkusio&related=quarkusio" rel="nofollow" target="_blank" title="Share on X">
+    <i class="fa-brands fa-square-x-twitter fa-xl"></i>
+  </a>
+  <a class="share-facebook" href="https://facebook.com/sharer.php?u=https://quarkus.io/blog/quarkus-infinispan-embedded/" rel="nofollow" target="_blank" title="Share on Facebook">
+    <i class="fa-brands fa-square-facebook fa-xl"></i>
+  </a>
+  <a class="share-reddit" href="http://www.reddit.com/submit?url=https://quarkus.io/blog/quarkus-infinispan-embedded/" onclick="window.open(this.href, 'pop-up', 'left=20,top=20,width=900,height=500,toolbar=1,resizable=0'); return false;" title="Share on Reddit" >
+    <i class="fa-brands fa-square-reddit fa-xl"></i>
+  </a>
+  <a class="share-email" href="mailto:?subject=Quarkus Infinispan Embedded extension&amp;body=Quarkus Infinispan Embedded extension https://quarkus.io/blog/quarkus-infinispan-embedded/" title="Share via Email" >
+    <i class="fa-solid fa-envelope fa-xl"></i>
+  </a>
+</div>
+</div>
+      </div>
     
       
       <div class="blog-list-item grid-wrapper">
@@ -229,9 +265,18 @@
       </div>
     
   </div>
-  <div class="grid__item width-3-12 width-12-12-m">
+  <div class="grid__item width-1-12 width-12-12-m"></div>
+  <div class="grid__item width-2-12 width-12-12-m">
     <h3 class="tags-label">Tags</h3>
     
+    
+    
+    
+    <a href="/blog/tag/agentic">agentic</a></br>
+    
+    
+    
+    <a href="/blog/tag/agents">agents</a></br>
     
     
     
@@ -351,7 +396,15 @@
     
     
     
+    <a href="/blog/tag/development">development</a></br>
+    
+    
+    
     <a href="/blog/tag/development-tips">development-tips</a></br>
+    
+    
+    
+    <a href="/blog/tag/dpop">dpop</a></br>
     
     
     
@@ -384,6 +437,10 @@
     
     
     <a href="/blog/tag/gc">gc</a></br>
+    
+    
+    
+    <a href="/blog/tag/gemini">gemini</a></br>
     
     
     
@@ -451,6 +508,10 @@
     
     
     
+    <a href="/blog/tag/introduction">introduction</a></br>
+    
+    
+    
     <a href="/blog/tag/jackson">jackson</a></br>
     
     
@@ -479,6 +540,10 @@
     
     
     
+    <a href="/blog/tag/jlama">jlama</a></br>
+    
+    
+    
     <a href="/blog/tag/kafka">kafka</a></br>
     
     
@@ -491,11 +556,31 @@
     
     
     
+    <a href="/blog/tag/langchain4j">langchain4j</a></br>
+    
+    
+    
+    <a href="/blog/tag/langchain4j,">langchain4j,</a></br>
+    
+    
+    
     <a href="/blog/tag/leyden">leyden</a></br>
     
     
     
+    <a href="/blog/tag/library">library</a></br>
+    
+    
+    
     <a href="/blog/tag/llm">llm</a></br>
+    
+    
+    
+    <a href="/blog/tag/llm,">llm,</a></br>
+    
+    
+    
+    <a href="/blog/tag/local-inference">local-inference</a></br>
     
     
     
@@ -508,6 +593,10 @@
     
     
     <a href="/blog/tag/maven">maven</a></br>
+    
+    
+    
+    <a href="/blog/tag/mcp">mcp</a></br>
     
     
     
@@ -539,6 +628,10 @@
     
     
     
+    <a href="/blog/tag/mtls">mtls</a></br>
+    
+    
+    
     <a href="/blog/tag/mutiny">mutiny</a></br>
     
     
@@ -564,10 +657,6 @@
     
     
     <a href="/blog/tag/oidc">oidc</a></br>
-    
-    
-    
-    <a href="/blog/tag/openshift">openshift</a></br>
     
     
     
@@ -675,6 +764,10 @@
     
     
     
+    <a href="/blog/tag/sqlite">sqlite</a></br>
+    
+    
+    
     <a href="/blog/tag/stork">stork</a></br>
     
     
@@ -719,7 +812,15 @@
     
     
     
+    <a href="/blog/tag/wasm">wasm</a></br>
+    
+    
+    
     <a href="/blog/tag/web">web</a></br>
+    
+    
+    
+    <a href="/blog/tag/webassembly">webassembly</a></br>
     
     
     
@@ -771,6 +872,10 @@
           
           
             <li><a href="/newsletter" target="_blank">Newsletter</a></li>
+          
+          
+          
+            <li><a href="/userstories" target="_blank">User Stories</a></li>
           
           
           

@@ -12,7 +12,7 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <meta http-equiv="Content-Security-Policy" content="
-  connect-src 'self' https://dpm.demdex.net https://adobedc.demdex.net https://route-default-test-mscherer-matamo.apps.ospo-osci.z3b1.p1.openshiftapps.com/ https://search.quarkus.io https://smetrics.redhat.com; 
+  connect-src 'self' https://dpm.demdex.net https://adobedc.demdex.net https://analytics.ossupstream.org/ https://search.quarkus.io https://smetrics.redhat.com; 
   script-src 'self' 'unsafe-inline' 'unsafe-eval'
       
       https://assets.adobedtm.com
@@ -27,13 +27,13 @@
       http://www.googleadservices.com
       https://googleads.g.doubleclick.net
       https://giscus.app
-      https://route-default-test-mscherer-matamo.apps.ospo-osci.z3b1.p1.openshiftapps.com/
+      https://analytics.ossupstream.org/
       https://app.mailjet.com;
 
   style-src 'self' https://fonts.googleapis.com https://use.fontawesome.com; 
   img-src 'self' * data:; 
   media-src 'self'; 
-  frame-src https://redhat.demdex.net https://www.youtube.com https://embed.restream.io https://app.mailjet.com http://xy0p2.mjt.lu https://mj.quarkus.io https://giscus.app; 
+  frame-src https://redhat.demdex.net https://www.youtube.com https://player.restream.io https://app.mailjet.com http://xy0p2.mjt.lu https://mj.quarkus.io https://giscus.app; 
   base-uri 'none'; 
   object-src 'none'; 
   form-action 'none'; 
@@ -100,13 +100,12 @@
         <span href="/about/">Why<i class="fas fa-chevron-down"></i></span>
         <ul class="submenu">
           <li><a href="/about" class="">WHAT IS QUARKUS?</a></li>
-          <li><a href="/container-first" class="">CONTAINER FIRST</a></li>
-          <li><a href="/continuum" class="">VERSATILITY</a></li>
-          <li><a href="/standards" class="">STANDARDS</a></li>
-          <li><a href="/kubernetes-native" class="">KUBERNETES NATIVE</a></li>
-          <li><a href="/performance" class="">PERFORMANCE</a></li>
           <li><a href="/developer-joy" class="">DEVELOPER JOY</a></li>
-          
+          <li><a href="/performance" class="">PERFORMANCE</a></li>
+          <li><a href="/kubernetes-native" class="">KUBERNETES NATIVE</a></li>
+          <li><a href="/standards" class="">STANDARDS</a></li>
+          <li><a href="/versatility" class="">VERSATILITY</a></li>
+          <li><a href="/container-first" class="">CONTAINER FIRST</a></li>          
         </ul>
       </li>
       <li class="dropdown">
@@ -114,6 +113,7 @@
         <ul class="submenu">
           <li><a href="/get-started" class="">GET STARTED</a></li>
           <li><a href="/guides" class="active">DOCUMENTATION</a></li>
+          <li><a href="/userstories/" class="">USER STORIES</a></li>  
           <li><a href="/qtips" class="">"Q" TIP VIDEOS</a></li>          
           <li><a href="/books" class="">BOOKS</a></li>
           </ul>
@@ -189,7 +189,11 @@
         
         
         
-        <option value="latest" >3.17.0 - Latest</option>
+        <option value="latest" >3.23.4 - Latest</option>
+        
+        
+        
+        <option value="3.20" >3.20</option>
         
         
         
@@ -226,6 +230,9 @@
 <p>Micrometer provides an abstraction layer for metrics collection.
 It defines an API for basic meter types, like counters, gauges, timers, and distribution summaries, along with a <code>MeterRegistry</code> API that generalizes metrics collection and propagation for different backend monitoring systems.</p>
 </div>
+<div class="paragraph">
+<p>This document is part of the <a href="observability">Observability in Quarkus reference guide</a> which features this and other observability related components.</p>
+</div>
 <div class="admonitionblock important">
 <table>
 <tr>
@@ -251,6 +258,18 @@ If you would like to surface metrics from a separate management port, see the <a
 </tr>
 </table>
 </div>
+<div class="admonitionblock note">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-note" title="Note"></i>
+</td>
+<td class="content">
+<code>quarkus-micrometer</code> now uses the Prometheus client v1.x. For help migrating from the old client, please check the <a href="https://github.com/micrometer-metrics/micrometer/wiki/1.13-Migration-Guide">Prometheus Java client 0.x to 1.x upgrade</a>  from Micrometer.
+</td>
+</tr>
+</table>
+</div>
 </div>
 </div>
 <div class="sect1">
@@ -270,7 +289,7 @@ Other Quarkus and Quarkiverse extensions use the Quarkus Micrometer extension to
 <p>micrometer</p>
 </li>
 <li>
-<p>micrometer-registry-prometheus</p>
+<p>micrometer-registry-prometheus (Prometheus client v1.x)</p>
 </li>
 </ul>
 </div>
@@ -506,7 +525,7 @@ Micrometer applies naming conventions to convert registered meter names to match
 <div class="ulist">
 <ul>
 <li>
-<p>Prometheus: <code>http_server_requests_duration_seconds</code></p>
+<p>Prometheus: <code>http_server_requests_seconds</code></p>
 </li>
 <li>
 <p>Atlas: <code>httpServerRequests</code></p>
@@ -534,7 +553,7 @@ For hierarchical systems that only support a flat metric name, Micrometer will f
 <p>Tags can be specified when a meter is registered with a <code>MeterRegistry</code> or using a <a href="#meter-filter">Meter Filter</a>.</p>
 </div>
 <div class="paragraph">
-<p>See the Micrometer documentation for additional advice on <a href="https://micrometer.io/docs/concepts#_tag_naming">tag naming</a>.</p>
+<p>See the Micrometer documentation for additional advice on <a href="https://docs.micrometer.io/micrometer/reference/concepts/naming">tag naming</a>.</p>
 </div>
 <div class="admonitionblock important">
 <table>
@@ -686,7 +705,7 @@ Gauge tag values are constant, and must be assigned at construction time.</td>
 </ol>
 </div>
 <div class="paragraph">
-<p>See <a href="https://micrometer.io/docs/concepts#_gauges">Gauges</a> in the Micrometer documentation for more information and examples.
+<p>See <a href="https://docs.micrometer.io/micrometer/reference/concepts/gauges">Gauges</a> in the Micrometer documentation for more information and examples.
 Of note are two special cases: <code>TimeGauge</code> for measuring time, and a <code>MultiGauge</code> for reporting several criteria together.</p>
 </div>
 <div class="admonitionblock note">
@@ -796,7 +815,7 @@ void countThisMethod(){
 </ol>
 </div>
 <div class="paragraph">
-<p>See <a href="https://micrometer.io/docs/concepts#_counters">Counters</a> in the Micrometer documentation for more information and examples, including the less common <code>FunctionCounter</code> that can be used to measure the result returned by an always increasing function.</p>
+<p>See <a href="https://docs.micrometer.io/micrometer/reference/concepts/counters">Counters</a> in the Micrometer documentation for more information and examples, including the less common <code>FunctionCounter</code> that can be used to measure the result returned by an always increasing function.</p>
 </div>
 <div class="paragraph">
 <p>When should you use a counter?
@@ -1048,7 +1067,7 @@ sample.stop(registry.timer("my.timer", "response", response.status())); <i class
 <h4 id="histograms-and-percentiles"><a class="anchor" href="#histograms-and-percentiles"></a>Histograms and percentiles</h4>
 <div class="paragraph">
 <p>Both timers and distribution summaries can be configured to emit additional statistics, like histogram data, precomputed percentiles, or service level objective (SLO) boundaries.
-See <a href="https://micrometer.io/docs/concepts#_timers">Timers</a> and <a href="https://micrometer.io/docs/concepts#_distribution_summaries">Distribution Summaries</a> in the Micrometer documentation for more information and examples, including memory footprint estimation for both types.</p>
+See <a href="https://docs.micrometer.io/micrometer/reference/concepts/timers">Timers</a> and <a href="https://docs.micrometer.io/micrometer/reference/concepts/distribution-summaries">Distribution Summaries</a> in the Micrometer documentation for more information and examples, including memory footprint estimation for both types.</p>
 </div>
 <div class="admonitionblock important">
 <table>
@@ -1160,7 +1179,6 @@ public class CustomConfiguration {
                 if(id.getName().startsWith("myservice")) {
                     return DistributionStatisticConfig.builder()
                         .percentiles(0.5, 0.95)     // median and 95th percentile, not aggregable
-                        .percentilesHistogram(true) // histogram buckets (e.g. prometheus histogram_quantile)
                         .build()
                         .merge(config);
                 }
@@ -1184,7 +1202,19 @@ Additional examples of MeterFilters can be found in the
 <div class="sect2">
 <h3 id="use-httpservermetricstagscontributor-for-server-http-requests"><a class="anchor" href="#use-httpservermetricstagscontributor-for-server-http-requests"></a>Use <code>HttpServerMetricsTagsContributor</code> for server HTTP requests</h3>
 <div class="paragraph">
-<p>By providing CDI beans that implement <code>io.quarkus.micrometer.runtime.HttpServerMetricsTagsContributor</code>, user code can contribute arbitrary tags based on the details of HTTP request</p>
+<p>By providing CDI beans that implement <code>io.quarkus.micrometer.runtime.HttpServerMetricsTagsContributor</code>, user code can contribute arbitrary tags based on the details of HTTP request and responses.</p>
+</div>
+<div class="admonitionblock caution">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-caution" title="Caution"></i>
+</td>
+<td class="content">
+When creating tags using this interface, it&#8217;s important to limit the cardinality of the values, otherwise there is a risk of severely degrading the metrics system&#8217;s capacity.
+</td>
+</tr>
+</table>
 </div>
 </div>
 <div class="sect2">
@@ -1509,7 +1539,7 @@ The prometheus metrics will be available from <code><a href="http://0.0.0.0:9000
 <p>Micrometer metrics support is enabled by default.</p>
 </div>
 <div class="paragraph">
-<p>Environment variable: <code id="env-var-55730">QUARKUS_MICROMETER_ENABLED</code><button class="btn-copy fa fa-clipboard inline-btn-copy" data-clipboard-action="copy" data-clipboard-target="#env-var-55730" title="Copy to clipboard" do-not-collapse="true"></button></p>
+<p>Environment variable: <code id="env-var-64822">QUARKUS_MICROMETER_ENABLED</code><button class="btn-copy fa fa-clipboard inline-btn-copy" data-clipboard-action="copy" data-clipboard-target="#env-var-64822" title="Copy to clipboard" do-not-collapse="true"></button></p>
 </div>
 </div>
 </div>
@@ -1533,7 +1563,7 @@ The prometheus metrics will be available from <code><a href="http://0.0.0.0:9000
 <p>Micrometer MeterRegistry implementations discovered on the classpath will be enabled automatically by default.</p>
 </div>
 <div class="paragraph">
-<p>Environment variable: <code id="env-var-55731">QUARKUS_MICROMETER_REGISTRY_ENABLED_DEFAULT</code><button class="btn-copy fa fa-clipboard inline-btn-copy" data-clipboard-action="copy" data-clipboard-target="#env-var-55731" title="Copy to clipboard" do-not-collapse="true"></button></p>
+<p>Environment variable: <code id="env-var-64823">QUARKUS_MICROMETER_REGISTRY_ENABLED_DEFAULT</code><button class="btn-copy fa fa-clipboard inline-btn-copy" data-clipboard-action="copy" data-clipboard-target="#env-var-64823" title="Copy to clipboard" do-not-collapse="true"></button></p>
 </div>
 </div>
 </div>
@@ -1557,7 +1587,7 @@ The prometheus metrics will be available from <code><a href="http://0.0.0.0:9000
 <p>Micrometer MeterBinder implementations discovered on the classpath will be enabled automatically by default.</p>
 </div>
 <div class="paragraph">
-<p>Environment variable: <code id="env-var-55732">QUARKUS_MICROMETER_BINDER_ENABLED_DEFAULT</code><button class="btn-copy fa fa-clipboard inline-btn-copy" data-clipboard-action="copy" data-clipboard-target="#env-var-55732" title="Copy to clipboard" do-not-collapse="true"></button></p>
+<p>Environment variable: <code id="env-var-64824">QUARKUS_MICROMETER_BINDER_ENABLED_DEFAULT</code><button class="btn-copy fa fa-clipboard inline-btn-copy" data-clipboard-action="copy" data-clipboard-target="#env-var-64824" title="Copy to clipboard" do-not-collapse="true"></button></p>
 </div>
 </div>
 </div>
@@ -1581,7 +1611,7 @@ The prometheus metrics will be available from <code><a href="http://0.0.0.0:9000
 <p>Support for HTTP client metrics will be enabled if Micrometer support is enabled, the REST client feature is enabled, and either this value is true, or this value is unset and <code>quarkus.micrometer.binder-enabled-default</code> is true.</p>
 </div>
 <div class="paragraph">
-<p>Environment variable: <code id="env-var-55733">QUARKUS_MICROMETER_BINDER_HTTP_CLIENT_ENABLED</code><button class="btn-copy fa fa-clipboard inline-btn-copy" data-clipboard-action="copy" data-clipboard-target="#env-var-55733" title="Copy to clipboard" do-not-collapse="true"></button></p>
+<p>Environment variable: <code id="env-var-64825">QUARKUS_MICROMETER_BINDER_HTTP_CLIENT_ENABLED</code><button class="btn-copy fa fa-clipboard inline-btn-copy" data-clipboard-action="copy" data-clipboard-target="#env-var-64825" title="Copy to clipboard" do-not-collapse="true"></button></p>
 </div>
 </div>
 </div>
@@ -1605,7 +1635,7 @@ The prometheus metrics will be available from <code><a href="http://0.0.0.0:9000
 <p>Support for HTTP server metrics will be enabled if Micrometer support is enabled, an extension serving HTTP traffic is enabled, and either this value is true, or this value is unset and <code>quarkus.micrometer.binder-enabled-default</code> is true.</p>
 </div>
 <div class="paragraph">
-<p>Environment variable: <code id="env-var-55734">QUARKUS_MICROMETER_BINDER_HTTP_SERVER_ENABLED</code><button class="btn-copy fa fa-clipboard inline-btn-copy" data-clipboard-action="copy" data-clipboard-target="#env-var-55734" title="Copy to clipboard" do-not-collapse="true"></button></p>
+<p>Environment variable: <code id="env-var-64826">QUARKUS_MICROMETER_BINDER_HTTP_SERVER_ENABLED</code><button class="btn-copy fa fa-clipboard inline-btn-copy" data-clipboard-action="copy" data-clipboard-target="#env-var-64826" title="Copy to clipboard" do-not-collapse="true"></button></p>
 </div>
 </div>
 </div>
@@ -1629,7 +1659,7 @@ The prometheus metrics will be available from <code><a href="http://0.0.0.0:9000
 <p>Support for JVM metrics will be enabled if Micrometer support is enabled, and either this value is true, or this value is unset and <code>quarkus.micrometer.binder-enabled-default</code> is true.</p>
 </div>
 <div class="paragraph">
-<p>Environment variable: <code id="env-var-55735">QUARKUS_MICROMETER_BINDER_JVM</code><button class="btn-copy fa fa-clipboard inline-btn-copy" data-clipboard-action="copy" data-clipboard-target="#env-var-55735" title="Copy to clipboard" do-not-collapse="true"></button></p>
+<p>Environment variable: <code id="env-var-64827">QUARKUS_MICROMETER_BINDER_JVM</code><button class="btn-copy fa fa-clipboard inline-btn-copy" data-clipboard-action="copy" data-clipboard-target="#env-var-64827" title="Copy to clipboard" do-not-collapse="true"></button></p>
 </div>
 </div>
 </div>
@@ -1653,7 +1683,7 @@ The prometheus metrics will be available from <code><a href="http://0.0.0.0:9000
 <p>Support for Kafka metrics will be enabled if Micrometer support is enabled, the Kafka Consumer or Producer interface is on the classpath and either this value is true, or this value is unset and <code>quarkus.micrometer.binder-enabled-default</code> is true.</p>
 </div>
 <div class="paragraph">
-<p>Environment variable: <code id="env-var-55736">QUARKUS_MICROMETER_BINDER_KAFKA_ENABLED</code><button class="btn-copy fa fa-clipboard inline-btn-copy" data-clipboard-action="copy" data-clipboard-target="#env-var-55736" title="Copy to clipboard" do-not-collapse="true"></button></p>
+<p>Environment variable: <code id="env-var-64828">QUARKUS_MICROMETER_BINDER_KAFKA_ENABLED</code><button class="btn-copy fa fa-clipboard inline-btn-copy" data-clipboard-action="copy" data-clipboard-target="#env-var-64828" title="Copy to clipboard" do-not-collapse="true"></button></p>
 </div>
 </div>
 </div>
@@ -1677,7 +1707,7 @@ The prometheus metrics will be available from <code><a href="http://0.0.0.0:9000
 <p>Support for Redis metrics will be enabled if Micrometer support is enabled, the Quarkus Redis client extension is on the classpath and either this value is true, or this value is unset and <code>quarkus.micrometer.binder-enabled-default</code> is true.</p>
 </div>
 <div class="paragraph">
-<p>Environment variable: <code id="env-var-55737">QUARKUS_MICROMETER_BINDER_REDIS_ENABLED</code><button class="btn-copy fa fa-clipboard inline-btn-copy" data-clipboard-action="copy" data-clipboard-target="#env-var-55737" title="Copy to clipboard" do-not-collapse="true"></button></p>
+<p>Environment variable: <code id="env-var-64829">QUARKUS_MICROMETER_BINDER_REDIS_ENABLED</code><button class="btn-copy fa fa-clipboard inline-btn-copy" data-clipboard-action="copy" data-clipboard-target="#env-var-64829" title="Copy to clipboard" do-not-collapse="true"></button></p>
 </div>
 </div>
 </div>
@@ -1701,7 +1731,7 @@ The prometheus metrics will be available from <code><a href="http://0.0.0.0:9000
 <p>Support for Stork metrics will be enabled if Micrometer support is enabled, the Quarkus Stork extension is on the classpath and either this value is true, or this value is unset and <code>quarkus.micrometer.binder-enabled-default</code> is true.</p>
 </div>
 <div class="paragraph">
-<p>Environment variable: <code id="env-var-55738">QUARKUS_MICROMETER_BINDER_STORK_ENABLED</code><button class="btn-copy fa fa-clipboard inline-btn-copy" data-clipboard-action="copy" data-clipboard-target="#env-var-55738" title="Copy to clipboard" do-not-collapse="true"></button></p>
+<p>Environment variable: <code id="env-var-64830">QUARKUS_MICROMETER_BINDER_STORK_ENABLED</code><button class="btn-copy fa fa-clipboard inline-btn-copy" data-clipboard-action="copy" data-clipboard-target="#env-var-64830" title="Copy to clipboard" do-not-collapse="true"></button></p>
 </div>
 </div>
 </div>
@@ -1725,7 +1755,7 @@ The prometheus metrics will be available from <code><a href="http://0.0.0.0:9000
 <p>Support for gRPC server metrics will be enabled if Micrometer support is enabled, the gRPC server interfaces are on the classpath and either this value is true, or this value is unset and <code>quarkus.micrometer.binder-enabled-default</code> is true.</p>
 </div>
 <div class="paragraph">
-<p>Environment variable: <code id="env-var-55739">QUARKUS_MICROMETER_BINDER_GRPC_SERVER_ENABLED</code><button class="btn-copy fa fa-clipboard inline-btn-copy" data-clipboard-action="copy" data-clipboard-target="#env-var-55739" title="Copy to clipboard" do-not-collapse="true"></button></p>
+<p>Environment variable: <code id="env-var-64831">QUARKUS_MICROMETER_BINDER_GRPC_SERVER_ENABLED</code><button class="btn-copy fa fa-clipboard inline-btn-copy" data-clipboard-action="copy" data-clipboard-target="#env-var-64831" title="Copy to clipboard" do-not-collapse="true"></button></p>
 </div>
 </div>
 </div>
@@ -1749,7 +1779,7 @@ The prometheus metrics will be available from <code><a href="http://0.0.0.0:9000
 <p>Support for gRPC client metrics will be enabled if Micrometer support is enabled, the gRPC client interfaces are on the classpath and either this value is true, or this value is unset and <code>quarkus.micrometer.binder-enabled-default</code> is true.</p>
 </div>
 <div class="paragraph">
-<p>Environment variable: <code id="env-var-55740">QUARKUS_MICROMETER_BINDER_GRPC_CLIENT_ENABLED</code><button class="btn-copy fa fa-clipboard inline-btn-copy" data-clipboard-action="copy" data-clipboard-target="#env-var-55740" title="Copy to clipboard" do-not-collapse="true"></button></p>
+<p>Environment variable: <code id="env-var-64832">QUARKUS_MICROMETER_BINDER_GRPC_CLIENT_ENABLED</code><button class="btn-copy fa fa-clipboard inline-btn-copy" data-clipboard-action="copy" data-clipboard-target="#env-var-64832" title="Copy to clipboard" do-not-collapse="true"></button></p>
 </div>
 </div>
 </div>
@@ -1773,7 +1803,7 @@ The prometheus metrics will be available from <code><a href="http://0.0.0.0:9000
 <p>Support for Reactive Messaging metrics will be enabled if Micrometer support is enabled, MessageObservationCollector interface is on the classpath and either this value is true, or this value is unset and <code>quarkus.micrometer.binder-enabled-default</code> is true.</p>
 </div>
 <div class="paragraph">
-<p>Environment variable: <code id="env-var-55741">QUARKUS_MICROMETER_BINDER_MESSAGING_ENABLED</code><button class="btn-copy fa fa-clipboard inline-btn-copy" data-clipboard-action="copy" data-clipboard-target="#env-var-55741" title="Copy to clipboard" do-not-collapse="true"></button></p>
+<p>Environment variable: <code id="env-var-64833">QUARKUS_MICROMETER_BINDER_MESSAGING_ENABLED</code><button class="btn-copy fa fa-clipboard inline-btn-copy" data-clipboard-action="copy" data-clipboard-target="#env-var-64833" title="Copy to clipboard" do-not-collapse="true"></button></p>
 </div>
 </div>
 </div>
@@ -1811,7 +1841,7 @@ but metric names and recorded values will be different.
 Note that the MP Metrics compatibility layer will move to a different extension in the future.</p>
 </div>
 <div class="paragraph">
-<p>Environment variable: <code id="env-var-55742">QUARKUS_MICROMETER_BINDER_MP_METRICS_ENABLED</code><button class="btn-copy fa fa-clipboard inline-btn-copy" data-clipboard-action="copy" data-clipboard-target="#env-var-55742" title="Copy to clipboard" do-not-collapse="true"></button></p>
+<p>Environment variable: <code id="env-var-64834">QUARKUS_MICROMETER_BINDER_MP_METRICS_ENABLED</code><button class="btn-copy fa fa-clipboard inline-btn-copy" data-clipboard-action="copy" data-clipboard-target="#env-var-64834" title="Copy to clipboard" do-not-collapse="true"></button></p>
 </div>
 </div>
 </div>
@@ -1823,10 +1853,55 @@ Note that the MP Metrics compatibility layer will move to a different extension 
 </tr>
 <tr class="row-collapsible row-collapsed row-with-desc">
 <td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p><span class="icon"><i class="fa fa-lock" title="Fixed at build time"></i></span> <a id="quarkus-micrometer_quarkus-micrometer-binder-virtual-threads-enabled"></a> <span class="property-path"><a href="#quarkus-micrometer_quarkus-micrometer-binder-virtual-threads-enabled"><code>quarkus.micrometer.binder.virtual-threads.enabled</code></a></span>
+<button class="btn-copy fa fa-clipboard inline-btn-copy" data-clipboard-action="copy" data-clipboard-text='quarkus.micrometer.binder.virtual-threads.enabled' title="Copy to clipboard" do-not-collapse="true"></button></p>
+</div>
+<div id="conf-collapsible-desc-14" class="openblock description description-collapsed">
+<div class="content">
+<div class="paragraph">
+<p>Virtual Threads metrics support.</p>
+</div>
+<div class="paragraph">
+<p>Support for virtual threads metrics will be enabled if Micrometer support is enabled, this value is set to <code>true</code> (default), the JVM supports virtual threads (Java 21&#43;) and the <code>quarkus.micrometer.binder-enabled-default</code> property is true.</p>
+</div>
+<div class="paragraph">
+<p>Environment variable: <code id="env-var-64835">QUARKUS_MICROMETER_BINDER_VIRTUAL_THREADS_ENABLED</code><button class="btn-copy fa fa-clipboard inline-btn-copy" data-clipboard-action="copy" data-clipboard-target="#env-var-64835" title="Copy to clipboard" do-not-collapse="true"></button></p>
+</div>
+</div>
+</div>
+<div class="paragraph description-decoration">
+<p><i class="fa fa-chevron-down"></i><span>Show more</span></p>
+</div></div></td>
+<td class="tableblock halign-left valign-middle"><p class="tableblock">boolean</p></td>
+<td class="tableblock halign-left valign-middle"></td>
+</tr>
+<tr class="row-collapsible row-collapsed row-with-desc odd">
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p><span class="icon"><i class="fa fa-lock" title="Fixed at build time"></i></span> <a id="quarkus-micrometer_quarkus-micrometer-binder-virtual-threads-tags"></a> <span class="property-path"><a href="#quarkus-micrometer_quarkus-micrometer-binder-virtual-threads-tags"><code>quarkus.micrometer.binder.virtual-threads.tags</code></a></span>
+<button class="btn-copy fa fa-clipboard inline-btn-copy" data-clipboard-action="copy" data-clipboard-text='quarkus.micrometer.binder.virtual-threads.tags' title="Copy to clipboard" do-not-collapse="true"></button></p>
+</div>
+<div id="conf-collapsible-desc-15" class="openblock description description-collapsed">
+<div class="content">
+<div class="paragraph">
+<p>The tags to be added to the metrics. Empty by default. When set, tags are passed as: <code>key1=value1,key2=value2</code>.</p>
+</div>
+<div class="paragraph">
+<p>Environment variable: <code id="env-var-64836">QUARKUS_MICROMETER_BINDER_VIRTUAL_THREADS_TAGS</code><button class="btn-copy fa fa-clipboard inline-btn-copy" data-clipboard-action="copy" data-clipboard-target="#env-var-64836" title="Copy to clipboard" do-not-collapse="true"></button></p>
+</div>
+</div>
+</div>
+<div class="paragraph description-decoration">
+<p><i class="fa fa-chevron-down"></i><span>Show more</span></p>
+</div></div></td>
+<td class="tableblock halign-left valign-middle"><p class="tableblock">list of string</p></td>
+<td class="tableblock halign-left valign-middle"></td>
+</tr>
+<tr class="row-collapsible row-collapsed row-with-desc">
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
 <p><span class="icon"><i class="fa fa-lock" title="Fixed at build time"></i></span> <a id="quarkus-micrometer_quarkus-micrometer-binder-system"></a> <span class="property-path"><a href="#quarkus-micrometer_quarkus-micrometer-binder-system"><code>quarkus.micrometer.binder.system</code></a></span>
 <button class="btn-copy fa fa-clipboard inline-btn-copy" data-clipboard-action="copy" data-clipboard-text='quarkus.micrometer.binder.system' title="Copy to clipboard" do-not-collapse="true"></button></p>
 </div>
-<div id="conf-collapsible-desc-14" class="openblock description description-collapsed">
+<div id="conf-collapsible-desc-16" class="openblock description description-collapsed">
 <div class="content">
 <div class="paragraph">
 <p>Micrometer System metrics support.</p>
@@ -1835,7 +1910,7 @@ Note that the MP Metrics compatibility layer will move to a different extension 
 <p>Support for System metrics will be enabled if Micrometer support is enabled, and either this value is true, or this value is unset and <code>quarkus.micrometer.binder-enabled-default</code> is true.</p>
 </div>
 <div class="paragraph">
-<p>Environment variable: <code id="env-var-55743">QUARKUS_MICROMETER_BINDER_SYSTEM</code><button class="btn-copy fa fa-clipboard inline-btn-copy" data-clipboard-action="copy" data-clipboard-target="#env-var-55743" title="Copy to clipboard" do-not-collapse="true"></button></p>
+<p>Environment variable: <code id="env-var-64837">QUARKUS_MICROMETER_BINDER_SYSTEM</code><button class="btn-copy fa fa-clipboard inline-btn-copy" data-clipboard-action="copy" data-clipboard-target="#env-var-64837" title="Copy to clipboard" do-not-collapse="true"></button></p>
 </div>
 </div>
 </div>
@@ -1850,7 +1925,7 @@ Note that the MP Metrics compatibility layer will move to a different extension 
 <p><span class="icon"><i class="fa fa-lock" title="Fixed at build time"></i></span> <a id="quarkus-micrometer_quarkus-micrometer-binder-vertx-enabled"></a> <span class="property-path"><a href="#quarkus-micrometer_quarkus-micrometer-binder-vertx-enabled"><code>quarkus.micrometer.binder.vertx.enabled</code></a></span>
 <button class="btn-copy fa fa-clipboard inline-btn-copy" data-clipboard-action="copy" data-clipboard-text='quarkus.micrometer.binder.vertx.enabled' title="Copy to clipboard" do-not-collapse="true"></button></p>
 </div>
-<div id="conf-collapsible-desc-15" class="openblock description description-collapsed">
+<div id="conf-collapsible-desc-17" class="openblock description description-collapsed">
 <div class="content">
 <div class="paragraph">
 <p>Vert.x metrics support.</p>
@@ -1859,7 +1934,7 @@ Note that the MP Metrics compatibility layer will move to a different extension 
 <p>Support for Vert.x metrics will be enabled if Micrometer support is enabled, Vert.x MetricsOptions is on the classpath and either this value is true, or this value is unset and <code>quarkus.micrometer.binder-enabled-default</code> is true.</p>
 </div>
 <div class="paragraph">
-<p>Environment variable: <code id="env-var-55744">QUARKUS_MICROMETER_BINDER_VERTX_ENABLED</code><button class="btn-copy fa fa-clipboard inline-btn-copy" data-clipboard-action="copy" data-clipboard-target="#env-var-55744" title="Copy to clipboard" do-not-collapse="true"></button></p>
+<p>Environment variable: <code id="env-var-64838">QUARKUS_MICROMETER_BINDER_VERTX_ENABLED</code><button class="btn-copy fa fa-clipboard inline-btn-copy" data-clipboard-action="copy" data-clipboard-target="#env-var-64838" title="Copy to clipboard" do-not-collapse="true"></button></p>
 </div>
 </div>
 </div>
@@ -1874,7 +1949,7 @@ Note that the MP Metrics compatibility layer will move to a different extension 
 <p><span class="icon"><i class="fa fa-lock" title="Fixed at build time"></i></span> <a id="quarkus-micrometer_quarkus-micrometer-binder-netty-enabled"></a> <span class="property-path"><a href="#quarkus-micrometer_quarkus-micrometer-binder-netty-enabled"><code>quarkus.micrometer.binder.netty.enabled</code></a></span>
 <button class="btn-copy fa fa-clipboard inline-btn-copy" data-clipboard-action="copy" data-clipboard-text='quarkus.micrometer.binder.netty.enabled' title="Copy to clipboard" do-not-collapse="true"></button></p>
 </div>
-<div id="conf-collapsible-desc-16" class="openblock description description-collapsed">
+<div id="conf-collapsible-desc-18" class="openblock description description-collapsed">
 <div class="content">
 <div class="paragraph">
 <p>Netty metrics support.</p>
@@ -1883,7 +1958,7 @@ Note that the MP Metrics compatibility layer will move to a different extension 
 <p>Support for Netty metrics will be enabled if Micrometer support is enabled, the Netty allocator classes are on the classpath and either this value is true, or this value is unset and <code>quarkus.micrometer.binder-enabled-default</code> is true.</p>
 </div>
 <div class="paragraph">
-<p>Environment variable: <code id="env-var-55745">QUARKUS_MICROMETER_BINDER_NETTY_ENABLED</code><button class="btn-copy fa fa-clipboard inline-btn-copy" data-clipboard-action="copy" data-clipboard-target="#env-var-55745" title="Copy to clipboard" do-not-collapse="true"></button></p>
+<p>Environment variable: <code id="env-var-64839">QUARKUS_MICROMETER_BINDER_NETTY_ENABLED</code><button class="btn-copy fa fa-clipboard inline-btn-copy" data-clipboard-action="copy" data-clipboard-target="#env-var-64839" title="Copy to clipboard" do-not-collapse="true"></button></p>
 </div>
 </div>
 </div>
@@ -1898,13 +1973,13 @@ Note that the MP Metrics compatibility layer will move to a different extension 
 <p><span class="icon"><i class="fa fa-lock" title="Fixed at build time"></i></span> <a id="quarkus-micrometer_quarkus-micrometer-export-json-enabled"></a> <span class="property-path"><a href="#quarkus-micrometer_quarkus-micrometer-export-json-enabled"><code>quarkus.micrometer.export.json.enabled</code></a></span>
 <button class="btn-copy fa fa-clipboard inline-btn-copy" data-clipboard-action="copy" data-clipboard-text='quarkus.micrometer.export.json.enabled' title="Copy to clipboard" do-not-collapse="true"></button></p>
 </div>
-<div id="conf-collapsible-desc-17" class="openblock description description-collapsed">
+<div id="conf-collapsible-desc-19" class="openblock description description-collapsed">
 <div class="content">
 <div class="paragraph">
 <p>Support for export to JSON format. Off by default.</p>
 </div>
 <div class="paragraph">
-<p>Environment variable: <code id="env-var-55746">QUARKUS_MICROMETER_EXPORT_JSON_ENABLED</code><button class="btn-copy fa fa-clipboard inline-btn-copy" data-clipboard-action="copy" data-clipboard-target="#env-var-55746" title="Copy to clipboard" do-not-collapse="true"></button></p>
+<p>Environment variable: <code id="env-var-64840">QUARKUS_MICROMETER_EXPORT_JSON_ENABLED</code><button class="btn-copy fa fa-clipboard inline-btn-copy" data-clipboard-action="copy" data-clipboard-target="#env-var-64840" title="Copy to clipboard" do-not-collapse="true"></button></p>
 </div>
 </div>
 </div>
@@ -1919,13 +1994,13 @@ Note that the MP Metrics compatibility layer will move to a different extension 
 <p><span class="icon"><i class="fa fa-lock" title="Fixed at build time"></i></span> <a id="quarkus-micrometer_quarkus-micrometer-export-json-path"></a> <span class="property-path"><a href="#quarkus-micrometer_quarkus-micrometer-export-json-path"><code>quarkus.micrometer.export.json.path</code></a></span>
 <button class="btn-copy fa fa-clipboard inline-btn-copy" data-clipboard-action="copy" data-clipboard-text='quarkus.micrometer.export.json.path' title="Copy to clipboard" do-not-collapse="true"></button></p>
 </div>
-<div id="conf-collapsible-desc-18" class="openblock description description-collapsed">
+<div id="conf-collapsible-desc-20" class="openblock description description-collapsed">
 <div class="content">
 <div class="paragraph">
 <p>The path for the JSON metrics endpoint. The default value is <code>metrics</code>. By default, this value will be resolved as a path relative to <code>${quarkus.http.non-application-root-path}</code>. If the management interface is enabled, the value will be resolved as a path relative to <code>${quarkus.management.root-path}</code>.</p>
 </div>
 <div class="paragraph">
-<p>Environment variable: <code id="env-var-55747">QUARKUS_MICROMETER_EXPORT_JSON_PATH</code><button class="btn-copy fa fa-clipboard inline-btn-copy" data-clipboard-action="copy" data-clipboard-target="#env-var-55747" title="Copy to clipboard" do-not-collapse="true"></button></p>
+<p>Environment variable: <code id="env-var-64841">QUARKUS_MICROMETER_EXPORT_JSON_PATH</code><button class="btn-copy fa fa-clipboard inline-btn-copy" data-clipboard-action="copy" data-clipboard-target="#env-var-64841" title="Copy to clipboard" do-not-collapse="true"></button></p>
 </div>
 </div>
 </div>
@@ -1940,13 +2015,13 @@ Note that the MP Metrics compatibility layer will move to a different extension 
 <p><span class="icon"><i class="fa fa-lock" title="Fixed at build time"></i></span> <a id="quarkus-micrometer_quarkus-micrometer-export-json-buffer-length"></a> <span class="property-path"><a href="#quarkus-micrometer_quarkus-micrometer-export-json-buffer-length"><code>quarkus.micrometer.export.json.buffer-length</code></a></span>
 <button class="btn-copy fa fa-clipboard inline-btn-copy" data-clipboard-action="copy" data-clipboard-text='quarkus.micrometer.export.json.buffer-length' title="Copy to clipboard" do-not-collapse="true"></button></p>
 </div>
-<div id="conf-collapsible-desc-19" class="openblock description description-collapsed">
+<div id="conf-collapsible-desc-21" class="openblock description description-collapsed">
 <div class="content">
 <div class="paragraph">
 <p>Statistics like max, percentiles, and histogram counts decay over time to give greater weight to recent samples. Samples are accumulated to such statistics in ring buffers which rotate after the expiry, with this buffer length.</p>
 </div>
 <div class="paragraph">
-<p>Environment variable: <code id="env-var-55748">QUARKUS_MICROMETER_EXPORT_JSON_BUFFER_LENGTH</code><button class="btn-copy fa fa-clipboard inline-btn-copy" data-clipboard-action="copy" data-clipboard-target="#env-var-55748" title="Copy to clipboard" do-not-collapse="true"></button></p>
+<p>Environment variable: <code id="env-var-64842">QUARKUS_MICROMETER_EXPORT_JSON_BUFFER_LENGTH</code><button class="btn-copy fa fa-clipboard inline-btn-copy" data-clipboard-action="copy" data-clipboard-target="#env-var-64842" title="Copy to clipboard" do-not-collapse="true"></button></p>
 </div>
 </div>
 </div>
@@ -1961,13 +2036,13 @@ Note that the MP Metrics compatibility layer will move to a different extension 
 <p><span class="icon"><i class="fa fa-lock" title="Fixed at build time"></i></span> <a id="quarkus-micrometer_quarkus-micrometer-export-json-expiry"></a> <span class="property-path"><a href="#quarkus-micrometer_quarkus-micrometer-export-json-expiry"><code>quarkus.micrometer.export.json.expiry</code></a></span>
 <button class="btn-copy fa fa-clipboard inline-btn-copy" data-clipboard-action="copy" data-clipboard-text='quarkus.micrometer.export.json.expiry' title="Copy to clipboard" do-not-collapse="true"></button></p>
 </div>
-<div id="conf-collapsible-desc-20" class="openblock description description-collapsed">
+<div id="conf-collapsible-desc-22" class="openblock description description-collapsed">
 <div class="content">
 <div class="paragraph">
 <p>Statistics like max, percentiles, and histogram counts decay over time to give greater weight to recent samples. Samples are accumulated to such statistics in ring buffers which rotate after this expiry, with a particular buffer length.</p>
 </div>
 <div class="paragraph">
-<p>Environment variable: <code id="env-var-55749">QUARKUS_MICROMETER_EXPORT_JSON_EXPIRY</code><button class="btn-copy fa fa-clipboard inline-btn-copy" data-clipboard-action="copy" data-clipboard-target="#env-var-55749" title="Copy to clipboard" do-not-collapse="true"></button></p>
+<p>Environment variable: <code id="env-var-64843">QUARKUS_MICROMETER_EXPORT_JSON_EXPIRY</code><button class="btn-copy fa fa-clipboard inline-btn-copy" data-clipboard-action="copy" data-clipboard-target="#env-var-64843" title="Copy to clipboard" do-not-collapse="true"></button></p>
 </div>
 </div>
 </div>
@@ -1982,7 +2057,7 @@ Note that the MP Metrics compatibility layer will move to a different extension 
 <p><span class="icon"><i class="fa fa-lock" title="Fixed at build time"></i></span> <a id="quarkus-micrometer_quarkus-micrometer-export-prometheus-enabled"></a> <span class="property-path"><a href="#quarkus-micrometer_quarkus-micrometer-export-prometheus-enabled"><code>quarkus.micrometer.export.prometheus.enabled</code></a></span>
 <button class="btn-copy fa fa-clipboard inline-btn-copy" data-clipboard-action="copy" data-clipboard-text='quarkus.micrometer.export.prometheus.enabled' title="Copy to clipboard" do-not-collapse="true"></button></p>
 </div>
-<div id="conf-collapsible-desc-21" class="openblock description description-collapsed">
+<div id="conf-collapsible-desc-23" class="openblock description description-collapsed">
 <div class="content">
 <div class="paragraph">
 <p>Support for export to Prometheus.</p>
@@ -1991,7 +2066,7 @@ Note that the MP Metrics compatibility layer will move to a different extension 
 <p>Support for Prometheus will be enabled if Micrometer support is enabled, the PrometheusMeterRegistry is on the classpath and either this value is true, or this value is unset and <code>quarkus.micrometer.registry-enabled-default</code> is true.</p>
 </div>
 <div class="paragraph">
-<p>Environment variable: <code id="env-var-55750">QUARKUS_MICROMETER_EXPORT_PROMETHEUS_ENABLED</code><button class="btn-copy fa fa-clipboard inline-btn-copy" data-clipboard-action="copy" data-clipboard-target="#env-var-55750" title="Copy to clipboard" do-not-collapse="true"></button></p>
+<p>Environment variable: <code id="env-var-64844">QUARKUS_MICROMETER_EXPORT_PROMETHEUS_ENABLED</code><button class="btn-copy fa fa-clipboard inline-btn-copy" data-clipboard-action="copy" data-clipboard-target="#env-var-64844" title="Copy to clipboard" do-not-collapse="true"></button></p>
 </div>
 </div>
 </div>
@@ -2006,7 +2081,7 @@ Note that the MP Metrics compatibility layer will move to a different extension 
 <p><span class="icon"><i class="fa fa-lock" title="Fixed at build time"></i></span> <a id="quarkus-micrometer_quarkus-micrometer-export-prometheus-path"></a> <span class="property-path"><a href="#quarkus-micrometer_quarkus-micrometer-export-prometheus-path"><code>quarkus.micrometer.export.prometheus.path</code></a></span>
 <button class="btn-copy fa fa-clipboard inline-btn-copy" data-clipboard-action="copy" data-clipboard-text='quarkus.micrometer.export.prometheus.path' title="Copy to clipboard" do-not-collapse="true"></button></p>
 </div>
-<div id="conf-collapsible-desc-22" class="openblock description description-collapsed">
+<div id="conf-collapsible-desc-24" class="openblock description description-collapsed">
 <div class="content">
 <div class="paragraph">
 <p>The path for the prometheus metrics endpoint (produces text/plain). The default value is
@@ -2023,7 +2098,7 @@ If an absolute path is specified (<code>/metrics</code>), the prometheus endpoin
 <code><a href="http://${quarkus.management.host}:${quarkus.management.port}/metrics" class="bare">http://${quarkus.management.host}:${quarkus.management.port}/metrics</a></code>.</p>
 </div>
 <div class="paragraph">
-<p>Environment variable: <code id="env-var-55751">QUARKUS_MICROMETER_EXPORT_PROMETHEUS_PATH</code><button class="btn-copy fa fa-clipboard inline-btn-copy" data-clipboard-action="copy" data-clipboard-target="#env-var-55751" title="Copy to clipboard" do-not-collapse="true"></button></p>
+<p>Environment variable: <code id="env-var-64845">QUARKUS_MICROMETER_EXPORT_PROMETHEUS_PATH</code><button class="btn-copy fa fa-clipboard inline-btn-copy" data-clipboard-action="copy" data-clipboard-target="#env-var-64845" title="Copy to clipboard" do-not-collapse="true"></button></p>
 </div>
 </div>
 </div>
@@ -2038,7 +2113,7 @@ If an absolute path is specified (<code>/metrics</code>), the prometheus endpoin
 <p><span class="icon"><i class="fa fa-lock" title="Fixed at build time"></i></span> <a id="quarkus-micrometer_quarkus-micrometer-export-prometheus-default-registry"></a> <span class="property-path"><a href="#quarkus-micrometer_quarkus-micrometer-export-prometheus-default-registry"><code>quarkus.micrometer.export.prometheus.default-registry</code></a></span>
 <button class="btn-copy fa fa-clipboard inline-btn-copy" data-clipboard-action="copy" data-clipboard-text='quarkus.micrometer.export.prometheus.default-registry' title="Copy to clipboard" do-not-collapse="true"></button></p>
 </div>
-<div id="conf-collapsible-desc-23" class="openblock description description-collapsed">
+<div id="conf-collapsible-desc-25" class="openblock description description-collapsed">
 <div class="content">
 <div class="paragraph">
 <p>By default, this extension will create a Prometheus MeterRegistry instance.</p>
@@ -2047,7 +2122,7 @@ If an absolute path is specified (<code>/metrics</code>), the prometheus endpoin
 <p>Use this attribute to veto the creation of the default Prometheus MeterRegistry.</p>
 </div>
 <div class="paragraph">
-<p>Environment variable: <code id="env-var-55752">QUARKUS_MICROMETER_EXPORT_PROMETHEUS_DEFAULT_REGISTRY</code><button class="btn-copy fa fa-clipboard inline-btn-copy" data-clipboard-action="copy" data-clipboard-target="#env-var-55752" title="Copy to clipboard" do-not-collapse="true"></button></p>
+<p>Environment variable: <code id="env-var-64846">QUARKUS_MICROMETER_EXPORT_PROMETHEUS_DEFAULT_REGISTRY</code><button class="btn-copy fa fa-clipboard inline-btn-copy" data-clipboard-action="copy" data-clipboard-target="#env-var-64846" title="Copy to clipboard" do-not-collapse="true"></button></p>
 </div>
 </div>
 </div>
@@ -2062,7 +2137,7 @@ If an absolute path is specified (<code>/metrics</code>), the prometheus endpoin
 <p><a id="quarkus-micrometer_quarkus-micrometer-binder-http-server-match-patterns"></a> <span class="property-path"><a href="#quarkus-micrometer_quarkus-micrometer-binder-http-server-match-patterns"><code>quarkus.micrometer.binder.http-server.match-patterns</code></a></span>
 <button class="btn-copy fa fa-clipboard inline-btn-copy" data-clipboard-action="copy" data-clipboard-text='quarkus.micrometer.binder.http-server.match-patterns' title="Copy to clipboard" do-not-collapse="true"></button></p>
 </div>
-<div id="conf-collapsible-desc-24" class="openblock description description-collapsed">
+<div id="conf-collapsible-desc-26" class="openblock description description-collapsed">
 <div class="content">
 <div class="paragraph">
 <p>Comma-separated list of regular expressions used to specify uri
@@ -2085,7 +2160,7 @@ replacement value (<code>/item/custom</code>) as the value for the uri label.
 Note that backslashes must be double escaped as <code>\\\\</code>.</p>
 </div>
 <div class="paragraph">
-<p>Environment variable: <code id="env-var-55753">QUARKUS_MICROMETER_BINDER_HTTP_SERVER_MATCH_PATTERNS</code><button class="btn-copy fa fa-clipboard inline-btn-copy" data-clipboard-action="copy" data-clipboard-target="#env-var-55753" title="Copy to clipboard" do-not-collapse="true"></button></p>
+<p>Environment variable: <code id="env-var-64847">QUARKUS_MICROMETER_BINDER_HTTP_SERVER_MATCH_PATTERNS</code><button class="btn-copy fa fa-clipboard inline-btn-copy" data-clipboard-action="copy" data-clipboard-target="#env-var-64847" title="Copy to clipboard" do-not-collapse="true"></button></p>
 </div>
 </div>
 </div>
@@ -2100,13 +2175,13 @@ Note that backslashes must be double escaped as <code>\\\\</code>.</p>
 <p><a id="quarkus-micrometer_quarkus-micrometer-binder-http-server-ignore-patterns"></a> <span class="property-path"><a href="#quarkus-micrometer_quarkus-micrometer-binder-http-server-ignore-patterns"><code>quarkus.micrometer.binder.http-server.ignore-patterns</code></a></span>
 <button class="btn-copy fa fa-clipboard inline-btn-copy" data-clipboard-action="copy" data-clipboard-text='quarkus.micrometer.binder.http-server.ignore-patterns' title="Copy to clipboard" do-not-collapse="true"></button></p>
 </div>
-<div id="conf-collapsible-desc-25" class="openblock description description-collapsed">
+<div id="conf-collapsible-desc-27" class="openblock description description-collapsed">
 <div class="content">
 <div class="paragraph">
 <p>Comma-separated list of regular expressions defining uri paths that should be ignored (not measured).</p>
 </div>
 <div class="paragraph">
-<p>Environment variable: <code id="env-var-55754">QUARKUS_MICROMETER_BINDER_HTTP_SERVER_IGNORE_PATTERNS</code><button class="btn-copy fa fa-clipboard inline-btn-copy" data-clipboard-action="copy" data-clipboard-target="#env-var-55754" title="Copy to clipboard" do-not-collapse="true"></button></p>
+<p>Environment variable: <code id="env-var-64848">QUARKUS_MICROMETER_BINDER_HTTP_SERVER_IGNORE_PATTERNS</code><button class="btn-copy fa fa-clipboard inline-btn-copy" data-clipboard-action="copy" data-clipboard-target="#env-var-64848" title="Copy to clipboard" do-not-collapse="true"></button></p>
 </div>
 </div>
 </div>
@@ -2121,7 +2196,7 @@ Note that backslashes must be double escaped as <code>\\\\</code>.</p>
 <p><a id="quarkus-micrometer_quarkus-micrometer-binder-http-server-suppress-non-application-uris"></a> <span class="property-path"><a href="#quarkus-micrometer_quarkus-micrometer-binder-http-server-suppress-non-application-uris"><code>quarkus.micrometer.binder.http-server.suppress-non-application-uris</code></a></span>
 <button class="btn-copy fa fa-clipboard inline-btn-copy" data-clipboard-action="copy" data-clipboard-text='quarkus.micrometer.binder.http-server.suppress-non-application-uris' title="Copy to clipboard" do-not-collapse="true"></button></p>
 </div>
-<div id="conf-collapsible-desc-26" class="openblock description description-collapsed">
+<div id="conf-collapsible-desc-28" class="openblock description description-collapsed">
 <div class="content">
 <div class="paragraph">
 <p>Suppress non-application uris from metrics collection.
@@ -2132,7 +2207,7 @@ This will suppress all metrics for non-application endpoints using
 <p>Suppressing non-application uris is enabled by default.</p>
 </div>
 <div class="paragraph">
-<p>Environment variable: <code id="env-var-55755">QUARKUS_MICROMETER_BINDER_HTTP_SERVER_SUPPRESS_NON_APPLICATION_URIS</code><button class="btn-copy fa fa-clipboard inline-btn-copy" data-clipboard-action="copy" data-clipboard-target="#env-var-55755" title="Copy to clipboard" do-not-collapse="true"></button></p>
+<p>Environment variable: <code id="env-var-64849">QUARKUS_MICROMETER_BINDER_HTTP_SERVER_SUPPRESS_NON_APPLICATION_URIS</code><button class="btn-copy fa fa-clipboard inline-btn-copy" data-clipboard-action="copy" data-clipboard-target="#env-var-64849" title="Copy to clipboard" do-not-collapse="true"></button></p>
 </div>
 </div>
 </div>
@@ -2144,16 +2219,41 @@ This will suppress all metrics for non-application endpoints using
 </tr>
 <tr class="row-collapsible row-collapsed row-with-desc odd">
 <td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p><a id="quarkus-micrometer_quarkus-micrometer-binder-http-server-suppress4xx-errors"></a> <span class="property-path"><a href="#quarkus-micrometer_quarkus-micrometer-binder-http-server-suppress4xx-errors"><code>quarkus.micrometer.binder.http-server.suppress4xx-errors</code></a></span>
+<button class="btn-copy fa fa-clipboard inline-btn-copy" data-clipboard-action="copy" data-clipboard-text='quarkus.micrometer.binder.http-server.suppress4xx-errors' title="Copy to clipboard" do-not-collapse="true"></button></p>
+</div>
+<div id="conf-collapsible-desc-29" class="openblock description description-collapsed">
+<div class="content">
+<div class="paragraph">
+<p>Suppress 4xx errors from metrics collection for unmatched templates.
+This configuration exists to limit cardinality explosion from caller side error. Does not apply to 404 errors.</p>
+</div>
+<div class="paragraph">
+<p>Suppressing 4xx errors is disabled by default.</p>
+</div>
+<div class="paragraph">
+<p>Environment variable: <code id="env-var-64850">QUARKUS_MICROMETER_BINDER_HTTP_SERVER_SUPPRESS4XX_ERRORS</code><button class="btn-copy fa fa-clipboard inline-btn-copy" data-clipboard-action="copy" data-clipboard-target="#env-var-64850" title="Copy to clipboard" do-not-collapse="true"></button></p>
+</div>
+</div>
+</div>
+<div class="paragraph description-decoration">
+<p><i class="fa fa-chevron-down"></i><span>Show more</span></p>
+</div></div></td>
+<td class="tableblock halign-left valign-middle"><p class="tableblock">boolean</p></td>
+<td class="tableblock halign-left valign-middle"><p class="tableblock"><code>false</code></p></td>
+</tr>
+<tr class="row-collapsible row-collapsed row-with-desc">
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
 <p><a id="quarkus-micrometer_quarkus-micrometer-binder-http-server-max-uri-tags"></a> <span class="property-path"><a href="#quarkus-micrometer_quarkus-micrometer-binder-http-server-max-uri-tags"><code>quarkus.micrometer.binder.http-server.max-uri-tags</code></a></span>
 <button class="btn-copy fa fa-clipboard inline-btn-copy" data-clipboard-action="copy" data-clipboard-text='quarkus.micrometer.binder.http-server.max-uri-tags' title="Copy to clipboard" do-not-collapse="true"></button></p>
 </div>
-<div id="conf-collapsible-desc-27" class="openblock description description-collapsed">
+<div id="conf-collapsible-desc-30" class="openblock description description-collapsed">
 <div class="content">
 <div class="paragraph">
 <p>Maximum number of unique URI tag values allowed. After the max number of tag values is reached, metrics with additional tag values are denied by filter.</p>
 </div>
 <div class="paragraph">
-<p>Environment variable: <code id="env-var-55756">QUARKUS_MICROMETER_BINDER_HTTP_SERVER_MAX_URI_TAGS</code><button class="btn-copy fa fa-clipboard inline-btn-copy" data-clipboard-action="copy" data-clipboard-target="#env-var-55756" title="Copy to clipboard" do-not-collapse="true"></button></p>
+<p>Environment variable: <code id="env-var-64851">QUARKUS_MICROMETER_BINDER_HTTP_SERVER_MAX_URI_TAGS</code><button class="btn-copy fa fa-clipboard inline-btn-copy" data-clipboard-action="copy" data-clipboard-target="#env-var-64851" title="Copy to clipboard" do-not-collapse="true"></button></p>
 </div>
 </div>
 </div>
@@ -2163,12 +2263,12 @@ This will suppress all metrics for non-application endpoints using
 <td class="tableblock halign-left valign-middle"><p class="tableblock">int</p></td>
 <td class="tableblock halign-left valign-middle"><p class="tableblock"><code>100</code></p></td>
 </tr>
-<tr class="row-collapsible row-collapsed row-with-desc">
+<tr class="row-collapsible row-collapsed row-with-desc row-hidden odd">
 <td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
 <p><a id="quarkus-micrometer_quarkus-micrometer-export-prometheus-configuration-property-name"></a> <span class="property-path"><a href="#quarkus-micrometer_quarkus-micrometer-export-prometheus-configuration-property-name"><code>quarkus.micrometer.export.prometheus."configuration-property-name"</code></a></span>
 <button class="btn-copy fa fa-clipboard inline-btn-copy" data-clipboard-action="copy" data-clipboard-text='quarkus.micrometer.export.prometheus."configuration-property-name"' title="Copy to clipboard" do-not-collapse="true"></button></p>
 </div>
-<div id="conf-collapsible-desc-28" class="openblock description description-collapsed">
+<div id="conf-collapsible-desc-31" class="openblock description description-collapsed">
 <div class="content">
 <div class="paragraph">
 <p>Prometheus registry configuration properties.</p>
@@ -2178,7 +2278,7 @@ This will suppress all metrics for non-application endpoints using
 see <a href="https://micrometer.io/docs/registry/prometheus" class="bare">https://micrometer.io/docs/registry/prometheus</a>.</p>
 </div>
 <div class="paragraph">
-<p>Environment variable: <code id="env-var-55757">QUARKUS_MICROMETER_EXPORT_PROMETHEUS__CONFIGURATION_PROPERTY_NAME_</code><button class="btn-copy fa fa-clipboard inline-btn-copy" data-clipboard-action="copy" data-clipboard-target="#env-var-55757" title="Copy to clipboard" do-not-collapse="true"></button></p>
+<p>Environment variable: <code id="env-var-64852">QUARKUS_MICROMETER_EXPORT_PROMETHEUS__CONFIGURATION_PROPERTY_NAME_</code><button class="btn-copy fa fa-clipboard inline-btn-copy" data-clipboard-action="copy" data-clipboard-target="#env-var-64852" title="Copy to clipboard" do-not-collapse="true"></button></p>
 </div>
 </div>
 </div>
@@ -2188,12 +2288,12 @@ see <a href="https://micrometer.io/docs/registry/prometheus" class="bare">https:
 <td class="tableblock halign-left valign-middle"><p class="tableblock">Map&lt;String,String&gt;</p></td>
 <td class="tableblock halign-left valign-middle"></td>
 </tr>
-<tr class="row-collapsible row-collapsed row-with-desc odd">
+<tr class="row-collapsible row-collapsed row-with-desc row-hidden">
 <td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
 <p><a id="quarkus-micrometer_quarkus-micrometer-binder-http-client-match-patterns"></a> <span class="property-path"><a href="#quarkus-micrometer_quarkus-micrometer-binder-http-client-match-patterns"><code>quarkus.micrometer.binder.http-client.match-patterns</code></a></span>
 <button class="btn-copy fa fa-clipboard inline-btn-copy" data-clipboard-action="copy" data-clipboard-text='quarkus.micrometer.binder.http-client.match-patterns' title="Copy to clipboard" do-not-collapse="true"></button></p>
 </div>
-<div id="conf-collapsible-desc-29" class="openblock description description-collapsed">
+<div id="conf-collapsible-desc-32" class="openblock description description-collapsed">
 <div class="content">
 <div class="paragraph">
 <p>Comma-separated list of regular expressions used to specify uri
@@ -2216,28 +2316,7 @@ replacement value (<code>/item/custom</code>) as the value for the uri label.
 Note that backslashes must be double escaped as <code>\\\\</code>.</p>
 </div>
 <div class="paragraph">
-<p>Environment variable: <code id="env-var-55758">QUARKUS_MICROMETER_BINDER_HTTP_CLIENT_MATCH_PATTERNS</code><button class="btn-copy fa fa-clipboard inline-btn-copy" data-clipboard-action="copy" data-clipboard-target="#env-var-55758" title="Copy to clipboard" do-not-collapse="true"></button></p>
-</div>
-</div>
-</div>
-<div class="paragraph description-decoration">
-<p><i class="fa fa-chevron-down"></i><span>Show more</span></p>
-</div></div></td>
-<td class="tableblock halign-left valign-middle"><p class="tableblock">list of string</p></td>
-<td class="tableblock halign-left valign-middle"></td>
-</tr>
-<tr class="row-collapsible row-collapsed row-with-desc">
-<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
-<p><a id="quarkus-micrometer_quarkus-micrometer-binder-http-client-ignore-patterns"></a> <span class="property-path"><a href="#quarkus-micrometer_quarkus-micrometer-binder-http-client-ignore-patterns"><code>quarkus.micrometer.binder.http-client.ignore-patterns</code></a></span>
-<button class="btn-copy fa fa-clipboard inline-btn-copy" data-clipboard-action="copy" data-clipboard-text='quarkus.micrometer.binder.http-client.ignore-patterns' title="Copy to clipboard" do-not-collapse="true"></button></p>
-</div>
-<div id="conf-collapsible-desc-30" class="openblock description description-collapsed">
-<div class="content">
-<div class="paragraph">
-<p>Comma-separated list of regular expressions defining uri paths that should be ignored (not measured).</p>
-</div>
-<div class="paragraph">
-<p>Environment variable: <code id="env-var-55759">QUARKUS_MICROMETER_BINDER_HTTP_CLIENT_IGNORE_PATTERNS</code><button class="btn-copy fa fa-clipboard inline-btn-copy" data-clipboard-action="copy" data-clipboard-target="#env-var-55759" title="Copy to clipboard" do-not-collapse="true"></button></p>
+<p>Environment variable: <code id="env-var-64853">QUARKUS_MICROMETER_BINDER_HTTP_CLIENT_MATCH_PATTERNS</code><button class="btn-copy fa fa-clipboard inline-btn-copy" data-clipboard-action="copy" data-clipboard-target="#env-var-64853" title="Copy to clipboard" do-not-collapse="true"></button></p>
 </div>
 </div>
 </div>
@@ -2249,16 +2328,62 @@ Note that backslashes must be double escaped as <code>\\\\</code>.</p>
 </tr>
 <tr class="row-collapsible row-collapsed row-with-desc row-hidden odd">
 <td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p><a id="quarkus-micrometer_quarkus-micrometer-binder-http-client-ignore-patterns"></a> <span class="property-path"><a href="#quarkus-micrometer_quarkus-micrometer-binder-http-client-ignore-patterns"><code>quarkus.micrometer.binder.http-client.ignore-patterns</code></a></span>
+<button class="btn-copy fa fa-clipboard inline-btn-copy" data-clipboard-action="copy" data-clipboard-text='quarkus.micrometer.binder.http-client.ignore-patterns' title="Copy to clipboard" do-not-collapse="true"></button></p>
+</div>
+<div id="conf-collapsible-desc-33" class="openblock description description-collapsed">
+<div class="content">
+<div class="paragraph">
+<p>Comma-separated list of regular expressions defining uri paths that should be ignored (not measured).</p>
+</div>
+<div class="paragraph">
+<p>Environment variable: <code id="env-var-64854">QUARKUS_MICROMETER_BINDER_HTTP_CLIENT_IGNORE_PATTERNS</code><button class="btn-copy fa fa-clipboard inline-btn-copy" data-clipboard-action="copy" data-clipboard-target="#env-var-64854" title="Copy to clipboard" do-not-collapse="true"></button></p>
+</div>
+</div>
+</div>
+<div class="paragraph description-decoration">
+<p><i class="fa fa-chevron-down"></i><span>Show more</span></p>
+</div></div></td>
+<td class="tableblock halign-left valign-middle"><p class="tableblock">list of string</p></td>
+<td class="tableblock halign-left valign-middle"></td>
+</tr>
+<tr class="row-collapsible row-collapsed row-with-desc row-hidden">
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p><a id="quarkus-micrometer_quarkus-micrometer-binder-http-client-suppress4xx-errors"></a> <span class="property-path"><a href="#quarkus-micrometer_quarkus-micrometer-binder-http-client-suppress4xx-errors"><code>quarkus.micrometer.binder.http-client.suppress4xx-errors</code></a></span>
+<button class="btn-copy fa fa-clipboard inline-btn-copy" data-clipboard-action="copy" data-clipboard-text='quarkus.micrometer.binder.http-client.suppress4xx-errors' title="Copy to clipboard" do-not-collapse="true"></button></p>
+</div>
+<div id="conf-collapsible-desc-34" class="openblock description description-collapsed">
+<div class="content">
+<div class="paragraph">
+<p>Suppress 4xx errors from metrics collection for unmatched templates.
+This configuration exists to limit cardinality explosion from caller side errors. Does not apply to 404 errors.</p>
+</div>
+<div class="paragraph">
+<p>Suppressing 4xx errors is disabled by default.</p>
+</div>
+<div class="paragraph">
+<p>Environment variable: <code id="env-var-64855">QUARKUS_MICROMETER_BINDER_HTTP_CLIENT_SUPPRESS4XX_ERRORS</code><button class="btn-copy fa fa-clipboard inline-btn-copy" data-clipboard-action="copy" data-clipboard-target="#env-var-64855" title="Copy to clipboard" do-not-collapse="true"></button></p>
+</div>
+</div>
+</div>
+<div class="paragraph description-decoration">
+<p><i class="fa fa-chevron-down"></i><span>Show more</span></p>
+</div></div></td>
+<td class="tableblock halign-left valign-middle"><p class="tableblock">boolean</p></td>
+<td class="tableblock halign-left valign-middle"><p class="tableblock"><code>false</code></p></td>
+</tr>
+<tr class="row-collapsible row-collapsed row-with-desc row-hidden odd">
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
 <p><a id="quarkus-micrometer_quarkus-micrometer-binder-http-client-max-uri-tags"></a> <span class="property-path"><a href="#quarkus-micrometer_quarkus-micrometer-binder-http-client-max-uri-tags"><code>quarkus.micrometer.binder.http-client.max-uri-tags</code></a></span>
 <button class="btn-copy fa fa-clipboard inline-btn-copy" data-clipboard-action="copy" data-clipboard-text='quarkus.micrometer.binder.http-client.max-uri-tags' title="Copy to clipboard" do-not-collapse="true"></button></p>
 </div>
-<div id="conf-collapsible-desc-31" class="openblock description description-collapsed">
+<div id="conf-collapsible-desc-35" class="openblock description description-collapsed">
 <div class="content">
 <div class="paragraph">
 <p>Maximum number of unique URI tag values allowed. After the max number of tag values is reached, metrics with additional tag values are denied by filter.</p>
 </div>
 <div class="paragraph">
-<p>Environment variable: <code id="env-var-55760">QUARKUS_MICROMETER_BINDER_HTTP_CLIENT_MAX_URI_TAGS</code><button class="btn-copy fa fa-clipboard inline-btn-copy" data-clipboard-action="copy" data-clipboard-target="#env-var-55760" title="Copy to clipboard" do-not-collapse="true"></button></p>
+<p>Environment variable: <code id="env-var-64856">QUARKUS_MICROMETER_BINDER_HTTP_CLIENT_MAX_URI_TAGS</code><button class="btn-copy fa fa-clipboard inline-btn-copy" data-clipboard-action="copy" data-clipboard-target="#env-var-64856" title="Copy to clipboard" do-not-collapse="true"></button></p>
 </div>
 </div>
 </div>
@@ -2358,6 +2483,9 @@ See the <a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/ja
       
         
         <li class="tutorial"><a href="/version/main/guides/telemetry-micrometer-tutorial">Collect metrics using Micrometer</a></li>
+      
+        
+        <li class="reference"><a href="/version/main/guides/observability">Observability in Quarkus</a></li>
       </ul>
     </div>
     <div class="grid__item width-6-12 width-12-12-m">
@@ -2366,6 +2494,15 @@ See the <a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/ja
       
         
         <li class="tutorial"><a href="/version/main/guides/telemetry-micrometer-tutorial">Collect metrics using Micrometer</a></li>
+      
+        
+        <li class="reference"><a href="/version/main/guides/telemetry-micrometer-to-opentelemetry">Micrometer and OpenTelemetry extension</a></li>
+      
+        
+        <li class="guide"><a href="/version/main/guides/observability-devservices-lgtm">Observability Dev Services with Grafana OTel LGTM</a></li>
+      
+        
+        <li class="reference"><a href="/version/main/guides/observability">Observability in Quarkus</a></li>
       
         
         <li class="guide"><a href="/version/main/guides/centralized-log-management">Centralized log management (Graylog, Logstash, Fluentd)</a></li>
@@ -2445,6 +2582,10 @@ See the <a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/ja
           
           
             <li><a href="/newsletter" target="_blank">Newsletter</a></li>
+          
+          
+          
+            <li><a href="/userstories" target="_blank">User Stories</a></li>
           
           
           

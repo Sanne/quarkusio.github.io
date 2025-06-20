@@ -12,7 +12,7 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <meta http-equiv="Content-Security-Policy" content="
-  connect-src 'self' https://dpm.demdex.net https://adobedc.demdex.net https://route-default-test-mscherer-matamo.apps.ospo-osci.z3b1.p1.openshiftapps.com/ https://search.quarkus.io https://smetrics.redhat.com; 
+  connect-src 'self' https://dpm.demdex.net https://adobedc.demdex.net https://analytics.ossupstream.org/ https://search.quarkus.io https://smetrics.redhat.com; 
   script-src 'self' 'unsafe-inline' 'unsafe-eval'
       
       https://assets.adobedtm.com
@@ -27,13 +27,13 @@
       http://www.googleadservices.com
       https://googleads.g.doubleclick.net
       https://giscus.app
-      https://route-default-test-mscherer-matamo.apps.ospo-osci.z3b1.p1.openshiftapps.com/
+      https://analytics.ossupstream.org/
       https://app.mailjet.com;
 
   style-src 'self' https://fonts.googleapis.com https://use.fontawesome.com; 
   img-src 'self' * data:; 
   media-src 'self'; 
-  frame-src https://redhat.demdex.net https://www.youtube.com https://embed.restream.io https://app.mailjet.com http://xy0p2.mjt.lu https://mj.quarkus.io https://giscus.app; 
+  frame-src https://redhat.demdex.net https://www.youtube.com https://player.restream.io https://app.mailjet.com http://xy0p2.mjt.lu https://mj.quarkus.io https://giscus.app; 
   base-uri 'none'; 
   object-src 'none'; 
   form-action 'none'; 
@@ -100,13 +100,12 @@
         <span href="/about/">Why<i class="fas fa-chevron-down"></i></span>
         <ul class="submenu">
           <li><a href="/about" class="">WHAT IS QUARKUS?</a></li>
-          <li><a href="/container-first" class="">CONTAINER FIRST</a></li>
-          <li><a href="/continuum" class="">VERSATILITY</a></li>
-          <li><a href="/standards" class="">STANDARDS</a></li>
-          <li><a href="/kubernetes-native" class="">KUBERNETES NATIVE</a></li>
-          <li><a href="/performance" class="">PERFORMANCE</a></li>
           <li><a href="/developer-joy" class="">DEVELOPER JOY</a></li>
-          
+          <li><a href="/performance" class="">PERFORMANCE</a></li>
+          <li><a href="/kubernetes-native" class="">KUBERNETES NATIVE</a></li>
+          <li><a href="/standards" class="">STANDARDS</a></li>
+          <li><a href="/versatility" class="">VERSATILITY</a></li>
+          <li><a href="/container-first" class="">CONTAINER FIRST</a></li>          
         </ul>
       </li>
       <li class="dropdown">
@@ -114,6 +113,7 @@
         <ul class="submenu">
           <li><a href="/get-started" class="">GET STARTED</a></li>
           <li><a href="/guides" class="active">DOCUMENTATION</a></li>
+          <li><a href="/userstories/" class="">USER STORIES</a></li>  
           <li><a href="/qtips" class="">"Q" TIP VIDEOS</a></li>          
           <li><a href="/books" class="">BOOKS</a></li>
           </ul>
@@ -189,7 +189,11 @@
         
         
         
-        <option value="latest" selected>3.17.0 - Latest</option>
+        <option value="latest" selected>3.23.4 - Latest</option>
+        
+        
+        
+        <option value="3.20" >3.20</option>
         
         
         
@@ -334,7 +338,7 @@ cd google-cloud-functions</code></pre>
 <div class="title">Maven</div>
 <div class="listingblock">
 <div class="content">
-<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">mvn io.quarkus.platform:quarkus-maven-plugin:3.17.0:create \
+<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">mvn io.quarkus.platform:quarkus-maven-plugin:3.23.4:create \
     -DprojectGroupId=org.acme \
     -DprojectArtifactId=google-cloud-functions \
     -Dextensions='google-cloud-functions' \
@@ -381,18 +385,6 @@ cd google-cloud-functions</code></pre>
 <div class="paragraph">
 <p>For this example project, we will create four functions, one <code>HttpFunction</code>, one <code>BackgroundFunction</code> (Storage event),
 one <code>RawBackgroundFunction</code> (PubSub event) and one <code>CloudEventsFunction</code> (storage event using the Cloud Events specification).</p>
-</div>
-<div class="admonitionblock note">
-<table>
-<tr>
-<td class="icon">
-<i class="fa icon-note" title="Note"></i>
-</td>
-<td class="content">
-Quarkus supports Cloud Functions gen 1 and gen 2. For an overview of Cloud Functions gen 2 see <a href="https://cloud.google.com/functions/docs/2nd-gen/overview">this page</a> on the Google Cloud Functions documentation. To use gen 2 you must add the <code>--gen2</code> parameter.
-</td>
-</tr>
-</table>
 </div>
 </div>
 </div>
@@ -599,18 +591,6 @@ public class RawBackgroundFunctionPubSubTest implements RawBackgroundFunction { 
 </div>
 <div class="sect2">
 <h3 id="the-cloudeventsfunction"><a class="anchor" href="#the-cloudeventsfunction"></a>The CloudEventsFunction</h3>
-<div class="admonitionblock warning">
-<table>
-<tr>
-<td class="icon">
-<i class="fa icon-warning" title="Warning"></i>
-</td>
-<td class="content">
-<code>CloudEventsFunction</code> is a feature of Cloud Functions gen 2 only.
-</td>
-</tr>
-</table>
-</div>
 <div class="paragraph">
 <p>This <code>CloudEventsFunction</code> is triggered by a Cloud Events Storage event, you can use any Cloud Events supported by Google Cloud instead.</p>
 </div>
@@ -863,25 +843,13 @@ it needs to use <code>--trigger-event google.pubsub.topic.publish</code> and the
 </div>
 <div class="sect2">
 <h3 id="the-cloudeventsfunction-2"><a class="anchor" href="#the-cloudeventsfunction-2"></a>The CloudEventsFunction</h3>
-<div class="admonitionblock warning">
-<table>
-<tr>
-<td class="icon">
-<i class="fa icon-warning" title="Warning"></i>
-</td>
-<td class="content">
-<code>CloudEventsFunction</code> is a feature of Cloud Functions gen 2 only.
-</td>
-</tr>
-</table>
-</div>
 <div class="paragraph">
 <p>This is an example command to deploy your <code>CloudEventsFunction</code> to Google Cloud, as the function is triggered by a Storage event,
 it needs to use <code>--trigger-bucket</code> parameter with the name of a previously created bucket:</p>
 </div>
 <div class="listingblock">
 <div class="content">
-<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">gcloud functions deploy quarkus-example-cloud-event --gen2 \
+<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">gcloud functions deploy quarkus-example-cloud-event \
   --entry-point=io.quarkus.gcp.functions.QuarkusCloudEventsFunction \
   --runtime=java21 --trigger-bucket=example-cloud-event --source=target/deployment</code></pre>
 </div>
@@ -918,7 +886,7 @@ it needs to use <code>--trigger-bucket</code> parameter with the name of a previ
 <div class="listingblock">
 <div class="content">
 <pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">mvn dependency:copy \
-  -Dartifact='com.google.cloud.functions.invoker:java-function-invoker:1.3.0' \
+  -Dartifact='com.google.cloud.functions.invoker:java-function-invoker:1.4.1' \
   -DoutputDirectory=.</code></pre>
 </div>
 </div>
@@ -950,7 +918,7 @@ it needs to use <code>--trigger-bucket</code> parameter with the name of a previ
 </div>
 <div class="listingblock">
 <div class="content">
-<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">java -jar java-function-invoker-1.3.0.jar \
+<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">java -jar java-function-invoker-1.4.1.jar \
   --classpath target/google-cloud-functions-1.0.0-SNAPSHOT-runner.jar \
   --target io.quarkus.gcp.functions.QuarkusHttpFunction</code></pre>
 </div>
@@ -978,7 +946,7 @@ The <code>--classpath</code> parameter needs to be set to the previously package
 </div>
 <div class="listingblock">
 <div class="content">
-<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">java -jar java-function-invoker-1.3.0.jar \
+<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">java -jar java-function-invoker-1.4.1.jar \
   --classpath target/google-cloud-functions-1.0.0-SNAPSHOT-runner.jar \
   --target io.quarkus.gcp.functions.QuarkusBackgroundFunction</code></pre>
 </div>
@@ -1014,7 +982,7 @@ The <code>--classpath</code> parameter needs to be set to the previously package
 </div>
 <div class="listingblock">
 <div class="content">
-<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">java -jar java-function-invoker-1.3.0.jar \
+<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">java -jar java-function-invoker-1.4.1.jar \
   --classpath target/google-cloud-functions-1.0.0-SNAPSHOT-runner.jar \
   --target io.quarkus.gcp.functions.QuarkusBackgroundFunction</code></pre>
 </div>
@@ -1045,24 +1013,12 @@ The <code>--classpath</code> parameter needs to be set to the previously package
 </div>
 <div class="sect2">
 <h3 id="the-cloudeventsfunction-3"><a class="anchor" href="#the-cloudeventsfunction-3"></a>The CloudEventsFunction</h3>
-<div class="admonitionblock important">
-<table>
-<tr>
-<td class="icon">
-<i class="fa icon-important" title="Important"></i>
-</td>
-<td class="content">
-<code>CloudEventsFunction</code> is a feature of Cloud Function gen 2 only.
-</td>
-</tr>
-</table>
-</div>
 <div class="paragraph">
 <p>For cloud events functions, you launch the invoker with a target class of <code>io.quarkus.gcp.functions.QuarkusCloudEventsFunction</code>.</p>
 </div>
 <div class="listingblock">
 <div class="content">
-<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">java -jar java-function-invoker-1.3.0.jar \
+<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">java -jar java-function-invoker-1.4.1.jar \
   --classpath target/google-cloud-functions-1.0.0-SNAPSHOT-runner.jar \
   --target io.quarkus.gcp.functions.QuarkusCloudEventsFunction</code></pre>
 </div>
@@ -1269,18 +1225,6 @@ class RawBackgroundFunctionPubSubTestCase {
 </div>
 <div class="sect2">
 <h3 id="the-cloudeventsfunction-4"><a class="anchor" href="#the-cloudeventsfunction-4"></a>The CloudEventsFunction</h3>
-<div class="admonitionblock warning">
-<table>
-<tr>
-<td class="icon">
-<i class="fa icon-warning" title="Warning"></i>
-</td>
-<td class="content">
-Cloud Events Function is a feature of Cloud Functions gen 2 only.
-</td>
-</tr>
-</table>
-</div>
 <div class="listingblock">
 <div class="content">
 <pre class="highlightjs highlight"><code class="language-java hljs" data-lang="java">import static io.restassured.RestAssured.given;
@@ -1459,10 +1403,10 @@ class CloudEventStorageTestCase {
         <li class="guide"><a href="/guides/container-image">Container Images</a></li>
       
         
-        <li class="guide"><a href="/guides/deploying-to-openshift">Deploying on OpenShift</a></li>
+        <li class="howto"><a href="/guides/deploying-to-openshift-native-howto">Deploying Quarkus applications compiled to native executables</a></li>
       
         
-        <li class="guide"><a href="/guides/deploying-to-heroku">Deploying to Heroku</a></li>
+        <li class="guide"><a href="/guides/deploying-to-openshift">Deploying Quarkus applications to OpenShift</a></li>
       </ul>
     </div>
     </div>
@@ -1506,6 +1450,10 @@ class CloudEventStorageTestCase {
           
           
             <li><a href="/newsletter" target="_blank">Newsletter</a></li>
+          
+          
+          
+            <li><a href="/userstories" target="_blank">User Stories</a></li>
           
           
           

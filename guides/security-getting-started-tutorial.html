@@ -8,11 +8,11 @@
 
 
 <head>
-  <title>Getting started with Security by using Basic authentication and Jakarta Persistence - Quarkus</title>
+  <title>Getting started with security by using Basic authentication and Jakarta Persistence - Quarkus</title>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <meta http-equiv="Content-Security-Policy" content="
-  connect-src 'self' https://dpm.demdex.net https://adobedc.demdex.net https://route-default-test-mscherer-matamo.apps.ospo-osci.z3b1.p1.openshiftapps.com/ https://search.quarkus.io https://smetrics.redhat.com; 
+  connect-src 'self' https://dpm.demdex.net https://adobedc.demdex.net https://analytics.ossupstream.org/ https://search.quarkus.io https://smetrics.redhat.com; 
   script-src 'self' 'unsafe-inline' 'unsafe-eval'
       
       https://assets.adobedtm.com
@@ -27,13 +27,13 @@
       http://www.googleadservices.com
       https://googleads.g.doubleclick.net
       https://giscus.app
-      https://route-default-test-mscherer-matamo.apps.ospo-osci.z3b1.p1.openshiftapps.com/
+      https://analytics.ossupstream.org/
       https://app.mailjet.com;
 
   style-src 'self' https://fonts.googleapis.com https://use.fontawesome.com; 
   img-src 'self' * data:; 
   media-src 'self'; 
-  frame-src https://redhat.demdex.net https://www.youtube.com https://embed.restream.io https://app.mailjet.com http://xy0p2.mjt.lu https://mj.quarkus.io https://giscus.app; 
+  frame-src https://redhat.demdex.net https://www.youtube.com https://player.restream.io https://app.mailjet.com http://xy0p2.mjt.lu https://mj.quarkus.io https://giscus.app; 
   base-uri 'none'; 
   object-src 'none'; 
   form-action 'none'; 
@@ -49,7 +49,7 @@
   <meta name="twitter:site" content="@QuarkusIO"> 
   <meta name="twitter:creator" content="@QuarkusIO">
   <meta property="og:url" content="https://quarkus.io/guides/security-getting-started-tutorial" />
-  <meta property="og:title" content="Getting started with Security by using Basic authentication and Jakarta Persistence" />
+  <meta property="og:title" content="Getting started with security by using Basic authentication and Jakarta Persistence" />
   <meta property="og:description" content="Quarkus: Supersonic Subatomic Java" />
   <meta property="og:image" content="https://quarkus.io/assets/images/quarkus_card.png" />
   
@@ -100,13 +100,12 @@
         <span href="/about/">Why<i class="fas fa-chevron-down"></i></span>
         <ul class="submenu">
           <li><a href="/about" class="">WHAT IS QUARKUS?</a></li>
-          <li><a href="/container-first" class="">CONTAINER FIRST</a></li>
-          <li><a href="/continuum" class="">VERSATILITY</a></li>
-          <li><a href="/standards" class="">STANDARDS</a></li>
-          <li><a href="/kubernetes-native" class="">KUBERNETES NATIVE</a></li>
-          <li><a href="/performance" class="">PERFORMANCE</a></li>
           <li><a href="/developer-joy" class="">DEVELOPER JOY</a></li>
-          
+          <li><a href="/performance" class="">PERFORMANCE</a></li>
+          <li><a href="/kubernetes-native" class="">KUBERNETES NATIVE</a></li>
+          <li><a href="/standards" class="">STANDARDS</a></li>
+          <li><a href="/versatility" class="">VERSATILITY</a></li>
+          <li><a href="/container-first" class="">CONTAINER FIRST</a></li>          
         </ul>
       </li>
       <li class="dropdown">
@@ -114,6 +113,7 @@
         <ul class="submenu">
           <li><a href="/get-started" class="">GET STARTED</a></li>
           <li><a href="/guides" class="active">DOCUMENTATION</a></li>
+          <li><a href="/userstories/" class="">USER STORIES</a></li>  
           <li><a href="/qtips" class="">"Q" TIP VIDEOS</a></li>          
           <li><a href="/books" class="">BOOKS</a></li>
           </ul>
@@ -189,7 +189,11 @@
         
         
         
-        <option value="latest" selected>3.17.0 - Latest</option>
+        <option value="latest" selected>3.23.4 - Latest</option>
+        
+        
+        
+        <option value="3.20" >3.20</option>
         
         
         
@@ -218,7 +222,7 @@
       
       <a class="editlink" href="https://github.com/quarkusio/quarkus/edit/main/docs/src/main/asciidoc/security-getting-started-tutorial.adoc">Edit this Page</a>
       
-      <h1 class="text-caps">Getting started with Security by using Basic authentication and Jakarta Persistence </h1>
+      <h1 class="text-caps">Getting started with security by using Basic authentication and Jakarta Persistence </h1>
       <div id="preamble">
 <div class="sectionbody">
 <div class="paragraph">
@@ -400,7 +404,7 @@ cd security-jpa-quickstart</code></pre>
 <div class="title">Maven</div>
 <div class="listingblock">
 <div class="content">
-<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">mvn io.quarkus.platform:quarkus-maven-plugin:3.17.0:create \
+<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">mvn io.quarkus.platform:quarkus-maven-plugin:3.23.4:create \
     -DprojectGroupId=org.acme \
     -DprojectArtifactId=security-jpa-quickstart \
     -Dextensions='security-jpa,jdbc-postgresql,rest,hibernate-orm-panache' \
@@ -563,6 +567,7 @@ Add a regular Jakarta REST resource to your Java source code, as shown in the fo
 <div class="exampleblock">
 <div class="content">
 <div class="listingblock">
+<div class="title"><code>src/main/java/org/acme/security/jpa/PublicResource.java</code></div>
 <div class="content">
 <pre class="highlightjs highlight"><code class="language-java hljs" data-lang="java">package org.acme.security.jpa;
 
@@ -594,6 +599,7 @@ Add a Jakarta REST resource with the following <code>@RolesAllowed</code> annota
 <div class="exampleblock">
 <div class="content">
 <div class="listingblock">
+<div class="title"><code>src/main/java/org/acme/security/jpa/AdminResource.java</code></div>
 <div class="content">
 <pre class="highlightjs highlight"><code class="language-java hljs" data-lang="java">package org.acme.security.jpa;
 
@@ -624,11 +630,11 @@ Use <code>SecurityContext</code> to get access to the currently authenticated <c
 <div class="exampleblock">
 <div class="content">
 <div class="listingblock">
+<div class="title"><code>src/main/java/org/acme/security/jpa/UserResource.java</code></div>
 <div class="content">
 <pre class="highlightjs highlight"><code class="language-java hljs" data-lang="java">package org.acme.security.jpa;
 
 import jakarta.annotation.security.RolesAllowed;
-import jakarta.inject.Inject;
 import jakarta.ws.rs.GET;
 import jakarta.ws.rs.Path;
 import jakarta.ws.rs.core.Context;
@@ -659,14 +665,11 @@ public class UserResource {
 <div class="sect1">
 <h2 id="define-the-user-entity"><a class="anchor" href="#define-the-user-entity"></a>3. Define the user entity</h2>
 <div class="sectionbody">
-<div class="ulist">
-<ul>
-<li>
-<p>You can now describe how you want security information to be stored in the model by adding annotations to the <code>user</code> entity, as outlined in the following code snippet:</p>
-</li>
-</ul>
+<div class="paragraph">
+<p>Specify how security information is stored in the model by adding the following annotations to the <code>user</code> entity:</p>
 </div>
 <div class="listingblock">
+<div class="title"><code>src/main/java/org/acme/security/jpa/User.java</code></div>
 <div class="content">
 <pre class="highlightjs highlight"><code class="language-java hljs" data-lang="java">package org.acme.security.jpa;
 
@@ -794,21 +797,25 @@ Therefore, in this tutorial, you do not need to set the property <code>quarkus.h
 </div>
 </li>
 <li>
-<p>Configure at least one data source in the <code>application.properties</code> file so the <code>quarkus-security-jpa</code> extension can access your database.
+<p>Configure at least one data source in the <code>src/main/resources/application.properties</code> file so the <code>quarkus-security-jpa</code> extension can access your database.
 For example:</p>
 <div class="exampleblock">
 <div class="content">
 <div class="listingblock">
+<div class="title">src/main/resources/application.properties</div>
 <div class="content">
 <pre class="highlightjs highlight"><code class="language-properties hljs" data-lang="properties">quarkus.http.auth.basic=true
 
-quarkus.datasource.db-kind=postgresql
-quarkus.datasource.username=quarkus
-quarkus.datasource.password=quarkus
-quarkus.datasource.jdbc.url=jdbc:postgresql:security_jpa
+%prod.quarkus.datasource.db-kind=postgresql
+%prod.quarkus.datasource.username=quarkus
+%prod.quarkus.datasource.password=quarkus
+%prod.quarkus.datasource.jdbc.url=jdbc:postgresql:quarkus
 
-quarkus.hibernate-orm.database.generation=drop-and-create</code></pre>
+quarkus.hibernate-orm.schema-management.strategy=drop-and-create</code></pre>
 </div>
+</div>
+<div class="paragraph">
+<p>By adding the <code>%prod.</code> profile prefix, you ensure that the data source properties are only observed by an application running in production mode.</p>
 </div>
 </div>
 </div>
@@ -831,6 +838,7 @@ quarkus.hibernate-orm.database.generation=drop-and-create</code></pre>
 <p>The URLs of Reactive datasources that are used by the <code>quarkus-security-jpa-reactive</code> extension are set with the <code>quarkus.datasource.reactive.url</code>
 configuration property and not the <code>quarkus.datasource.jdbc.url</code> configuration property typically used by JDBC datasources.</p>
 <div class="listingblock">
+<div class="title">src/main/resources/application.properties</div>
 <div class="content">
 <pre class="highlightjs highlight"><code class="language-properties hljs" data-lang="properties">%prod.quarkus.datasource.reactive.url=vertx-reactive:postgresql://localhost:5431/security_jpa</code></pre>
 </div>
@@ -849,6 +857,7 @@ Therefore, adjustments are needed in a production environment.</p>
 </table>
 </div>
 <div class="listingblock">
+<div class="title"><code>src/main/java/org/acme/security/jpa/Startup.java</code></div>
 <div class="content">
 <pre class="highlightjs highlight"><code class="language-java hljs" data-lang="java">package org.acme.security.jpa;
 
@@ -892,7 +901,7 @@ As a result, the <code>quarkus-security-jpa</code> defaults to using bcrypt-hash
 </div>
 </div>
 <div class="sect1">
-<h2 id="test-your-application-by-using-dev-services-for-postgresql"><a class="anchor" href="#test-your-application-by-using-dev-services-for-postgresql"></a>5. Test your application by using Dev Services for PostgreSQL</h2>
+<h2 id="test-your-application-in-dev-mode-by-using-dev-services-for-postgresql"><a class="anchor" href="#test-your-application-in-dev-mode-by-using-dev-services-for-postgresql"></a>5. Test your application in dev mode by using Dev Services for PostgreSQL</h2>
 <div class="sectionbody">
 <div class="paragraph">
 <p>Complete the integration testing of your application in JVM and native modes by using <a href="dev-services#databases">Dev Services for PostgreSQL</a> before you run your application in production mode.</p>
@@ -938,26 +947,14 @@ As a result, the <code>quarkus-security-jpa</code> defaults to using bcrypt-hash
 </div>
 </div>
 <div class="paragraph">
-<p>The following properties configuration demonstrates how to enable PostgreSQL testing to run only in production (<code>prod</code>) mode.
-In this scenario, <code>Dev Services for PostgreSQL</code> launches and configures a <code>PostgreSQL</code> test container.</p>
-</div>
-<div class="listingblock">
-<div class="content">
-<pre class="highlightjs highlight"><code class="language-properties hljs" data-lang="properties">%prod.quarkus.datasource.db-kind=postgresql
-%prod.quarkus.datasource.username=quarkus
-%prod.quarkus.datasource.password=quarkus
-%prod.quarkus.datasource.jdbc.url=jdbc:postgresql://localhost/quarkus
-
-quarkus.hibernate-orm.database.generation=drop-and-create</code></pre>
-</div>
-</div>
-<div class="paragraph">
-<p>If you add the <code>%prod.</code> profile prefix, data source properties are not visible to <code>Dev Services for PostgreSQL</code> and are only observed by an application running in production mode.</p>
+<p>In this scenario, <code>Dev Services for PostgreSQL</code> launches and configures a <code>PostgreSQL</code> test container.
+Make sure that either <code>Podman</code> or <code>Docker</code> is installed on your computer.</p>
 </div>
 <div class="paragraph">
 <p>To write the integration test, use the following code sample:</p>
 </div>
 <div class="listingblock">
+<div class="title"><code>src/test/java/org/acme/security/jpa/JpaSecurityRealmTest.java</code></div>
 <div class="content">
 <pre class="highlightjs highlight"><code class="language-java hljs" data-lang="java">package org.acme.security.jpa;
 
@@ -1026,6 +1023,9 @@ public class JpaSecurityRealmTest {
 <div class="paragraph">
 <p>As you can see in this code sample, you do not need to start the test container from the test code.</p>
 </div>
+<div class="paragraph">
+<p>To run these tests, choose <code>Press [r] to resume testing</code> option which is shown in the console after you started your application in dev mode.</p>
+</div>
 <div class="admonitionblock note">
 <table>
 <tr>
@@ -1042,13 +1042,22 @@ Dev Services for PostgreSQL supports testing while you develop by providing a se
 </tr>
 </table>
 </div>
+<div class="paragraph">
+<p>Alternatively, you can run these tests using Maven:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">./mvnw test</code></pre>
+</div>
+</div>
 </div>
 </div>
 <div class="sect1">
-<h2 id="test-your-application-using-curl-or-browser"><a class="anchor" href="#test-your-application-using-curl-or-browser"></a>6. Test your application using Curl or browser</h2>
+<h2 id="test-your-application-in-production-mode-by-using-curl-or-browser"><a class="anchor" href="#test-your-application-in-production-mode-by-using-curl-or-browser"></a>6. Test your application in production mode by using Curl or browser</h2>
 <div class="sectionbody">
 <div class="paragraph">
-<p>To test your application using Curl or the browser, you must first start a PostgreSQL server, then compile and run your application either in JVM or native mode.</p>
+<p>To test your application using Curl or a browser start a PostgreSQL server first.
+Then, compile and run your application in either JVM or native mode.</p>
 </div>
 <div class="sect2">
 <h3 id="start-the-postgresql-server"><a class="anchor" href="#start-the-postgresql-server"></a>6.1. Start the PostgreSQL server</h3>
@@ -1056,7 +1065,7 @@ Dev Services for PostgreSQL supports testing while you develop by providing a se
 <div class="content">
 <pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">docker run --rm=true --name security-getting-started -e POSTGRES_USER=quarkus \
            -e POSTGRES_PASSWORD=quarkus -e POSTGRES_DB=quarkus \
-           -p 5432:5432 postgres:14.1</code></pre>
+           -p 5432:5432 postgres:17</code></pre>
 </div>
 </div>
 </div>
@@ -1196,11 +1205,7 @@ public</code></pre>
 <pre class="highlightjs highlight"><code class="language-shell hljs" data-lang="shell">$ curl -i -X GET http://localhost:8080/api/admin
 
 HTTP/1.1 401 Unauthorized
-Content-Length: 14
-Content-Type: text/html;charset=UTF-8
-WWW-Authenticate: Basic
-
-Not authorized</code></pre>
+WWW-Authenticate: Basic</code></pre>
 </div>
 </div>
 </div>
@@ -1249,11 +1254,7 @@ The <code>admin</code> user is authorized to access the protected resources.</p>
 <div class="content">
 <pre class="highlightjs highlight"><code class="language-shell hljs" data-lang="shell">$ curl -i -X GET -u admin:admin http://localhost:8080/api/users/me
 
-HTTP/1.1 403 Forbidden
-Content-Length: 34
-Content-Type: text/html;charset=UTF-8
-
-Forbidden</code></pre>
+HTTP/1.1 403 Forbidden</code></pre>
 </div>
 </div>
 <div class="paragraph">
@@ -1343,8 +1344,8 @@ The following information shows you how to use <code>OpenID Connect</code> for s
 <li><a href="#write-the-application">2. Write the application</a></li>
 <li><a href="#define-the-user-entity">3. Define the user entity</a></li>
 <li><a href="#configure-the-application">4. Configure the application</a></li>
-<li><a href="#test-your-application-by-using-dev-services-for-postgresql">5. Test your application by using Dev Services for PostgreSQL</a></li>
-<li><a href="#test-your-application-using-curl-or-browser">6. Test your application using Curl or browser</a>
+<li><a href="#test-your-application-in-dev-mode-by-using-dev-services-for-postgresql">5. Test your application in dev mode by using Dev Services for PostgreSQL</a></li>
+<li><a href="#test-your-application-in-production-mode-by-using-curl-or-browser">6. Test your application in production mode by using Curl or browser</a>
 <ul class="sectlevel2">
 <li><a href="#start-the-postgresql-server">6.1. Start the PostgreSQL server</a></li>
 <li><a href="#compile-and-run-the-application">6.2. Compile and run the application</a></li>
@@ -1377,7 +1378,7 @@ The following information shows you how to use <code>OpenID Connect</code> for s
         <li class="reference"><a href="/guides/security-authorize-web-endpoints-reference">Authorization of web endpoints</a></li>
       
         
-        <li class="concepts"><a href="/guides/security-cors">Cross-origin resource sharing</a></li>
+        <li class="reference"><a href="/guides/security-cors">Cross-Origin Resource Sharing (CORS)</a></li>
       
         
         <li class="reference"><a href="/guides/http-reference">HTTP Reference</a></li>
@@ -1439,7 +1440,7 @@ The following information shows you how to use <code>OpenID Connect</code> for s
         <li class="howto"><a href="/guides/security-keycloak-authorization">Using OpenID Connect (OIDC) and Keycloak to centralize authorization</a></li>
       
         
-        <li class="guide"><a href="/guides/security-jwt-build">Build, Sign and Encrypt JSON Web Tokens</a></li>
+        <li class="guide"><a href="/guides/security-jwt-build">Build, sign, and encrypt JSON Web Tokens</a></li>
       
         
         <li class="concepts"><a href="/guides/security-openid-connect-providers">Configuring Well-Known OpenID Connect Providers</a></li>
@@ -1504,6 +1505,10 @@ The following information shows you how to use <code>OpenID Connect</code> for s
           
           
             <li><a href="/newsletter" target="_blank">Newsletter</a></li>
+          
+          
+          
+            <li><a href="/userstories" target="_blank">User Stories</a></li>
           
           
           

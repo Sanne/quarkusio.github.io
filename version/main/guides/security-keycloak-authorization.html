@@ -12,7 +12,7 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <meta http-equiv="Content-Security-Policy" content="
-  connect-src 'self' https://dpm.demdex.net https://adobedc.demdex.net https://route-default-test-mscherer-matamo.apps.ospo-osci.z3b1.p1.openshiftapps.com/ https://search.quarkus.io https://smetrics.redhat.com; 
+  connect-src 'self' https://dpm.demdex.net https://adobedc.demdex.net https://analytics.ossupstream.org/ https://search.quarkus.io https://smetrics.redhat.com; 
   script-src 'self' 'unsafe-inline' 'unsafe-eval'
       
       https://assets.adobedtm.com
@@ -27,13 +27,13 @@
       http://www.googleadservices.com
       https://googleads.g.doubleclick.net
       https://giscus.app
-      https://route-default-test-mscherer-matamo.apps.ospo-osci.z3b1.p1.openshiftapps.com/
+      https://analytics.ossupstream.org/
       https://app.mailjet.com;
 
   style-src 'self' https://fonts.googleapis.com https://use.fontawesome.com; 
   img-src 'self' * data:; 
   media-src 'self'; 
-  frame-src https://redhat.demdex.net https://www.youtube.com https://embed.restream.io https://app.mailjet.com http://xy0p2.mjt.lu https://mj.quarkus.io https://giscus.app; 
+  frame-src https://redhat.demdex.net https://www.youtube.com https://player.restream.io https://app.mailjet.com http://xy0p2.mjt.lu https://mj.quarkus.io https://giscus.app; 
   base-uri 'none'; 
   object-src 'none'; 
   form-action 'none'; 
@@ -100,13 +100,12 @@
         <span href="/about/">Why<i class="fas fa-chevron-down"></i></span>
         <ul class="submenu">
           <li><a href="/about" class="">WHAT IS QUARKUS?</a></li>
-          <li><a href="/container-first" class="">CONTAINER FIRST</a></li>
-          <li><a href="/continuum" class="">VERSATILITY</a></li>
-          <li><a href="/standards" class="">STANDARDS</a></li>
-          <li><a href="/kubernetes-native" class="">KUBERNETES NATIVE</a></li>
-          <li><a href="/performance" class="">PERFORMANCE</a></li>
           <li><a href="/developer-joy" class="">DEVELOPER JOY</a></li>
-          
+          <li><a href="/performance" class="">PERFORMANCE</a></li>
+          <li><a href="/kubernetes-native" class="">KUBERNETES NATIVE</a></li>
+          <li><a href="/standards" class="">STANDARDS</a></li>
+          <li><a href="/versatility" class="">VERSATILITY</a></li>
+          <li><a href="/container-first" class="">CONTAINER FIRST</a></li>          
         </ul>
       </li>
       <li class="dropdown">
@@ -114,6 +113,7 @@
         <ul class="submenu">
           <li><a href="/get-started" class="">GET STARTED</a></li>
           <li><a href="/guides" class="active">DOCUMENTATION</a></li>
+          <li><a href="/userstories/" class="">USER STORIES</a></li>  
           <li><a href="/qtips" class="">"Q" TIP VIDEOS</a></li>          
           <li><a href="/books" class="">BOOKS</a></li>
           </ul>
@@ -189,7 +189,11 @@
         
         
         
-        <option value="latest" >3.17.0 - Latest</option>
+        <option value="latest" >3.23.4 - Latest</option>
+        
+        
+        
+        <option value="3.20" >3.20</option>
         
         
         
@@ -225,36 +229,94 @@
       <div id="preamble">
 <div class="sectionbody">
 <div class="paragraph">
-<p>Learn how to enable bearer token authorization in your Quarkus application using <a href="https://www.keycloak.org/docs/latest/authorization_services/index.html">Keycloak Authorization Services</a> for secure access to protected resources.</p>
+<p>Learn how to enable bearer token authorization in your Quarkus application by using <a href="https://www.keycloak.org/docs/latest/authorization_services/index.html">Keycloak Authorization Services</a> for secure access to protected resources.</p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="overview"><a class="anchor" href="#overview"></a>Overview</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>The Keycloak Authorization extension, <code>quarkus-keycloak-authorization</code>, extends the OpenID Connect extension, <code>quarkus-oidc</code>, to provide advanced authorization capabilities.
+It features a policy enforcer that dynamically manages access to secured resources.
+Access is governed by permissions defined in Keycloak, supporting flexible and dynamic Resource-Based Access Control (RBAC).</p>
 </div>
 <div class="paragraph">
-<p>The <code>quarkus-keycloak-authorization</code> extension relies on <code>quarkus-oidc</code>.
-It includes a policy enforcer that regulates access to secured resources.
-Access is governed by permissions set in Keycloak.
-Currently, this extension is compatible solely with Quarkus <a href="security-oidc-bearer-token-authentication">OIDC service applications</a>.</p>
+<p>Use the <code>quarkus-keycloak-authorization</code> extension only if you are using Keycloak and the Keycloak Authorization Services feature is enabled in your environment to handle authorization decisions.</p>
 </div>
 <div class="paragraph">
-<p>It provides a flexible and dynamic authorization capability based on Resource-Based Access Control.</p>
+<p>If you are not using Keycloak, or if Keycloak is configured without the Keycloak Authorization Services feature, use the <code>quarkus-oidc</code> extension instead.</p>
 </div>
 <div class="paragraph">
-<p>Rather than explicitly enforcing access through specific mechanisms such as role-based access control (RBAC), <code>quarkus-keycloak-authorization</code> determines request permissions based on resource attributes such as name, identifier, or Uniform Resource Identifier (URI).
-This process involves sending a <code>quarkus-oidc</code>-verified bearer access token to Keycloak Authorization Services for an authorization decision.</p>
+<div class="title">How it works</div>
+<p>The <code>quarkus-keycloak-authorization</code> extension centralizes authorization responsibilities in Keycloak, enhancing security and simplifying application maintenance:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>It uses the <code>quarkus-oidc</code> extension to verify bearer tokens.</p>
+</li>
+<li>
+<p>It sends verified tokens to Keycloak Authorization Services.</p>
+</li>
+<li>
+<p>It allows Keycloak to evaluate resource-based permissions dynamically by using attributes such as resource name, identifier, or URI.</p>
+</li>
+</ul>
 </div>
 <div class="paragraph">
-<p>Use <code>quarkus-keycloak-authorization</code> only if you work with Keycloak and have Keycloak Authorization Services enabled to make authorization decisions.
-Use <code>quarkus-oidc</code> if you do not work with Keycloak or work with Keycloak but do not have its Keycloak Authorization Services enabled to make authorization decisions.</p>
+<p>By externalizing authorization decisions, you can:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>Implement diverse access control strategies without modifying application code.</p>
+</li>
+<li>
+<p>Reduce redeployment needs as security requirements evolve.</p>
+</li>
+</ul>
 </div>
 <div class="paragraph">
-<p>By shifting authorization responsibilities outside your application, you enhance security through various access control methods while eliminating the need for frequent re-deployments whenever security needs evolve.
-In this case, Keycloak acts as a centralized authorization hub, managing your protected resources and their corresponding permissions effectively.</p>
+<div class="title">Compatibility</div>
+<p>This extension is compatible only with Quarkus <a href="security-oidc-bearer-token-authentication">OIDC service applications</a>.
+It complements explicit mechanisms such as role-based access control with dynamic authorization policies.</p>
+</div>
+<div class="ulist">
+<div class="title">Key Features</div>
+<ul>
+<li>
+<p><strong>Centralized Management</strong>: Delegate authorization decisions to Keycloak for consistent security policies across applications.</p>
+</li>
+<li>
+<p><strong>Dynamic Permissions</strong>: Define access control dynamically by using resource attributes.</p>
+</li>
+<li>
+<p><strong>Simplified Maintenance</strong>: Reduce the need to update and redeploy applications when access policies change.</p>
+</li>
+</ul>
 </div>
 <div class="paragraph">
-<p>For more information, see the <a href="security-oidc-bearer-token-authentication">OIDC Bearer token authentication</a> guide.
-It is important to realize that the Bearer token authentication mechanism does the authentication and creates a security identity.
-Meanwhile, the <code>quarkus-keycloak-authorization</code> extension applies a Keycloak Authorization Policy to this identity based on the current request path and other policy settings.</p>
+<div class="title">Setting Up</div>
+<p>Before using this extension, ensure the following:</p>
+</div>
+<div class="olist arabic">
+<ol class="arabic">
+<li>
+<p>Keycloak Authorization Services feature is enabled in your Keycloak instance.</p>
+</li>
+<li>
+<p>Your Quarkus application includes the <code>quarkus-keycloak-authorization</code> extension.</p>
+</li>
+</ol>
 </div>
 <div class="paragraph">
-<p>For more information, see <a href="https://www.keycloak.org/docs/latest/authorization_services/index.html#_enforcer_overview">Keycloak Authorization Services documentation</a>.</p>
+<p>For detailed steps, see the <a href="security-oidc-bearer-token-authentication">OIDC Bearer Token Authentication</a> guide.</p>
+</div>
+<div class="paragraph">
+<div class="title">Additional resources</div>
+<p>To learn more about Keycloak Authorization Services and the policy enforcer, visit the official documentation:
+<a href="https://www.keycloak.org/docs/latest/authorization_services/index.html#_enforcer_overview">Keycloak Authorization Services Documentation</a>.</p>
 </div>
 </div>
 </div>
@@ -301,7 +363,7 @@ Meanwhile, the <code>quarkus-keycloak-authorization</code> extension applies a K
 <h2 id="architecture"><a class="anchor" href="#architecture"></a>Architecture</h2>
 <div class="sectionbody">
 <div class="paragraph">
-<p>In this example, we build a very simple microservice that offers two endpoints:</p>
+<p>This example demonstrates a simple microservice setup with two protected endpoints:</p>
 </div>
 <div class="ulist">
 <ul>
@@ -314,27 +376,83 @@ Meanwhile, the <code>quarkus-keycloak-authorization</code> extension applies a K
 </ul>
 </div>
 <div class="paragraph">
-<p>These endpoints are protected.
-Access is granted only when a client sends a bearer token with the request.
-This token must be valid, having a correct signature, expiration date, and audience.
-Additionally, the microservice must trust the token.</p>
+<div class="title">Token-based access control</div>
+<p>Access to these endpoints is controlled by using bearer tokens.
+To gain access, the following conditions must be met:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p><strong>Valid token</strong>: The token must have a correct signature, a valid expiration date, and the appropriate audience.</p>
+</li>
+<li>
+<p><strong>Trust</strong>: The microservice must trust the issuing Keycloak server.</p>
+</li>
+</ul>
 </div>
 <div class="paragraph">
-<p>The bearer token is issued by a Keycloak server and represents the subject for which the token was issued.
-For being an OAuth 2.0 Authorization Server, the token also references the client acting on behalf of the user.</p>
+<p>The bearer tokens issued by the Keycloak server serve as:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p><strong>User identifiers</strong>: Indicating the subject (user) for whom the token was issued.</p>
+</li>
+<li>
+<p><strong>Client references</strong>: Identifying the client application acting on behalf of the user, per OAuth 2.0 Authorization Server standards.</p>
+</li>
+</ul>
 </div>
 <div class="paragraph">
-<p>The <code>/api/users/me</code> endpoint can be accessed by any user with a valid token.
-As a response, it returns a JSON document with details about the user obtained from the information carried on the token.
-This endpoint is protected with RBAC, and only users granted with the <code>user</code> role can access this endpoint.</p>
+<div class="title">Endpoints and access policies</div>
+<p>For <code>/api/users/me</code>:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p><strong>Access policy</strong>: Open to users with a valid bearer token and the <code>user</code> role.</p>
+</li>
+<li>
+<p><strong>Response</strong>: Returns user details as a JSON object derived from the token.</p>
+<div class="listingblock">
+<div class="title">Example response</div>
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-json hljs" data-lang="json">{
+  "user": {
+    "id": "1234",
+    "username": "johndoe",
+    "email": "johndoe@example.com"
+  }
+}</code></pre>
+</div>
+</div>
+</li>
+</ul>
 </div>
 <div class="paragraph">
-<p>The <code>/api/admin</code> endpoint is protected with RBAC, and only users granted the <code>admin</code> role can access it.</p>
+<p>For <code>/api/admin</code>:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p><strong>Access policy</strong>: Restricted to users with a valid bearer token and the <code>admin</code> role.</p>
+</li>
+</ul>
 </div>
 <div class="paragraph">
-<p>This is a very simple example of using RBAC policies to govern access to your resources.
-However, Keycloak supports other policies that you can use to perform even more fine-grained access control.
-By using this example, you&#8217;ll see that your application is completely decoupled from your authorization policies, with enforcement purely based on the accessed resource.</p>
+<div class="title">Decoupled authorization</div>
+<p>This example highlights the use of role-based access control (RBAC) policies to protect resources.
+Key points include:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p><strong>Policy flexibility</strong>: Keycloak supports various policy types, such as attribute-based and custom policies, enabling fine-grained control.</p>
+</li>
+<li>
+<p><strong>Decoupled application logic</strong>: Authorization policies are managed entirely by Keycloak, allowing your application to focus on its core functionality.</p>
+</li>
+</ul>
 </div>
 </div>
 </div>
@@ -357,8 +475,7 @@ However, you can go right to the completed example.</p>
 <h2 id="creating-the-project"><a class="anchor" href="#creating-the-project"></a>Creating the project</h2>
 <div class="sectionbody">
 <div class="paragraph">
-<p>First, we need a new project.
-Create a new project with the following command:</p>
+<p>To get started, create a new project by using the following command:</p>
 </div>
 <div class="sidebarblock primary asciidoc-tabs-sync-cli">
 <div class="content">
@@ -411,12 +528,12 @@ cd security-keycloak-authorization-quickstart</code></pre>
 </ul>
 </div>
 <div class="paragraph">
-<p>This command generates a project, importing the <code>keycloak-authorization</code> extension.
-This extension implements a Keycloak Adapter for Quarkus applications and provides all the necessary capabilities to integrate with a Keycloak server and perform bearer token authorization.</p>
+<p>This command generates a new project with the <code>keycloak-authorization</code> extension.
+The extension integrates a Keycloak Adapter into your Quarkus application, providing the necessary capabilities to interact with a Keycloak server and perform bearer token authorization.</p>
 </div>
 <div class="paragraph">
-<p>If you already have your Quarkus project configured, you can add the <code>oidc</code> and <code>keycloak-authorization</code> extensions
-to your project by running the following command in your project base directory:</p>
+<div class="title">Adding extensions to an existing project</div>
+<p>If you already have an existing Quarkus project, you can add the <code>oidc</code> and <code>keycloak-authorization</code> extensions by running the following command in your project&#8217;s base directory:</p>
 </div>
 <div class="listingblock primary asciidoc-tabs-sync-cli">
 <div class="title">CLI</div>
@@ -437,7 +554,7 @@ to your project by running the following command in your project base directory:
 </div>
 </div>
 <div class="paragraph">
-<p>This adds the following dependencies to your build file:</p>
+<p>This command adds the following dependencies to your build file:</p>
 </div>
 <div class="listingblock primary asciidoc-tabs-target-sync-cli asciidoc-tabs-target-sync-maven">
 <div class="title">pom.xml</div>
@@ -460,8 +577,9 @@ implementation("io.quarkus:quarkus-keycloak-authorization")</code></pre>
 </div>
 </div>
 <div class="paragraph">
-<p>Let&#8217;s start by implementing the <code>/api/users/me</code> endpoint.
-As you can see in the following source code, it is a regular Jakarta REST resource:</p>
+<div class="title">Implementing the <code>/api/users/me</code> endpoint</div>
+<p>Start by implementing the <code>/api/users/me</code> endpoint.
+The following code defines a Jakarta REST resource that provides user details:</p>
 </div>
 <div class="listingblock">
 <div class="content">
@@ -504,7 +622,9 @@ public class UsersResource {
 </div>
 </div>
 <div class="paragraph">
-<p>The source code for the <code>/api/admin</code> endpoint is also very simple:</p>
+<div class="title">Implementing the <code>/api/admin</code> endpoint</div>
+<p>Next, define the <code>/api/admin</code> endpoint.
+The following code represents a simple Jakarta REST resource protected with authentication:</p>
 </div>
 <div class="listingblock">
 <div class="content">
@@ -530,29 +650,78 @@ public class AdminResource {
 </div>
 </div>
 <div class="paragraph">
-<p>Be aware that we have not defined annotations such as <code>@RolesAllowed</code> to explicitly enforce access to a resource.
-Instead, the extension is responsible for mapping the URIs of the protected resources in Keycloak and evaluating the permissions accordingly, granting or denying access depending on the permissions granted by Keycloak.</p>
+<div class="title">Role-based access control with Keycloak</div>
+<p>Notice that explicit annotations such as <code>@RolesAllowed</code> are not defined to enforce access control for the resources.
+Instead, the <code>keycloak-authorization</code> extension dynamically maps the URIs of protected resources in Keycloak.</p>
 </div>
-<div class="sect2">
-<h3 id="configuring-the-application"><a class="anchor" href="#configuring-the-application"></a>Configuring the application</h3>
 <div class="paragraph">
-<p>The OpenID Connect extension allows you to define the adapter configuration by using the <code>application.properties</code> file, which is usually located in the <code>src/main/resources</code> directory.</p>
+<p>Access control is managed as follows:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>Keycloak evaluates permissions for each request based on its configured policies.</p>
+</li>
+<li>
+<p>The extension enforces these permissions, granting or denying access based on the roles or policies defined in Keycloak.</p>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<p>This decouples access control logic from the application code, making it easier to manage and update access policies directly in Keycloak.</p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="configuring-the-application"><a class="anchor" href="#configuring-the-application"></a>Configuring the application</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>You can use the OpenID Connect extension to configure the adapter settings through the <code>application.properties</code> file, typically located in the <code>src/main/resources</code> directory.
+For example:</p>
 </div>
 <div class="listingblock">
 <div class="content">
 <pre class="highlightjs highlight"><code class="language-properties hljs" data-lang="properties"># OIDC Configuration
-%prod.quarkus.oidc.auth-server-url=https://localhost:8543/realms/quarkus
-quarkus.oidc.client-id=backend-service
-quarkus.oidc.credentials.secret=secret
-quarkus.oidc.tls.verification=none
+%prod.quarkus.oidc.auth-server-url=https://localhost:8543/realms/quarkus <i class="conum" data-value="1"></i><b>(1)</b>
+quarkus.oidc.client-id=backend-service <i class="conum" data-value="2"></i><b>(2)</b>
+quarkus.oidc.credentials.secret=secret <i class="conum" data-value="3"></i><b>(3)</b>
+quarkus.oidc.tls.verification=none <i class="conum" data-value="4"></i><b>(4)</b>
 
 # Enable Policy Enforcement
-quarkus.keycloak.policy-enforcer.enable=true
+quarkus.keycloak.policy-enforcer.enable=true <i class="conum" data-value="5"></i><b>(5)</b>
 
-# Tell Dev Services for Keycloak to import the realm file
-# This property is not effective when running the application in JVM or native modes
-quarkus.keycloak.devservices.realm-path=quarkus-realm.json</code></pre>
+# Import the realm file with Dev Services for Keycloak
+# Note: This property is effective only in dev mode, not in JVM or native modes
+quarkus.keycloak.devservices.realm-path=quarkus-realm.json <i class="conum" data-value="6"></i><b>(6)</b></code></pre>
 </div>
+</div>
+<div class="colist arabic">
+<table>
+<tr>
+<td><i class="conum" data-value="1"></i><b>1</b></td>
+<td>Specifies the URL of the Keycloak server and the realm used for authentication.</td>
+</tr>
+<tr>
+<td><i class="conum" data-value="2"></i><b>2</b></td>
+<td>Identifies the client application within the Keycloak realm.</td>
+</tr>
+<tr>
+<td><i class="conum" data-value="3"></i><b>3</b></td>
+<td>Defines the client secret for authentication with the Keycloak server.</td>
+</tr>
+<tr>
+<td><i class="conum" data-value="4"></i><b>4</b></td>
+<td>Disables TLS verification for development purposes, not recommended for production.</td>
+</tr>
+<tr>
+<td><i class="conum" data-value="5"></i><b>5</b></td>
+<td>Enables the Keycloak policy enforcer to manage access control based on defined permissions.</td>
+</tr>
+<tr>
+<td><i class="conum" data-value="6"></i><b>6</b></td>
+<td>Configures Dev Services to import a specified realm file, effective only in dev mode and not in JVM or native modes.</td>
+</tr>
+</table>
 </div>
 <div class="admonitionblock note">
 <table>
@@ -561,8 +730,10 @@ quarkus.keycloak.devservices.realm-path=quarkus-realm.json</code></pre>
 <i class="fa icon-note" title="Note"></i>
 </td>
 <td class="content">
-Adding a <code>%prod.</code> profile prefix to <code>quarkus.oidc.auth-server-url</code> ensures that Dev Services for Keycloak launches a container for you when the application is run in dev mode.
-For more information, see the <a href="#keycloak-dev-mode">Running the application in Dev mode</a> section.
+<div class="paragraph">
+<p>Adding the <code>%prod.</code> profile prefix to <code>quarkus.oidc.auth-server-url</code> ensures that Dev Services for Keycloak automatically launches a container in development mode.
+For more details, see the <a href="#keycloak-dev-mode">Running the application in Dev mode</a> section.</p>
+</div>
 </td>
 </tr>
 </table>
@@ -574,12 +745,23 @@ For more information, see the <a href="#keycloak-dev-mode">Running the applicati
 <i class="fa icon-note" title="Note"></i>
 </td>
 <td class="content">
-By default, applications that use the <code>quarkus-oidc</code> extension are marked as a <code>service</code> type application (see <code>quarkus.oidc.application-type</code>).
-This extension also supports only  <code>web-app</code> type applications but only if the access token returned as part of the authorization code grant response is marked as a source of roles: <code>quarkus.oidc.roles.source=accesstoken</code> (<code>web-app</code> type applications check ID token roles by default).
+<div class="paragraph">
+<p>By default, applications using the <code>quarkus-oidc</code> extension are treated as <code>service</code> type applications.
+However, the extension also supports <code>web-app</code> type applications under the following conditions:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>The access token returned during the authorization code grant flow must be the source of roles (<code>quarkus.oidc.roles.source=accesstoken</code>).</p>
+</li>
+<li>
+<p>Note: For <code>web-app</code> type applications, ID token roles are checked by default.</p>
+</li>
+</ul>
+</div>
 </td>
 </tr>
 </table>
-</div>
 </div>
 </div>
 </div>
@@ -593,9 +775,11 @@ This extension also supports only  <code>web-app</code> type applications but on
 <i class="fa icon-note" title="Note"></i>
 </td>
 <td class="content">
-Do not start the Keycloak server when you run the application in dev mode.
+<div class="paragraph">
+<p>Do not start the Keycloak server when you run the application in dev mode.
 Dev Services for Keycloak launches a container.
-For more information, see the <a href="#keycloak-dev-mode">Running the application in Dev mode</a> section.
+For more information, see the <a href="#keycloak-dev-mode">Running the application in Dev mode</a> section.</p>
+</div>
 </td>
 </tr>
 </table>
@@ -605,25 +789,56 @@ For more information, see the <a href="#keycloak-dev-mode">Running the applicati
 </div>
 <div class="listingblock">
 <div class="content">
-<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">docker run --name keycloak -e KEYCLOAK_ADMIN=admin -e KEYCLOAK_ADMIN_PASSWORD=admin -p 8543:8443 -v "$(pwd)"/config/keycloak-keystore.jks:/etc/keycloak-keystore.jks quay.io/keycloak/keycloak:{keycloak.version} start  --hostname-strict=false --https-key-store-file=/etc/keycloak-keystore.jks</code></pre>
+<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">docker run --name keycloak \
+  -e KC_BOOTSTRAP_ADMIN_USERNAME=admin \
+  -e KC_BOOTSTRAP_ADMIN_PASSWORD=admin \
+  -p 8543:8443 \
+  -v "$(pwd)"/config/keycloak-keystore.jks:/etc/keycloak-keystore.jks \
+  quay.io/keycloak/keycloak:{keycloak.version} \ <i class="conum" data-value="1"></i><b>(1)</b>
+  start --hostname-strict=false --https-key-store-file=/etc/keycloak-keystore.jks <i class="conum" data-value="2"></i><b>(2)</b></code></pre>
 </div>
+</div>
+<div class="colist arabic">
+<table>
+<tr>
+<td><i class="conum" data-value="1"></i><b>1</b></td>
+<td>For <code>keycloak.version</code>, ensure the version is <code>26.2.4</code> or later.</td>
+</tr>
+<tr>
+<td><i class="conum" data-value="2"></i><b>2</b></td>
+<td>For Keycloak keystore, use the <code>keycloak-keystore.jks</code> file located at <a href="https://github.com/quarkusio/quarkus-quickstarts/blob/main/security-keycloak-authorization-quickstart/config/keycloak-keystore.jks">quarkus-quickstarts/security-keycloak-authorization-quickstart/config</a>.</td>
+</tr>
+</table>
+</div>
+<div class="olist arabic">
+<div class="title">Accessing the Keycloak server</div>
+<ol class="arabic">
+<li>
+<p>Open your browser and navigate to <a href="https://localhost:8543">https://localhost:8543</a>.</p>
+</li>
+<li>
+<p>Log in to the Keycloak Administration Console by using the following credentials:</p>
+<div class="ulist">
+<ul>
+<li>
+<p><strong>Username</strong>: <code>admin</code></p>
+</li>
+<li>
+<p><strong>Password</strong>: <code>admin</code></p>
+</li>
+</ul>
+</div>
+</li>
+</ol>
 </div>
 <div class="paragraph">
-<p>where <code>keycloak.version</code> must be <code>25.0.6</code> or later and the <code>keycloak-keystore.jks</code> can be found in <a href="https://github.com/quarkusio/quarkus-quickstarts/blob/main/security-keycloak-authorization-quickstart/config/keycloak-keystore.jks">quarkus-quickstarts/security-keycloak-authorization-quickstart/config</a>.</p>
+<div class="title">Importing the realm configuration</div>
+<p>To create a new realm, import the <a href="https://github.com/quarkusio/quarkus-quickstarts/tree/development/security-keycloak-authorization-quickstart/config/quarkus-realm.json">realm configuration file</a>.
+For detailed steps on creating realms, refer to the Keycloak documentation: <a href="https://www.keycloak.org/docs/latest/server_admin/index.html#_create-realm">Create a new realm</a>.</p>
 </div>
 <div class="paragraph">
-<p>Try to access your Keycloak server at <a href="https://localhost:8543">localhost:8543</a>.</p>
-</div>
-<div class="paragraph">
-<p>To access the Keycloak Administration Console, log in as the <code>admin</code> user.
-The username and password are both <code>admin</code>.</p>
-</div>
-<div class="paragraph">
-<p>Import the <a href="https://github.com/quarkusio/quarkus-quickstarts/tree/development/security-keycloak-authorization-quickstart/config/quarkus-realm.json">realm configuration file</a> to create a new realm.
-For more details, see the Keycloak documentation about how to <a href="https://www.keycloak.org/docs/latest/server_admin/index.html#_create-realm">create a new realm</a>.</p>
-</div>
-<div class="paragraph">
-<p>After importing the realm you can see the resource permissions:</p>
+<p>After importing the realm, go to Clients, choose the <code>backend-service</code> client, and select the Authorization and Resources tab for this client.
+You can now review the resource permissions:</p>
 </div>
 <div class="imageblock center">
 <div class="content">
@@ -631,7 +846,9 @@ For more details, see the Keycloak documentation about how to <a href="https://w
 </div>
 </div>
 <div class="paragraph">
-<p>It explains why the endpoint has no <code>@RolesAllowed</code> annotations - the resource access permissions are set directly in Keycloak.</p>
+<div class="title">Role of Keycloak in resource permissions</div>
+<p>The resource access permissions are configured directly in Keycloak, which eliminates the need for <code>@RolesAllowed</code> annotations in your application code.
+This approach centralizes access control management within Keycloak, simplifying application maintenance and security updates.</p>
 </div>
 </div>
 </div>
@@ -639,7 +856,7 @@ For more details, see the Keycloak documentation about how to <a href="https://w
 <h2 id="keycloak-dev-mode"><a class="anchor" href="#keycloak-dev-mode"></a>Running the application in dev mode</h2>
 <div class="sectionbody">
 <div class="paragraph">
-<p>To run the application in dev mode, use:</p>
+<p>To run the application in development mode, use the following command:</p>
 </div>
 <div class="listingblock primary asciidoc-tabs-sync-cli">
 <div class="title">CLI</div>
@@ -660,50 +877,76 @@ For more details, see the Keycloak documentation about how to <a href="https://w
 </div>
 </div>
 <div class="paragraph">
-<p><a href="security-openid-connect-dev-services">Dev Services for Keycloak</a> launches a Keycloak container and imports a <code>quarkus-realm.json</code>.</p>
+<p><a href="security-openid-connect-dev-services">Dev Services for Keycloak</a> starts a Keycloak container and imports the <code>quarkus-realm.json</code> configuration file.</p>
 </div>
 <div class="paragraph">
-<p>Open a <a href="dev-ui">Dev UI</a> available at <a href="http://localhost:8080/q/dev-ui">/q/dev-ui</a> and click a <code>Provider: Keycloak</code> link in an <code>OpenID Connect</code> <code>Dev UI</code> card.</p>
+<p>Open a <a href="dev-ui">Dev UI</a> available at <a href="http://localhost:8080/q/dev-ui">/q/dev-ui</a> and click a <strong>Provider: Keycloak</strong> link on an <strong>OpenID Connect</strong> card in the Dev UI.</p>
+</div>
+<div class="olist arabic">
+<div class="title">Interacting with Dev UI</div>
+<ol class="arabic">
+<li>
+<p>Open the <a href="dev-ui">Dev UI</a> at <a href="http://localhost:8080/q/dev-ui">/q/dev-ui</a>.</p>
+</li>
+<li>
+<p>Click the <strong>Provider: Keycloak</strong> link within the <strong>OpenID Connect</strong> card in the Dev UI.</p>
+</li>
+</ol>
 </div>
 <div class="paragraph">
-<p>When asked to log in to a <code>Single Page Application</code> provided by <code>OpenID Connect Dev UI</code>:</p>
+<div class="title">Testing user permissions</div>
+<p>When prompted to log in to a <code>Single Page Application</code> provided by <code>OpenID Connect Dev UI</code>, do the following:</p>
 </div>
-<div class="ulist">
-<ul>
+<div class="olist arabic">
+<ol class="arabic">
 <li>
 <p>Log in as <code>alice</code> (password: <code>alice</code>), who only has a <code>User Permission</code> to access the <code>/api/users/me</code> resource:</p>
-<div class="ulist">
-<ul>
+<div class="olist loweralpha">
+<ol class="loweralpha" type="a">
 <li>
 <p>Access <code>/api/admin</code>, which returns <code>403</code>.</p>
 </li>
 <li>
 <p>Access <code>/api/users/me</code>, which returns <code>200</code>.</p>
 </li>
-</ul>
+</ol>
 </div>
 </li>
 <li>
 <p>Log out and log in as <code>admin</code> (password: <code>admin</code>), who has both <code>Admin Permission</code> to access the <code>/api/admin</code> resource and <code>User Permission</code> to access the <code>/api/users/me</code> resource:</p>
-<div class="ulist">
-<ul>
+<div class="olist loweralpha">
+<ol class="loweralpha" type="a">
 <li>
 <p>Access <code>/api/admin</code>, which returns <code>200</code>.</p>
 </li>
 <li>
 <p>Access <code>/api/users/me</code>, which returns <code>200</code>.</p>
 </li>
-</ul>
+</ol>
 </div>
 </li>
-</ul>
+</ol>
 </div>
 <div class="paragraph">
-<p>If you have started <a href="security-openid-connect-dev-services">Dev Services for Keycloak</a> without importing a realm file such as <a href="https://github.com/quarkusio/quarkus-quickstarts/tree/development/security-keycloak-authorization-quickstart/config/quarkus-realm.json">quarkus-realm.json</a> that is already configured to support Keycloak Authorization, create a default <code>quarkus</code> realm without Keycloak authorization policies.
-In this case, you must select the <code>Keycloak Admin</code> link in the <code>OpenId Connect</code> Dev UI card and configure <a href="https://www.keycloak.org/docs/latest/authorization_services/index.html">Keycloak Authorization Services</a> in the default <code>quarkus</code> realm.</p>
+<div class="title">Customizing the Keycloak realm</div>
+<p>If you started Dev Services for Keycloak without importing a realm file such as <a href="https://github.com/quarkusio/quarkus-quickstarts/tree/development/security-keycloak-authorization-quickstart/config/quarkus-realm.json">quarkus-realm.json</a>, create a default <code>quarkus</code> realm without Keycloak authorization policies:</p>
+</div>
+<div class="olist arabic">
+<ol class="arabic">
+<li>
+<p>Select the <strong>Keycloak Admin</strong> link from the <strong>OpenID Connect</strong> card in the Dev UI.</p>
+</li>
+<li>
+<p>Log in to the Keycloak admin console.
+The username and password are both <code>admin</code>.</p>
+</li>
+<li>
+<p>Follow the instructions at <a href="https://www.keycloak.org/docs/latest/authorization_services/index.html">Keycloak Authorization Services documentation</a> to enable authorization policies in the <code>quarkus</code> realm.</p>
+</li>
+</ol>
 </div>
 <div class="paragraph">
-<p>The <code>Keycloak Admin</code> link is easy to find in Dev UI:</p>
+<p>The <strong>Keycloak Admin</strong> link is easy to find in Dev UI:</p>
 </div>
 <div class="imageblock center">
 <div class="content">
@@ -711,15 +954,15 @@ In this case, you must select the <code>Keycloak Admin</code> link in the <code>
 </div>
 </div>
 <div class="paragraph">
-<p>When logging into the Keycloak admin console, the username and password are both <code>admin</code>.</p>
-</div>
-<div class="paragraph">
-<p>If your application uses Keycloak authorization configured with <a href="https://www.keycloak.org/docs/latest/authorization_services/index.html#_policy_js">JavaScript policies</a> that are deployed in a JAR file, you can set up Dev Services for Keycloak to transfer this archive to the Keycloak container.
-For instance:</p>
+<div class="title">Adding custom JavaScript policies</div>
+<p>If your application uses Keycloak authorization configured with <a href="https://www.keycloak.org/docs/latest/authorization_services/index.html#_policy_js">JavaScript policies</a> that are deployed in a JAR archive, Dev Services for Keycloak can transfer this archive to the Keycloak container.
+Use the following properties in <code>application.properties</code> to configure the transfer:</p>
 </div>
 <div class="listingblock">
 <div class="content">
-<pre class="highlightjs highlight"><code class="language-properties hljs" data-lang="properties">quarkus.keycloak.devservices.resource-aliases.policies=/policies.jar <i class="conum" data-value="1"></i><b>(1)</b>
+<pre class="highlightjs highlight"><code class="language-properties hljs" data-lang="properties"># Alias the policies archive
+quarkus.keycloak.devservices.resource-aliases.policies=/policies.jar <i class="conum" data-value="1"></i><b>(1)</b>
+# Map the policies archive to a specific location in the container
 quarkus.keycloak.devservices.resource-mappings.policies=/opt/keycloak/providers/policies.jar <i class="conum" data-value="2"></i><b>(2)</b></code></pre>
 </div>
 </div>
@@ -727,12 +970,12 @@ quarkus.keycloak.devservices.resource-mappings.policies=/opt/keycloak/providers/
 <table>
 <tr>
 <td><i class="conum" data-value="1"></i><b>1</b></td>
-<td><code>policies</code> alias is created for the <code>/policies.jar</code> classpath resource.
-Policy archive can also be located in the file system.</td>
+<td>Creates a <code>policies</code> alias for the <code>/policies.jar</code> classpath resource.
+The policies archive can also be located on the file system.</td>
 </tr>
 <tr>
 <td><i class="conum" data-value="2"></i><b>2</b></td>
-<td>The policies archive is mapped to the <code>/opt/keycloak/providers/policies.jar</code> container location.</td>
+<td>Maps the policies archive to the <code>/opt/keycloak/providers/policies.jar</code> location inside the Keycloak container.</td>
 </tr>
 </table>
 </div>
@@ -742,10 +985,10 @@ Policy archive can also be located in the file system.</td>
 <h2 id="running-the-application-in-jvm-mode"><a class="anchor" href="#running-the-application-in-jvm-mode"></a>Running the application in JVM mode</h2>
 <div class="sectionbody">
 <div class="paragraph">
-<p>After exploring the application in dev mode, you can run it as a standard Java application.</p>
+<p>After exploring the application in dev mode, you can run it as a standard Java application in JVM mode.</p>
 </div>
 <div class="paragraph">
-<p>First compile it:</p>
+<p>Compile the application:</p>
 </div>
 <div class="listingblock primary asciidoc-tabs-sync-cli">
 <div class="title">CLI</div>
@@ -766,7 +1009,7 @@ Policy archive can also be located in the file system.</td>
 </div>
 </div>
 <div class="paragraph">
-<p>Then run it:</p>
+<p>Run the application:</p>
 </div>
 <div class="listingblock">
 <div class="content">
@@ -779,13 +1022,17 @@ Policy archive can also be located in the file system.</td>
 <h2 id="running-the-application-in-native-mode"><a class="anchor" href="#running-the-application-in-native-mode"></a>Running the application in native mode</h2>
 <div class="sectionbody">
 <div class="paragraph">
-<p>This same demo can be compiled into native code; no modifications are required.</p>
+<p>You can compile this demo into native code; no modifications are required.</p>
 </div>
 <div class="paragraph">
-<p>This implies that you no longer need to install a JVM on your production environment because the runtime technology is included in the produced binary and optimized to run with minimal resources.</p>
+<p>Native compilation eliminates the need for a JVM in the production environment because the produced binary includes the runtime and is optimized for minimal resource usage.</p>
 </div>
 <div class="paragraph">
-<p>Compilation takes a bit longer, so this step is turned off by default; let&#8217;s build again by enabling the <code>native</code> profile:</p>
+<p>Compilation takes longer and is disabled by default.
+To build the application, enable the <code>native</code> profile.</p>
+</div>
+<div class="paragraph">
+<p>Build the native binary:</p>
 </div>
 <div class="listingblock primary asciidoc-tabs-sync-cli">
 <div class="title">CLI</div>
@@ -806,11 +1053,11 @@ Policy archive can also be located in the file system.</td>
 </div>
 </div>
 <div class="paragraph">
-<p>After a while, you can run this binary directly:</p>
+<p>After a while, run the native binary:</p>
 </div>
 <div class="listingblock">
 <div class="content">
-<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">./target/security-keycloak-authorization-quickstart-runner</code></pre>
+<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">./target/security-keycloak-authorization-quickstart-1.0.0-SNAPSHOT-runner</code></pre>
 </div>
 </div>
 </div>
@@ -819,13 +1066,15 @@ Policy archive can also be located in the file system.</td>
 <h2 id="testing"><a class="anchor" href="#testing"></a>Testing the application</h2>
 <div class="sectionbody">
 <div class="paragraph">
-<p>See the preceding <a href="#keycloak-dev-mode">Running the application in Dev mode</a> section about testing your application in a dev mode.</p>
+<p>See the preceding <a href="#keycloak-dev-mode">Running the application in Dev mode</a> section for instructions on testing your application in development mode.</p>
 </div>
 <div class="paragraph">
-<p>You can test the application launched in JVM or native modes with <code>curl</code>.</p>
+<p>You can test the application running in JVM or native modes by using <code>curl</code>.</p>
 </div>
 <div class="paragraph">
-<p>The application uses bearer token authorization, and the first thing to do is obtain an access token from the Keycloak server to access the application resources:</p>
+<div class="title">Obtaining an access token</div>
+<p>The application uses bearer token authorization.
+To access its resources, first obtain an access token from the Keycloak server:</p>
 </div>
 <div class="listingblock">
 <div class="content">
@@ -845,7 +1094,8 @@ Policy archive can also be located in the file system.</td>
 </td>
 <td class="content">
 <div class="paragraph">
-<p>When the <code>quarkus.oidc.authentication.user-info-required</code> property is set to <code>true</code> to require that an access token is used to request <code>UserInfo</code>, you must add a <code>scope=openid</code> query parameter to the token grant request command, for example:</p>
+<p>If the <code>quarkus.oidc.authentication.user-info-required</code> property is set to <code>true</code>, the application requires that an access token is used to request <code>UserInfo</code>.
+In that case, you must add the <code>scope=openid</code> query parameter to the token grant request; for example:</p>
 </div>
 <div class="listingblock">
 <div class="content">
@@ -862,12 +1112,11 @@ Policy archive can also be located in the file system.</td>
 </table>
 </div>
 <div class="paragraph">
-<p>The preceding example obtains an access token for user <code>alice</code>.</p>
+<p>The preceding example obtains an access token for the user <code>alice</code>.</p>
 </div>
 <div class="paragraph">
-<p>Any user is allowed to access the
-<code><a href="http://localhost:8080/api/users/me" class="bare">http://localhost:8080/api/users/me</a></code> endpoint,
-which returns a JSON payload with details about the user.</p>
+<div class="title">Accessing the <code>/api/users/me</code> endpoint</div>
+<p>Any user with a valid access token can access the <code><a href="http://localhost:8080/api/users/me" class="bare">http://localhost:8080/api/users/me</a></code> endpoint, which returns a JSON payload with user details:</p>
 </div>
 <div class="listingblock">
 <div class="content">
@@ -877,18 +1126,20 @@ which returns a JSON payload with details about the user.</p>
 </div>
 </div>
 <div class="paragraph">
-<p>The <code><a href="http://localhost:8080/api/admin" class="bare">http://localhost:8080/api/admin</a></code> endpoint can only be accessed by users with the <code>admin</code> role.
-If you try to access this endpoint with the previously issued access token, you get a <code>403</code> response from the server.</p>
+<div class="title">Accessing the <code>/api/admin</code> endpoint</div>
+<p>The <code><a href="http://localhost:8080/api/admin" class="bare">http://localhost:8080/api/admin</a></code> endpoint is restricted to users with the <code>admin</code> role.
+If you try to access this endpoint with the previously issued access token, the server returns a <code>403 Forbidden</code> response:</p>
 </div>
 <div class="listingblock">
 <div class="content">
-<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash"> curl -v -X GET \
-   http://localhost:8080/api/admin \
-   -H "Authorization: Bearer "$access_token</code></pre>
+<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">curl -v -X GET \
+  http://localhost:8080/api/admin \
+  -H "Authorization: Bearer "$access_token</code></pre>
 </div>
 </div>
 <div class="paragraph">
-<p>To access the admin endpoint, get a token for the <code>admin</code> user:</p>
+<div class="title">Getting an admin access token</div>
+<p>To access the admin endpoint, get an access token for the <code>admin</code> user:</p>
 </div>
 <div class="listingblock">
 <div class="content">
@@ -906,8 +1157,8 @@ If you try to access this endpoint with the previously issued access token, you 
 <h2 id="injecting-the-authorization-client"><a class="anchor" href="#injecting-the-authorization-client"></a>Injecting the authorization client</h2>
 <div class="sectionbody">
 <div class="paragraph">
-<p>In some cases, using the <a href="https://www.keycloak.org/docs/latest/authorization_services/#_service_client_api">Keycloak Authorization Client Java API</a> is beneficial for tasks such as managing resources and obtaining permissions directly from Keycloak.
-For this purpose, you can inject an <code>AuthzClient</code> instance into your beans as follows:</p>
+<p>You can use the <a href="https://www.keycloak.org/docs/latest/authorization_services/#_service_client_api">Keycloak Authorization Client Java API</a> for advanced tasks, such as managing resources and getting permissions directly from Keycloak.
+To enable this functionality, inject an <code>AuthzClient</code> instance into your beans:</p>
 </div>
 <div class="listingblock">
 <div class="content">
@@ -929,16 +1180,31 @@ If you want to use the <code>AuthzClient</code> directly, set <code>quarkus.keyc
 </tr>
 </table>
 </div>
+<div class="admonitionblock note">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-note" title="Note"></i>
+</td>
+<td class="content">
+<div class="paragraph">
+<p>To use the <code>AuthzClient</code> directly, set <code>quarkus.keycloak.policy-enforcer.enable=true</code>.
+Otherwise, no bean is available for injection.</p>
+</div>
+</td>
+</tr>
+</table>
+</div>
 </div>
 </div>
 <div class="sect1">
 <h2 id="mapping-protected-resources"><a class="anchor" href="#mapping-protected-resources"></a>Mapping protected resources</h2>
 <div class="sectionbody">
 <div class="paragraph">
-<p>By default, the extension fetches resources on-demand from Keycloak, using their URI to identify and map the resources in your application that need to be protected.</p>
+<p>By default, the extension fetches resources from Keycloak on demand, using their URI to identify and map the application resources that require protection.</p>
 </div>
 <div class="paragraph">
-<p>To disable this on-demand fetching and instead pre-load resources at startup, apply the following configuration setting:</p>
+<p>To disable on-demand fetching and instead pre-load resources at startup, configure the following property:</p>
 </div>
 <div class="listingblock">
 <div class="content">
@@ -946,7 +1212,7 @@ If you want to use the <code>AuthzClient</code> directly, set <code>quarkus.keyc
 </div>
 </div>
 <div class="paragraph">
-<p>The time required to pre-load resources from Keycloak at startup varies based on their quantity, potentially affecting your application&#8217;s initial load time."</p>
+<p>The time required to pre-load resources from Keycloak during startup depends on the number of resources, which might impact your application&#8217;s initial load time.</p>
 </div>
 </div>
 </div>
@@ -966,11 +1232,11 @@ For more details, check the <a href="security-overview">Quarkus Security overvie
 <h2 id="access-to-public-resources"><a class="anchor" href="#access-to-public-resources"></a>Access to public resources</h2>
 <div class="sectionbody">
 <div class="paragraph">
-<p>To enable access to a public resource without the <code>quarkus-keycloak-authorization</code> applying its policies, create a <code>permit</code> HTTP Policy configuration in <code>application.properties</code>.
+<p>To allow access to a public resource without applying <code>quarkus-keycloak-authorization</code> policies, define a <code>permit</code> HTTP policy in the <code>application.properties</code> file.
 For more information, see the <a href="security-authorize-web-endpoints-reference">Authorization of web endpoints</a> guide.</p>
 </div>
 <div class="paragraph">
-<p>There&#8217;s no need to deactivate policy checks for a Keycloak Authorization Policy with settings such as these:</p>
+<p>You do not need to disable policy checks for a Keycloak Authorization Policy when using configurations like the following:</p>
 </div>
 <div class="listingblock">
 <div class="content">
@@ -979,7 +1245,7 @@ quarkus.keycloak.policy-enforcer.paths.1.enforcement-mode=DISABLED</code></pre>
 </div>
 </div>
 <div class="paragraph">
-<p>To block access to the public resource to anonymous users, you can create an enforcing Keycloak Authorization Policy:</p>
+<p>To restrict access to public resources for anonymous users, define an enforcing Keycloak Authorization Policy:</p>
 </div>
 <div class="listingblock">
 <div class="content">
@@ -996,8 +1262,8 @@ quarkus.keycloak.policy-enforcer.paths.1.enforcement-mode=ENFORCING</code></pre>
 <h2 id="checking-permission-scopes-programmatically"><a class="anchor" href="#checking-permission-scopes-programmatically"></a>Checking permission scopes programmatically</h2>
 <div class="sectionbody">
 <div class="paragraph">
-<p>In addition to resource permissions, you can specify method scopes.
-The scope usually represents an action that can be performed on a resource.
+<p>In addition to resource permissions, you can define method scopes.
+A scope typically represents an action performed on a resource.
 You can create an enforcing Keycloak Authorization Policy with a method scope.
 For example:</p>
 </div>
@@ -1018,14 +1284,16 @@ quarkus.keycloak.policy-enforcer.paths.2.paths=/api/protected/programmatic-way,/
 <table>
 <tr>
 <td><i class="conum" data-value="1"></i><b>1</b></td>
-<td>User must have resource permission 'Scope Permission Resource' and scope 'read'</td>
+<td>User must have resource permission <code>Scope Permission Resource</code> and scope <code>read</code></td>
 </tr>
 </table>
 </div>
 <div class="paragraph">
-<p>The Keycloak Policy Enforcer now secures the <code>/api/protected/standard-way</code> request path, eliminating the need for additional annotations such as <code>@RolesAllowed</code>.
-However, in certain scenarios, a programmatic check is necessary.
-You can achieve this by injecting a <code>SecurityIdentity</code> instance into your beans, as shown in the following example.
+<p>The Keycloak Policy Enforcer secures the <code>/api/protected/standard-way</code> request path, removing the need for annotations such as <code>@RolesAllowed</code>.
+However, in some scenarios, you may need to perform a programmatic check.</p>
+</div>
+<div class="paragraph">
+<p>You can achieve this by injecting a <code>SecurityIdentity</code> instance into your beans, as shown in the following example.
 Or, you can get the same result by annotating the resource method with <code>@PermissionsAllowed</code>.
 The following example demonstrates three resource methods, each requiring the same <code>read</code> scope:</p>
 </div>
@@ -1088,16 +1356,16 @@ public class ProtectedResource {
 <table>
 <tr>
 <td><i class="conum" data-value="1"></i><b>1</b></td>
-<td>Request sub-path <code>/standard-way</code> requires both resource permission and scope <code>read</code> according to the configuration properties we previously set in the <code>application.properties</code>.</td>
+<td>The <code>/standard-way</code> sub-path requires both the resource permission and the <code>read</code> scope, based on the configuration set in the <code>application.properties</code> file.</td>
 </tr>
 <tr>
 <td><i class="conum" data-value="2"></i><b>2</b></td>
-<td>Request sub-path <code>/programmatic-way</code> only requires permission <code>Scope Permission Resource</code>, but we can enforce scope with <code>SecurityIdentity#checkPermission</code>.</td>
+<td>The <code>/programmatic-way</code> sub-path checks only for the <code>Scope Permission Resource</code> permission by default. However, you can enforce additional constraints, such as scope requirements, by using <code>SecurityIdentity#checkPermission</code>.</td>
 </tr>
 <tr>
 <td><i class="conum" data-value="3"></i><b>3</b></td>
-<td>The <code>@PermissionsAllowed</code> annotation only grants access to the requests with permission <code>Scope Permission Resource</code> and scope <code>read</code>.
-For more information, see the section <a href="security-authorize-web-endpoints-reference#standard-security-annotations">Authorization using annotations</a> of the Security Authorization guide.</td>
+<td>The <code>@PermissionsAllowed</code> annotation at <code>/annotation-way</code> restricts access to requests that have the <code>Scope Permission Resource</code> permission along with the <code>read</code> scope.
+For more information, see the section <a href="security-authorize-web-endpoints-reference#standard-security-annotations">Authorization using annotations</a> of the Authorization of web endpoints guide.</td>
 </tr>
 </table>
 </div>
@@ -1107,10 +1375,8 @@ For more information, see the section <a href="security-authorize-web-endpoints-
 <h2 id="multi-tenancy"><a class="anchor" href="#multi-tenancy"></a>Multi-tenancy</h2>
 <div class="sectionbody">
 <div class="paragraph">
-<p>You can set up policy enforcer configurations for each tenant, similar to how it is done with <a href="security-openid-connect-multitenancy">OpenID Connect (OIDC) multi-tenancy</a>.</p>
-</div>
-<div class="paragraph">
-<p>For example:</p>
+<p>You can set up policy enforcer configurations for each tenant, similar to how it is done with <a href="security-openid-connect-multitenancy">OpenID Connect (OIDC) multi-tenancy</a>.
+For example:</p>
 </div>
 <div class="listingblock">
 <div class="content">
@@ -1158,11 +1424,7 @@ quarkus.keycloak.webapp-tenant.policy-enforcer.paths.1.claim-information-point.c
 <h2 id="dynamic-tenant-configuration-resolution"><a class="anchor" href="#dynamic-tenant-configuration-resolution"></a>Dynamic tenant configuration resolution</h2>
 <div class="sectionbody">
 <div class="paragraph">
-<p>If you need a more dynamic configuration for the different tenants you want to support and don’t want to end up
-with multiple entries in your configuration file, you can use the <code>io.quarkus.keycloak.pep.TenantPolicyConfigResolver</code>.</p>
-</div>
-<div class="paragraph">
-<p>This interface allows you to dynamically create tenant configurations at runtime:</p>
+<p>To create configurations for multiple tenants while avoiding excessive entries in your configuration file, you can use the <code>io.quarkus.keycloak.pep.TenantPolicyConfigResolver</code> interface to define them programmatically at runtime.</p>
 </div>
 <div class="listingblock">
 <div class="content">
@@ -1187,7 +1449,7 @@ public class CustomTenantPolicyConfigResolver implements TenantPolicyConfigResol
     private final KeycloakPolicyEnforcerTenantConfig newTenantConfig;
 
     public CustomTenantPolicyConfigResolver(KeycloakPolicyEnforcerConfig enforcerConfig) {
-        this.enhancedTenantConfig = KeycloakPolicyEnforcerTenantConfig.builder(config) <i class="conum" data-value="1"></i><b>(1)</b>
+        this.enhancedTenantConfig = KeycloakPolicyEnforcerTenantConfig.builder(enforcerConfig.defaultTenant()) <i class="conum" data-value="1"></i><b>(1)</b>
             .paths("/enhanced-config")
             .permissionName("Permission Name")
             .get("read-scope")
@@ -1202,7 +1464,7 @@ public class CustomTenantPolicyConfigResolver implements TenantPolicyConfigResol
     public Uni&lt;KeycloakPolicyEnforcerTenantConfig&gt; resolve(RoutingContext routingContext, OidcTenantConfig tenantConfig,
                                                 OidcRequestContext&lt;KeycloakPolicyEnforcerTenantConfig&gt; requestContext) {
         String path = routingContext.normalizedPath();
-        String tenantId = tenantConfig.tenantId.orElse(null);
+        String tenantId = tenantConfig.tenantId().orElse(null);
         if ("enhanced-config-tenant".equals(tenantId) &amp;&amp; path.equals("/enhanced-config")) {
             return Uni.createFrom().item(enhancedTenantConfig);
         } else if ("new-config-tenant".equals(tenantId) &amp;&amp; path.equals("/new-config")) {
@@ -1217,15 +1479,15 @@ public class CustomTenantPolicyConfigResolver implements TenantPolicyConfigResol
 <table>
 <tr>
 <td><i class="conum" data-value="1"></i><b>1</b></td>
-<td>Create or update the <code>/enhanced-config</code> path in the default tenant config.</td>
+<td>Define or update the <code>/enhanced-config</code> path in the default tenant configuration.</td>
 </tr>
 <tr>
 <td><i class="conum" data-value="2"></i><b>2</b></td>
-<td>Add <code>/new-config</code> path into tenant config populated with documented configuration default values.</td>
+<td>Add the <code>/new-config</code> path to the tenant configuration, including custom claims and values that are populated programmatically.</td>
 </tr>
 <tr>
 <td><i class="conum" data-value="3"></i><b>3</b></td>
-<td>Use default static tenant configuration resolution based on the <code>application.properties</code> file and other SmallRye Config configuration sources.</td>
+<td>Fallback to the default static tenant configuration resolution defined in the <code>application.properties</code> file or other SmallRye Config sources.</td>
 </tr>
 </table>
 </div>
@@ -1264,7 +1526,7 @@ For detailed insights into various configuration options, see the following docu
 <p>Enables policy enforcement.</p>
 </div>
 <div class="paragraph">
-<p>Environment variable: <code id="env-var-55244">QUARKUS_KEYCLOAK_POLICY_ENFORCER_ENABLE</code><button class="btn-copy fa fa-clipboard inline-btn-copy" data-clipboard-action="copy" data-clipboard-target="#env-var-55244" title="Copy to clipboard" do-not-collapse="true"></button></p>
+<p>Environment variable: <code id="env-var-64296">QUARKUS_KEYCLOAK_POLICY_ENFORCER_ENABLE</code><button class="btn-copy fa fa-clipboard inline-btn-copy" data-clipboard-action="copy" data-clipboard-target="#env-var-64296" title="Copy to clipboard" do-not-collapse="true"></button></p>
 </div>
 </div>
 </div>
@@ -1285,7 +1547,7 @@ For detailed insights into various configuration options, see the following docu
 <p>Adapters will make separate HTTP invocations to the Keycloak server to turn an access code into an access token. This config option defines how many connections to the Keycloak server should be pooled</p>
 </div>
 <div class="paragraph">
-<p>Environment variable: <code id="env-var-55245">QUARKUS_KEYCLOAK_CONNECTION_POOL_SIZE</code><button class="btn-copy fa fa-clipboard inline-btn-copy" data-clipboard-action="copy" data-clipboard-target="#env-var-55245" title="Copy to clipboard" do-not-collapse="true"></button></p>
+<p>Environment variable: <code id="env-var-64297">QUARKUS_KEYCLOAK_CONNECTION_POOL_SIZE</code><button class="btn-copy fa fa-clipboard inline-btn-copy" data-clipboard-action="copy" data-clipboard-target="#env-var-64297" title="Copy to clipboard" do-not-collapse="true"></button></p>
 </div>
 </div>
 </div>
@@ -1306,7 +1568,7 @@ For detailed insights into various configuration options, see the following docu
 <p>Specifies how policies are enforced.</p>
 </div>
 <div class="paragraph">
-<p>Environment variable: <code id="env-var-55246">QUARKUS_KEYCLOAK_POLICY_ENFORCER_ENFORCEMENT_MODE</code><button class="btn-copy fa fa-clipboard inline-btn-copy" data-clipboard-action="copy" data-clipboard-target="#env-var-55246" title="Copy to clipboard" do-not-collapse="true"></button></p>
+<p>Environment variable: <code id="env-var-64298">QUARKUS_KEYCLOAK_POLICY_ENFORCER_ENFORCEMENT_MODE</code><button class="btn-copy fa fa-clipboard inline-btn-copy" data-clipboard-action="copy" data-clipboard-target="#env-var-64298" title="Copy to clipboard" do-not-collapse="true"></button></p>
 </div>
 </div>
 </div>
@@ -1329,7 +1591,7 @@ For detailed insights into various configuration options, see the following docu
 <p>Defines the limit of entries that should be kept in the cache</p>
 </div>
 <div class="paragraph">
-<p>Environment variable: <code id="env-var-55247">QUARKUS_KEYCLOAK_POLICY_ENFORCER_PATH_CACHE_MAX_ENTRIES</code><button class="btn-copy fa fa-clipboard inline-btn-copy" data-clipboard-action="copy" data-clipboard-target="#env-var-55247" title="Copy to clipboard" do-not-collapse="true"></button></p>
+<p>Environment variable: <code id="env-var-64299">QUARKUS_KEYCLOAK_POLICY_ENFORCER_PATH_CACHE_MAX_ENTRIES</code><button class="btn-copy fa fa-clipboard inline-btn-copy" data-clipboard-action="copy" data-clipboard-target="#env-var-64299" title="Copy to clipboard" do-not-collapse="true"></button></p>
 </div>
 </div>
 </div>
@@ -1350,7 +1612,7 @@ For detailed insights into various configuration options, see the following docu
 <p>Defines the time in milliseconds when the entry should be expired</p>
 </div>
 <div class="paragraph">
-<p>Environment variable: <code id="env-var-55248">QUARKUS_KEYCLOAK_POLICY_ENFORCER_PATH_CACHE_LIFESPAN</code><button class="btn-copy fa fa-clipboard inline-btn-copy" data-clipboard-action="copy" data-clipboard-target="#env-var-55248" title="Copy to clipboard" do-not-collapse="true"></button></p>
+<p>Environment variable: <code id="env-var-64300">QUARKUS_KEYCLOAK_POLICY_ENFORCER_PATH_CACHE_LIFESPAN</code><button class="btn-copy fa fa-clipboard inline-btn-copy" data-clipboard-action="copy" data-clipboard-target="#env-var-64300" title="Copy to clipboard" do-not-collapse="true"></button></p>
 </div>
 </div>
 </div>
@@ -1371,7 +1633,7 @@ For detailed insights into various configuration options, see the following docu
 <p>Specifies how the adapter should fetch the server for resources associated with paths in your application. If true, the policy enforcer is going to fetch resources on-demand accordingly with the path being requested</p>
 </div>
 <div class="paragraph">
-<p>Environment variable: <code id="env-var-55249">QUARKUS_KEYCLOAK_POLICY_ENFORCER_LAZY_LOAD_PATHS</code><button class="btn-copy fa fa-clipboard inline-btn-copy" data-clipboard-action="copy" data-clipboard-target="#env-var-55249" title="Copy to clipboard" do-not-collapse="true"></button></p>
+<p>Environment variable: <code id="env-var-64301">QUARKUS_KEYCLOAK_POLICY_ENFORCER_LAZY_LOAD_PATHS</code><button class="btn-copy fa fa-clipboard inline-btn-copy" data-clipboard-action="copy" data-clipboard-target="#env-var-64301" title="Copy to clipboard" do-not-collapse="true"></button></p>
 </div>
 </div>
 </div>
@@ -1392,7 +1654,7 @@ For detailed insights into various configuration options, see the following docu
 <p>Complex config.</p>
 </div>
 <div class="paragraph">
-<p>Environment variable: <code id="env-var-55250">QUARKUS_KEYCLOAK_POLICY_ENFORCER_CLAIM_INFORMATION_POINT__COMPLEX_CONFIG_</code><button class="btn-copy fa fa-clipboard inline-btn-copy" data-clipboard-action="copy" data-clipboard-target="#env-var-55250" title="Copy to clipboard" do-not-collapse="true"></button></p>
+<p>Environment variable: <code id="env-var-64302">QUARKUS_KEYCLOAK_POLICY_ENFORCER_CLAIM_INFORMATION_POINT__COMPLEX_CONFIG_</code><button class="btn-copy fa fa-clipboard inline-btn-copy" data-clipboard-action="copy" data-clipboard-target="#env-var-64302" title="Copy to clipboard" do-not-collapse="true"></button></p>
 </div>
 </div>
 </div>
@@ -1413,7 +1675,7 @@ For detailed insights into various configuration options, see the following docu
 <p>Simple config.</p>
 </div>
 <div class="paragraph">
-<p>Environment variable: <code id="env-var-55251">QUARKUS_KEYCLOAK_POLICY_ENFORCER_CLAIM_INFORMATION_POINT__SIMPLE_CONFIG_</code><button class="btn-copy fa fa-clipboard inline-btn-copy" data-clipboard-action="copy" data-clipboard-target="#env-var-55251" title="Copy to clipboard" do-not-collapse="true"></button></p>
+<p>Environment variable: <code id="env-var-64303">QUARKUS_KEYCLOAK_POLICY_ENFORCER_CLAIM_INFORMATION_POINT__SIMPLE_CONFIG_</code><button class="btn-copy fa fa-clipboard inline-btn-copy" data-clipboard-action="copy" data-clipboard-target="#env-var-64303" title="Copy to clipboard" do-not-collapse="true"></button></p>
 </div>
 </div>
 </div>
@@ -1434,7 +1696,7 @@ For detailed insights into various configuration options, see the following docu
 <p>Specifies how scopes should be mapped to HTTP methods. If set to true, the policy enforcer will use the HTTP method from the current request to check whether access should be granted</p>
 </div>
 <div class="paragraph">
-<p>Environment variable: <code id="env-var-55252">QUARKUS_KEYCLOAK_POLICY_ENFORCER_HTTP_METHOD_AS_SCOPE</code><button class="btn-copy fa fa-clipboard inline-btn-copy" data-clipboard-action="copy" data-clipboard-target="#env-var-55252" title="Copy to clipboard" do-not-collapse="true"></button></p>
+<p>Environment variable: <code id="env-var-64304">QUARKUS_KEYCLOAK_POLICY_ENFORCER_HTTP_METHOD_AS_SCOPE</code><button class="btn-copy fa fa-clipboard inline-btn-copy" data-clipboard-action="copy" data-clipboard-target="#env-var-64304" title="Copy to clipboard" do-not-collapse="true"></button></p>
 </div>
 </div>
 </div>
@@ -1455,7 +1717,7 @@ For detailed insights into various configuration options, see the following docu
 <p>The name of a resource on the server that is to be associated with a given path</p>
 </div>
 <div class="paragraph">
-<p>Environment variable: <code id="env-var-55253">QUARKUS_KEYCLOAK_POLICY_ENFORCER_PATHS__PATHS__NAME</code><button class="btn-copy fa fa-clipboard inline-btn-copy" data-clipboard-action="copy" data-clipboard-target="#env-var-55253" title="Copy to clipboard" do-not-collapse="true"></button></p>
+<p>Environment variable: <code id="env-var-64305">QUARKUS_KEYCLOAK_POLICY_ENFORCER_PATHS__PATHS__NAME</code><button class="btn-copy fa fa-clipboard inline-btn-copy" data-clipboard-action="copy" data-clipboard-target="#env-var-64305" title="Copy to clipboard" do-not-collapse="true"></button></p>
 </div>
 </div>
 </div>
@@ -1476,7 +1738,7 @@ For detailed insights into various configuration options, see the following docu
 <p>HTTP request paths that should be protected by the policy enforcer</p>
 </div>
 <div class="paragraph">
-<p>Environment variable: <code id="env-var-55254">QUARKUS_KEYCLOAK_POLICY_ENFORCER_PATHS__PATHS__PATHS</code><button class="btn-copy fa fa-clipboard inline-btn-copy" data-clipboard-action="copy" data-clipboard-target="#env-var-55254" title="Copy to clipboard" do-not-collapse="true"></button></p>
+<p>Environment variable: <code id="env-var-64306">QUARKUS_KEYCLOAK_POLICY_ENFORCER_PATHS__PATHS__PATHS</code><button class="btn-copy fa fa-clipboard inline-btn-copy" data-clipboard-action="copy" data-clipboard-target="#env-var-64306" title="Copy to clipboard" do-not-collapse="true"></button></p>
 </div>
 </div>
 </div>
@@ -1497,7 +1759,7 @@ For detailed insights into various configuration options, see the following docu
 <p>The name of the HTTP method</p>
 </div>
 <div class="paragraph">
-<p>Environment variable: <code id="env-var-55255">QUARKUS_KEYCLOAK_POLICY_ENFORCER_PATHS__PATHS__METHODS__METHODS__METHOD</code><button class="btn-copy fa fa-clipboard inline-btn-copy" data-clipboard-action="copy" data-clipboard-target="#env-var-55255" title="Copy to clipboard" do-not-collapse="true"></button></p>
+<p>Environment variable: <code id="env-var-64307">QUARKUS_KEYCLOAK_POLICY_ENFORCER_PATHS__PATHS__METHODS__METHODS__METHOD</code><button class="btn-copy fa fa-clipboard inline-btn-copy" data-clipboard-action="copy" data-clipboard-target="#env-var-64307" title="Copy to clipboard" do-not-collapse="true"></button></p>
 </div>
 </div>
 </div>
@@ -1518,7 +1780,7 @@ For detailed insights into various configuration options, see the following docu
 <p>An array of strings with the scopes associated with the method</p>
 </div>
 <div class="paragraph">
-<p>Environment variable: <code id="env-var-55256">QUARKUS_KEYCLOAK_POLICY_ENFORCER_PATHS__PATHS__METHODS__METHODS__SCOPES</code><button class="btn-copy fa fa-clipboard inline-btn-copy" data-clipboard-action="copy" data-clipboard-target="#env-var-55256" title="Copy to clipboard" do-not-collapse="true"></button></p>
+<p>Environment variable: <code id="env-var-64308">QUARKUS_KEYCLOAK_POLICY_ENFORCER_PATHS__PATHS__METHODS__METHODS__SCOPES</code><button class="btn-copy fa fa-clipboard inline-btn-copy" data-clipboard-action="copy" data-clipboard-target="#env-var-64308" title="Copy to clipboard" do-not-collapse="true"></button></p>
 </div>
 </div>
 </div>
@@ -1539,7 +1801,7 @@ For detailed insights into various configuration options, see the following docu
 <p>A string referencing the enforcement mode for the scopes associated with a method</p>
 </div>
 <div class="paragraph">
-<p>Environment variable: <code id="env-var-55257">QUARKUS_KEYCLOAK_POLICY_ENFORCER_PATHS__PATHS__METHODS__METHODS__SCOPES_ENFORCEMENT_MODE</code><button class="btn-copy fa fa-clipboard inline-btn-copy" data-clipboard-action="copy" data-clipboard-target="#env-var-55257" title="Copy to clipboard" do-not-collapse="true"></button></p>
+<p>Environment variable: <code id="env-var-64309">QUARKUS_KEYCLOAK_POLICY_ENFORCER_PATHS__PATHS__METHODS__METHODS__SCOPES_ENFORCEMENT_MODE</code><button class="btn-copy fa fa-clipboard inline-btn-copy" data-clipboard-action="copy" data-clipboard-target="#env-var-64309" title="Copy to clipboard" do-not-collapse="true"></button></p>
 </div>
 </div>
 </div>
@@ -1562,7 +1824,7 @@ For detailed insights into various configuration options, see the following docu
 <p>Specifies how policies are enforced</p>
 </div>
 <div class="paragraph">
-<p>Environment variable: <code id="env-var-55258">QUARKUS_KEYCLOAK_POLICY_ENFORCER_PATHS__PATHS__ENFORCEMENT_MODE</code><button class="btn-copy fa fa-clipboard inline-btn-copy" data-clipboard-action="copy" data-clipboard-target="#env-var-55258" title="Copy to clipboard" do-not-collapse="true"></button></p>
+<p>Environment variable: <code id="env-var-64310">QUARKUS_KEYCLOAK_POLICY_ENFORCER_PATHS__PATHS__ENFORCEMENT_MODE</code><button class="btn-copy fa fa-clipboard inline-btn-copy" data-clipboard-action="copy" data-clipboard-target="#env-var-64310" title="Copy to clipboard" do-not-collapse="true"></button></p>
 </div>
 </div>
 </div>
@@ -1585,7 +1847,7 @@ For detailed insights into various configuration options, see the following docu
 <p>Complex config.</p>
 </div>
 <div class="paragraph">
-<p>Environment variable: <code id="env-var-55259">QUARKUS_KEYCLOAK_POLICY_ENFORCER_PATHS__PATHS__CLAIM_INFORMATION_POINT__COMPLEX_CONFIG_</code><button class="btn-copy fa fa-clipboard inline-btn-copy" data-clipboard-action="copy" data-clipboard-target="#env-var-55259" title="Copy to clipboard" do-not-collapse="true"></button></p>
+<p>Environment variable: <code id="env-var-64311">QUARKUS_KEYCLOAK_POLICY_ENFORCER_PATHS__PATHS__CLAIM_INFORMATION_POINT__COMPLEX_CONFIG_</code><button class="btn-copy fa fa-clipboard inline-btn-copy" data-clipboard-action="copy" data-clipboard-target="#env-var-64311" title="Copy to clipboard" do-not-collapse="true"></button></p>
 </div>
 </div>
 </div>
@@ -1606,7 +1868,7 @@ For detailed insights into various configuration options, see the following docu
 <p>Simple config.</p>
 </div>
 <div class="paragraph">
-<p>Environment variable: <code id="env-var-55260">QUARKUS_KEYCLOAK_POLICY_ENFORCER_PATHS__PATHS__CLAIM_INFORMATION_POINT__SIMPLE_CONFIG_</code><button class="btn-copy fa fa-clipboard inline-btn-copy" data-clipboard-action="copy" data-clipboard-target="#env-var-55260" title="Copy to clipboard" do-not-collapse="true"></button></p>
+<p>Environment variable: <code id="env-var-64312">QUARKUS_KEYCLOAK_POLICY_ENFORCER_PATHS__PATHS__CLAIM_INFORMATION_POINT__SIMPLE_CONFIG_</code><button class="btn-copy fa fa-clipboard inline-btn-copy" data-clipboard-action="copy" data-clipboard-target="#env-var-64312" title="Copy to clipboard" do-not-collapse="true"></button></p>
 </div>
 </div>
 </div>
@@ -1632,7 +1894,7 @@ For detailed insights into various configuration options, see the following docu
 <p>Adapters will make separate HTTP invocations to the Keycloak server to turn an access code into an access token. This config option defines how many connections to the Keycloak server should be pooled</p>
 </div>
 <div class="paragraph">
-<p>Environment variable: <code id="env-var-55261">QUARKUS_KEYCLOAK__TENANT__CONNECTION_POOL_SIZE</code><button class="btn-copy fa fa-clipboard inline-btn-copy" data-clipboard-action="copy" data-clipboard-target="#env-var-55261" title="Copy to clipboard" do-not-collapse="true"></button></p>
+<p>Environment variable: <code id="env-var-64313">QUARKUS_KEYCLOAK__TENANT__CONNECTION_POOL_SIZE</code><button class="btn-copy fa fa-clipboard inline-btn-copy" data-clipboard-action="copy" data-clipboard-target="#env-var-64313" title="Copy to clipboard" do-not-collapse="true"></button></p>
 </div>
 </div>
 </div>
@@ -1653,7 +1915,7 @@ For detailed insights into various configuration options, see the following docu
 <p>Specifies how policies are enforced.</p>
 </div>
 <div class="paragraph">
-<p>Environment variable: <code id="env-var-55262">QUARKUS_KEYCLOAK__TENANT__POLICY_ENFORCER_ENFORCEMENT_MODE</code><button class="btn-copy fa fa-clipboard inline-btn-copy" data-clipboard-action="copy" data-clipboard-target="#env-var-55262" title="Copy to clipboard" do-not-collapse="true"></button></p>
+<p>Environment variable: <code id="env-var-64314">QUARKUS_KEYCLOAK__TENANT__POLICY_ENFORCER_ENFORCEMENT_MODE</code><button class="btn-copy fa fa-clipboard inline-btn-copy" data-clipboard-action="copy" data-clipboard-target="#env-var-64314" title="Copy to clipboard" do-not-collapse="true"></button></p>
 </div>
 </div>
 </div>
@@ -1676,7 +1938,7 @@ For detailed insights into various configuration options, see the following docu
 <p>The name of a resource on the server that is to be associated with a given path</p>
 </div>
 <div class="paragraph">
-<p>Environment variable: <code id="env-var-55263">QUARKUS_KEYCLOAK__TENANT__POLICY_ENFORCER_PATHS__PATHS__NAME</code><button class="btn-copy fa fa-clipboard inline-btn-copy" data-clipboard-action="copy" data-clipboard-target="#env-var-55263" title="Copy to clipboard" do-not-collapse="true"></button></p>
+<p>Environment variable: <code id="env-var-64315">QUARKUS_KEYCLOAK__TENANT__POLICY_ENFORCER_PATHS__PATHS__NAME</code><button class="btn-copy fa fa-clipboard inline-btn-copy" data-clipboard-action="copy" data-clipboard-target="#env-var-64315" title="Copy to clipboard" do-not-collapse="true"></button></p>
 </div>
 </div>
 </div>
@@ -1697,7 +1959,7 @@ For detailed insights into various configuration options, see the following docu
 <p>HTTP request paths that should be protected by the policy enforcer</p>
 </div>
 <div class="paragraph">
-<p>Environment variable: <code id="env-var-55264">QUARKUS_KEYCLOAK__TENANT__POLICY_ENFORCER_PATHS__PATHS__PATHS</code><button class="btn-copy fa fa-clipboard inline-btn-copy" data-clipboard-action="copy" data-clipboard-target="#env-var-55264" title="Copy to clipboard" do-not-collapse="true"></button></p>
+<p>Environment variable: <code id="env-var-64316">QUARKUS_KEYCLOAK__TENANT__POLICY_ENFORCER_PATHS__PATHS__PATHS</code><button class="btn-copy fa fa-clipboard inline-btn-copy" data-clipboard-action="copy" data-clipboard-target="#env-var-64316" title="Copy to clipboard" do-not-collapse="true"></button></p>
 </div>
 </div>
 </div>
@@ -1718,7 +1980,7 @@ For detailed insights into various configuration options, see the following docu
 <p>The name of the HTTP method</p>
 </div>
 <div class="paragraph">
-<p>Environment variable: <code id="env-var-55265">QUARKUS_KEYCLOAK__TENANT__POLICY_ENFORCER_PATHS__PATHS__METHODS__METHODS__METHOD</code><button class="btn-copy fa fa-clipboard inline-btn-copy" data-clipboard-action="copy" data-clipboard-target="#env-var-55265" title="Copy to clipboard" do-not-collapse="true"></button></p>
+<p>Environment variable: <code id="env-var-64317">QUARKUS_KEYCLOAK__TENANT__POLICY_ENFORCER_PATHS__PATHS__METHODS__METHODS__METHOD</code><button class="btn-copy fa fa-clipboard inline-btn-copy" data-clipboard-action="copy" data-clipboard-target="#env-var-64317" title="Copy to clipboard" do-not-collapse="true"></button></p>
 </div>
 </div>
 </div>
@@ -1739,7 +2001,7 @@ For detailed insights into various configuration options, see the following docu
 <p>An array of strings with the scopes associated with the method</p>
 </div>
 <div class="paragraph">
-<p>Environment variable: <code id="env-var-55266">QUARKUS_KEYCLOAK__TENANT__POLICY_ENFORCER_PATHS__PATHS__METHODS__METHODS__SCOPES</code><button class="btn-copy fa fa-clipboard inline-btn-copy" data-clipboard-action="copy" data-clipboard-target="#env-var-55266" title="Copy to clipboard" do-not-collapse="true"></button></p>
+<p>Environment variable: <code id="env-var-64318">QUARKUS_KEYCLOAK__TENANT__POLICY_ENFORCER_PATHS__PATHS__METHODS__METHODS__SCOPES</code><button class="btn-copy fa fa-clipboard inline-btn-copy" data-clipboard-action="copy" data-clipboard-target="#env-var-64318" title="Copy to clipboard" do-not-collapse="true"></button></p>
 </div>
 </div>
 </div>
@@ -1760,7 +2022,7 @@ For detailed insights into various configuration options, see the following docu
 <p>A string referencing the enforcement mode for the scopes associated with a method</p>
 </div>
 <div class="paragraph">
-<p>Environment variable: <code id="env-var-55267">QUARKUS_KEYCLOAK__TENANT__POLICY_ENFORCER_PATHS__PATHS__METHODS__METHODS__SCOPES_ENFORCEMENT_MODE</code><button class="btn-copy fa fa-clipboard inline-btn-copy" data-clipboard-action="copy" data-clipboard-target="#env-var-55267" title="Copy to clipboard" do-not-collapse="true"></button></p>
+<p>Environment variable: <code id="env-var-64319">QUARKUS_KEYCLOAK__TENANT__POLICY_ENFORCER_PATHS__PATHS__METHODS__METHODS__SCOPES_ENFORCEMENT_MODE</code><button class="btn-copy fa fa-clipboard inline-btn-copy" data-clipboard-action="copy" data-clipboard-target="#env-var-64319" title="Copy to clipboard" do-not-collapse="true"></button></p>
 </div>
 </div>
 </div>
@@ -1783,7 +2045,7 @@ For detailed insights into various configuration options, see the following docu
 <p>Specifies how policies are enforced</p>
 </div>
 <div class="paragraph">
-<p>Environment variable: <code id="env-var-55268">QUARKUS_KEYCLOAK__TENANT__POLICY_ENFORCER_PATHS__PATHS__ENFORCEMENT_MODE</code><button class="btn-copy fa fa-clipboard inline-btn-copy" data-clipboard-action="copy" data-clipboard-target="#env-var-55268" title="Copy to clipboard" do-not-collapse="true"></button></p>
+<p>Environment variable: <code id="env-var-64320">QUARKUS_KEYCLOAK__TENANT__POLICY_ENFORCER_PATHS__PATHS__ENFORCEMENT_MODE</code><button class="btn-copy fa fa-clipboard inline-btn-copy" data-clipboard-action="copy" data-clipboard-target="#env-var-64320" title="Copy to clipboard" do-not-collapse="true"></button></p>
 </div>
 </div>
 </div>
@@ -1806,7 +2068,7 @@ For detailed insights into various configuration options, see the following docu
 <p>Complex config.</p>
 </div>
 <div class="paragraph">
-<p>Environment variable: <code id="env-var-55269">QUARKUS_KEYCLOAK__TENANT__POLICY_ENFORCER_PATHS__PATHS__CLAIM_INFORMATION_POINT__COMPLEX_CONFIG_</code><button class="btn-copy fa fa-clipboard inline-btn-copy" data-clipboard-action="copy" data-clipboard-target="#env-var-55269" title="Copy to clipboard" do-not-collapse="true"></button></p>
+<p>Environment variable: <code id="env-var-64321">QUARKUS_KEYCLOAK__TENANT__POLICY_ENFORCER_PATHS__PATHS__CLAIM_INFORMATION_POINT__COMPLEX_CONFIG_</code><button class="btn-copy fa fa-clipboard inline-btn-copy" data-clipboard-action="copy" data-clipboard-target="#env-var-64321" title="Copy to clipboard" do-not-collapse="true"></button></p>
 </div>
 </div>
 </div>
@@ -1827,7 +2089,7 @@ For detailed insights into various configuration options, see the following docu
 <p>Simple config.</p>
 </div>
 <div class="paragraph">
-<p>Environment variable: <code id="env-var-55270">QUARKUS_KEYCLOAK__TENANT__POLICY_ENFORCER_PATHS__PATHS__CLAIM_INFORMATION_POINT__SIMPLE_CONFIG_</code><button class="btn-copy fa fa-clipboard inline-btn-copy" data-clipboard-action="copy" data-clipboard-target="#env-var-55270" title="Copy to clipboard" do-not-collapse="true"></button></p>
+<p>Environment variable: <code id="env-var-64322">QUARKUS_KEYCLOAK__TENANT__POLICY_ENFORCER_PATHS__PATHS__CLAIM_INFORMATION_POINT__SIMPLE_CONFIG_</code><button class="btn-copy fa fa-clipboard inline-btn-copy" data-clipboard-action="copy" data-clipboard-target="#env-var-64322" title="Copy to clipboard" do-not-collapse="true"></button></p>
 </div>
 </div>
 </div>
@@ -1848,7 +2110,7 @@ For detailed insights into various configuration options, see the following docu
 <p>Defines the limit of entries that should be kept in the cache</p>
 </div>
 <div class="paragraph">
-<p>Environment variable: <code id="env-var-55271">QUARKUS_KEYCLOAK__TENANT__POLICY_ENFORCER_PATH_CACHE_MAX_ENTRIES</code><button class="btn-copy fa fa-clipboard inline-btn-copy" data-clipboard-action="copy" data-clipboard-target="#env-var-55271" title="Copy to clipboard" do-not-collapse="true"></button></p>
+<p>Environment variable: <code id="env-var-64323">QUARKUS_KEYCLOAK__TENANT__POLICY_ENFORCER_PATH_CACHE_MAX_ENTRIES</code><button class="btn-copy fa fa-clipboard inline-btn-copy" data-clipboard-action="copy" data-clipboard-target="#env-var-64323" title="Copy to clipboard" do-not-collapse="true"></button></p>
 </div>
 </div>
 </div>
@@ -1869,7 +2131,7 @@ For detailed insights into various configuration options, see the following docu
 <p>Defines the time in milliseconds when the entry should be expired</p>
 </div>
 <div class="paragraph">
-<p>Environment variable: <code id="env-var-55272">QUARKUS_KEYCLOAK__TENANT__POLICY_ENFORCER_PATH_CACHE_LIFESPAN</code><button class="btn-copy fa fa-clipboard inline-btn-copy" data-clipboard-action="copy" data-clipboard-target="#env-var-55272" title="Copy to clipboard" do-not-collapse="true"></button></p>
+<p>Environment variable: <code id="env-var-64324">QUARKUS_KEYCLOAK__TENANT__POLICY_ENFORCER_PATH_CACHE_LIFESPAN</code><button class="btn-copy fa fa-clipboard inline-btn-copy" data-clipboard-action="copy" data-clipboard-target="#env-var-64324" title="Copy to clipboard" do-not-collapse="true"></button></p>
 </div>
 </div>
 </div>
@@ -1890,7 +2152,7 @@ For detailed insights into various configuration options, see the following docu
 <p>Specifies how the adapter should fetch the server for resources associated with paths in your application. If true, the policy enforcer is going to fetch resources on-demand accordingly with the path being requested</p>
 </div>
 <div class="paragraph">
-<p>Environment variable: <code id="env-var-55273">QUARKUS_KEYCLOAK__TENANT__POLICY_ENFORCER_LAZY_LOAD_PATHS</code><button class="btn-copy fa fa-clipboard inline-btn-copy" data-clipboard-action="copy" data-clipboard-target="#env-var-55273" title="Copy to clipboard" do-not-collapse="true"></button></p>
+<p>Environment variable: <code id="env-var-64325">QUARKUS_KEYCLOAK__TENANT__POLICY_ENFORCER_LAZY_LOAD_PATHS</code><button class="btn-copy fa fa-clipboard inline-btn-copy" data-clipboard-action="copy" data-clipboard-target="#env-var-64325" title="Copy to clipboard" do-not-collapse="true"></button></p>
 </div>
 </div>
 </div>
@@ -1911,7 +2173,7 @@ For detailed insights into various configuration options, see the following docu
 <p>Complex config.</p>
 </div>
 <div class="paragraph">
-<p>Environment variable: <code id="env-var-55274">QUARKUS_KEYCLOAK__TENANT__POLICY_ENFORCER_CLAIM_INFORMATION_POINT__COMPLEX_CONFIG_</code><button class="btn-copy fa fa-clipboard inline-btn-copy" data-clipboard-action="copy" data-clipboard-target="#env-var-55274" title="Copy to clipboard" do-not-collapse="true"></button></p>
+<p>Environment variable: <code id="env-var-64326">QUARKUS_KEYCLOAK__TENANT__POLICY_ENFORCER_CLAIM_INFORMATION_POINT__COMPLEX_CONFIG_</code><button class="btn-copy fa fa-clipboard inline-btn-copy" data-clipboard-action="copy" data-clipboard-target="#env-var-64326" title="Copy to clipboard" do-not-collapse="true"></button></p>
 </div>
 </div>
 </div>
@@ -1932,7 +2194,7 @@ For detailed insights into various configuration options, see the following docu
 <p>Simple config.</p>
 </div>
 <div class="paragraph">
-<p>Environment variable: <code id="env-var-55275">QUARKUS_KEYCLOAK__TENANT__POLICY_ENFORCER_CLAIM_INFORMATION_POINT__SIMPLE_CONFIG_</code><button class="btn-copy fa fa-clipboard inline-btn-copy" data-clipboard-action="copy" data-clipboard-target="#env-var-55275" title="Copy to clipboard" do-not-collapse="true"></button></p>
+<p>Environment variable: <code id="env-var-64327">QUARKUS_KEYCLOAK__TENANT__POLICY_ENFORCER_CLAIM_INFORMATION_POINT__SIMPLE_CONFIG_</code><button class="btn-copy fa fa-clipboard inline-btn-copy" data-clipboard-action="copy" data-clipboard-target="#env-var-64327" title="Copy to clipboard" do-not-collapse="true"></button></p>
 </div>
 </div>
 </div>
@@ -1953,7 +2215,7 @@ For detailed insights into various configuration options, see the following docu
 <p>Specifies how scopes should be mapped to HTTP methods. If set to true, the policy enforcer will use the HTTP method from the current request to check whether access should be granted</p>
 </div>
 <div class="paragraph">
-<p>Environment variable: <code id="env-var-55276">QUARKUS_KEYCLOAK__TENANT__POLICY_ENFORCER_HTTP_METHOD_AS_SCOPE</code><button class="btn-copy fa fa-clipboard inline-btn-copy" data-clipboard-action="copy" data-clipboard-target="#env-var-55276" title="Copy to clipboard" do-not-collapse="true"></button></p>
+<p>Environment variable: <code id="env-var-64328">QUARKUS_KEYCLOAK__TENANT__POLICY_ENFORCER_HTTP_METHOD_AS_SCOPE</code><button class="btn-copy fa fa-clipboard inline-btn-copy" data-clipboard-action="copy" data-clipboard-target="#env-var-64328" title="Copy to clipboard" do-not-collapse="true"></button></p>
 </div>
 </div>
 </div>
@@ -1997,14 +2259,12 @@ For detailed insights into various configuration options, see the following docu
     </div>
     <div class="grid__item width-4-12 width-12-12-m tocwrapper">
       <div class="hide-mobile toc"><ul class="sectlevel1">
+<li><a href="#overview">Overview</a></li>
 <li><a href="#prerequisites">Prerequisites</a></li>
 <li><a href="#architecture">Architecture</a></li>
 <li><a href="#solution">Solution</a></li>
-<li><a href="#creating-the-project">Creating the project</a>
-<ul class="sectlevel2">
+<li><a href="#creating-the-project">Creating the project</a></li>
 <li><a href="#configuring-the-application">Configuring the application</a></li>
-</ul>
-</li>
 <li><a href="#starting-and-configuring-the-keycloak-server">Starting and configuring the Keycloak server</a></li>
 <li><a href="#keycloak-dev-mode">Running the application in dev mode</a></li>
 <li><a href="#running-the-application-in-jvm-mode">Running the application in JVM mode</a></li>
@@ -2091,7 +2351,7 @@ For detailed insights into various configuration options, see the following docu
         <li class="howto"><a href="/version/main/guides/security-basic-authentication-howto">Enable Basic authentication</a></li>
       
         
-        <li class="tutorial"><a href="/version/main/guides/security-getting-started-tutorial">Getting started with Security by using Basic authentication and Jakarta Persistence</a></li>
+        <li class="tutorial"><a href="/version/main/guides/security-getting-started-tutorial">Getting started with security by using Basic authentication and Jakarta Persistence</a></li>
       
         
         <li class="reference"><a href="/version/main/guides/security-openid-connect-client-reference">OpenID Connect (OIDC) and OAuth2 client and filters</a></li>
@@ -2159,6 +2419,10 @@ For detailed insights into various configuration options, see the following docu
           
           
             <li><a href="/newsletter" target="_blank">Newsletter</a></li>
+          
+          
+          
+            <li><a href="/userstories" target="_blank">User Stories</a></li>
           
           
           

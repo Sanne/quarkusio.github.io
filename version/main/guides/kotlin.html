@@ -12,7 +12,7 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <meta http-equiv="Content-Security-Policy" content="
-  connect-src 'self' https://dpm.demdex.net https://adobedc.demdex.net https://route-default-test-mscherer-matamo.apps.ospo-osci.z3b1.p1.openshiftapps.com/ https://search.quarkus.io https://smetrics.redhat.com; 
+  connect-src 'self' https://dpm.demdex.net https://adobedc.demdex.net https://analytics.ossupstream.org/ https://search.quarkus.io https://smetrics.redhat.com; 
   script-src 'self' 'unsafe-inline' 'unsafe-eval'
       
       https://assets.adobedtm.com
@@ -27,13 +27,13 @@
       http://www.googleadservices.com
       https://googleads.g.doubleclick.net
       https://giscus.app
-      https://route-default-test-mscherer-matamo.apps.ospo-osci.z3b1.p1.openshiftapps.com/
+      https://analytics.ossupstream.org/
       https://app.mailjet.com;
 
   style-src 'self' https://fonts.googleapis.com https://use.fontawesome.com; 
   img-src 'self' * data:; 
   media-src 'self'; 
-  frame-src https://redhat.demdex.net https://www.youtube.com https://embed.restream.io https://app.mailjet.com http://xy0p2.mjt.lu https://mj.quarkus.io https://giscus.app; 
+  frame-src https://redhat.demdex.net https://www.youtube.com https://player.restream.io https://app.mailjet.com http://xy0p2.mjt.lu https://mj.quarkus.io https://giscus.app; 
   base-uri 'none'; 
   object-src 'none'; 
   form-action 'none'; 
@@ -100,13 +100,12 @@
         <span href="/about/">Why<i class="fas fa-chevron-down"></i></span>
         <ul class="submenu">
           <li><a href="/about" class="">WHAT IS QUARKUS?</a></li>
-          <li><a href="/container-first" class="">CONTAINER FIRST</a></li>
-          <li><a href="/continuum" class="">VERSATILITY</a></li>
-          <li><a href="/standards" class="">STANDARDS</a></li>
-          <li><a href="/kubernetes-native" class="">KUBERNETES NATIVE</a></li>
-          <li><a href="/performance" class="">PERFORMANCE</a></li>
           <li><a href="/developer-joy" class="">DEVELOPER JOY</a></li>
-          
+          <li><a href="/performance" class="">PERFORMANCE</a></li>
+          <li><a href="/kubernetes-native" class="">KUBERNETES NATIVE</a></li>
+          <li><a href="/standards" class="">STANDARDS</a></li>
+          <li><a href="/versatility" class="">VERSATILITY</a></li>
+          <li><a href="/container-first" class="">CONTAINER FIRST</a></li>          
         </ul>
       </li>
       <li class="dropdown">
@@ -114,6 +113,7 @@
         <ul class="submenu">
           <li><a href="/get-started" class="">GET STARTED</a></li>
           <li><a href="/guides" class="active">DOCUMENTATION</a></li>
+          <li><a href="/userstories/" class="">USER STORIES</a></li>  
           <li><a href="/qtips" class="">"Q" TIP VIDEOS</a></li>          
           <li><a href="/books" class="">BOOKS</a></li>
           </ul>
@@ -189,7 +189,11 @@
         
         
         
-        <option value="latest" >3.17.0 - Latest</option>
+        <option value="latest" >3.23.4 - Latest</option>
+        
+        
+        
+        <option value="3.20" >3.20</option>
         
         
         
@@ -408,7 +412,7 @@ class ReactiveGreetingResourceTest {
 <h2 id="kotlin-version"><a class="anchor" href="#kotlin-version"></a>Kotlin version</h2>
 <div class="sectionbody">
 <div class="paragraph">
-<p>The Quarkus Kotlin extension already declares a dependency on some base Kotlin libraries like <code>kotlin-stdlib-jdk8</code> and <code>kotlin-reflect</code>. The Kotlin version of these dependencies is declared in the Quarkus BOM and is currently at 2.0.21. It is therefore recommended to use the same Kotlin version for other Kotlin libraries. When adding a dependency to another base Kotlin library (e.g. <code>kotlin-test-junit5</code>) you don&#8217;t need to specify the version, since the Quarkus BOM includes the <a href="https://search.maven.org/artifact/org.jetbrains.kotlin/kotlin-bom">Kotlin BOM</a>.</p>
+<p>The Quarkus Kotlin extension already declares a dependency on some base Kotlin libraries like <code>kotlin-stdlib-jdk8</code> and <code>kotlin-reflect</code>. The Kotlin version of these dependencies is declared in the Quarkus BOM and is currently at 2.1.21. It is therefore recommended to use the same Kotlin version for other Kotlin libraries. When adding a dependency to another base Kotlin library (e.g. <code>kotlin-test-junit5</code>) you don&#8217;t need to specify the version, since the Quarkus BOM includes the <a href="https://search.maven.org/artifact/org.jetbrains.kotlin/kotlin-bom">Kotlin BOM</a>.</p>
 </div>
 <div class="paragraph">
 <p>This being said, you still need to specify the version of the Kotlin compiler to use. Again, it is recommended to use the same version which Quarkus uses for the Kotlin libraries.</p>
@@ -553,8 +557,8 @@ for example, then <code>&lt;option&gt;all-open:annotation=jakarta.enterprise.con
     id 'java'
     id 'io.quarkus'
 
-    id "org.jetbrains.kotlin.jvm" version "2.0.21" <i class="conum" data-value="1"></i><b>(1)</b>
-    id "org.jetbrains.kotlin.plugin.allopen" version "2.0.21" <i class="conum" data-value="1"></i><b>(1)</b>
+    id "org.jetbrains.kotlin.jvm" version "2.1.21" <i class="conum" data-value="1"></i><b>(1)</b>
+    id "org.jetbrains.kotlin.plugin.allopen" version "2.1.21" <i class="conum" data-value="1"></i><b>(1)</b>
 }
 
 repositories {
@@ -563,7 +567,7 @@ repositories {
 }
 
 dependencies {
-    implementation 'org.jetbrains.kotlin:kotlin-stdlib-jdk8:2.0.21'
+    implementation 'org.jetbrains.kotlin:kotlin-stdlib-jdk8:2.1.21'
 
    implementation enforcedPlatform("${quarkusPlatformGroupId}:${quarkusPlatformArtifactId}:${quarkusPlatformVersion}")
 
@@ -579,8 +583,8 @@ group = '...' // set your group
 version = '1.0.0-SNAPSHOT'
 
 java {
-    sourceCompatibility = JavaVersion.VERSION_11
-    targetCompatibility = JavaVersion.VERSION_11
+    sourceCompatibility = JavaVersion.VERSION_21
+    targetCompatibility = JavaVersion.VERSION_21
 }
 
 allOpen { <i class="conum" data-value="2"></i><b>(2)</b>
@@ -591,12 +595,12 @@ allOpen { <i class="conum" data-value="2"></i><b>(2)</b>
 }
 
 compileKotlin {
-    kotlinOptions.jvmTarget = JavaVersion.VERSION_11
+    kotlinOptions.jvmTarget = JavaVersion.VERSION_21
     kotlinOptions.javaParameters = true
 }
 
 compileTestKotlin {
-    kotlinOptions.jvmTarget = JavaVersion.VERSION_11
+    kotlinOptions.jvmTarget = JavaVersion.VERSION_21
 }</code></pre>
 </div>
 </div>
@@ -618,8 +622,8 @@ compileTestKotlin {
 <div class="listingblock">
 <div class="content">
 <pre class="highlightjs highlight"><code class="language-kotlin hljs" data-lang="kotlin">plugins {
-    kotlin("jvm") version "2.0.21" <i class="conum" data-value="1"></i><b>(1)</b>
-    kotlin("plugin.allopen") version "2.0.21"
+    kotlin("jvm") version "2.1.21" <i class="conum" data-value="1"></i><b>(1)</b>
+    kotlin("plugin.allopen") version "2.1.21"
     id("io.quarkus")
 }
 
@@ -658,8 +662,8 @@ group = '...' // set your group
 version = "1.0.0-SNAPSHOT"
 
 java {
-    sourceCompatibility = JavaVersion.VERSION_11
-    targetCompatibility = JavaVersion.VERSION_11
+    sourceCompatibility = JavaVersion.VERSION_21
+    targetCompatibility = JavaVersion.VERSION_21
 }
 
 allOpen { <i class="conum" data-value="2"></i><b>(2)</b>
@@ -909,6 +913,20 @@ data class ResultItem(
 
 ...</code></pre>
 </div>
+</div>
+<div class="admonitionblock note">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-note" title="Note"></i>
+</td>
+<td class="content">
+<div class="paragraph">
+<p>When using Kotlin with Quarkus REST, it is worth considering the use of <code>quarkus-rest-kotlin-serialization</code> which leverages the Kotlin Serialization framework instead of Jackson.</p>
+</div>
+</td>
+</tr>
+</table>
 </div>
 </div>
 </div>
@@ -1178,6 +1196,10 @@ class ReactiveGreetingResource(
           
           
             <li><a href="/newsletter" target="_blank">Newsletter</a></li>
+          
+          
+          
+            <li><a href="/userstories" target="_blank">User Stories</a></li>
           
           
           

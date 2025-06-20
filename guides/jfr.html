@@ -12,7 +12,7 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <meta http-equiv="Content-Security-Policy" content="
-  connect-src 'self' https://dpm.demdex.net https://adobedc.demdex.net https://route-default-test-mscherer-matamo.apps.ospo-osci.z3b1.p1.openshiftapps.com/ https://search.quarkus.io https://smetrics.redhat.com; 
+  connect-src 'self' https://dpm.demdex.net https://adobedc.demdex.net https://analytics.ossupstream.org/ https://search.quarkus.io https://smetrics.redhat.com; 
   script-src 'self' 'unsafe-inline' 'unsafe-eval'
       
       https://assets.adobedtm.com
@@ -27,13 +27,13 @@
       http://www.googleadservices.com
       https://googleads.g.doubleclick.net
       https://giscus.app
-      https://route-default-test-mscherer-matamo.apps.ospo-osci.z3b1.p1.openshiftapps.com/
+      https://analytics.ossupstream.org/
       https://app.mailjet.com;
 
   style-src 'self' https://fonts.googleapis.com https://use.fontawesome.com; 
   img-src 'self' * data:; 
   media-src 'self'; 
-  frame-src https://redhat.demdex.net https://www.youtube.com https://embed.restream.io https://app.mailjet.com http://xy0p2.mjt.lu https://mj.quarkus.io https://giscus.app; 
+  frame-src https://redhat.demdex.net https://www.youtube.com https://player.restream.io https://app.mailjet.com http://xy0p2.mjt.lu https://mj.quarkus.io https://giscus.app; 
   base-uri 'none'; 
   object-src 'none'; 
   form-action 'none'; 
@@ -100,13 +100,12 @@
         <span href="/about/">Why<i class="fas fa-chevron-down"></i></span>
         <ul class="submenu">
           <li><a href="/about" class="">WHAT IS QUARKUS?</a></li>
-          <li><a href="/container-first" class="">CONTAINER FIRST</a></li>
-          <li><a href="/continuum" class="">VERSATILITY</a></li>
-          <li><a href="/standards" class="">STANDARDS</a></li>
-          <li><a href="/kubernetes-native" class="">KUBERNETES NATIVE</a></li>
-          <li><a href="/performance" class="">PERFORMANCE</a></li>
           <li><a href="/developer-joy" class="">DEVELOPER JOY</a></li>
-          
+          <li><a href="/performance" class="">PERFORMANCE</a></li>
+          <li><a href="/kubernetes-native" class="">KUBERNETES NATIVE</a></li>
+          <li><a href="/standards" class="">STANDARDS</a></li>
+          <li><a href="/versatility" class="">VERSATILITY</a></li>
+          <li><a href="/container-first" class="">CONTAINER FIRST</a></li>          
         </ul>
       </li>
       <li class="dropdown">
@@ -114,6 +113,7 @@
         <ul class="submenu">
           <li><a href="/get-started" class="">GET STARTED</a></li>
           <li><a href="/guides" class="active">DOCUMENTATION</a></li>
+          <li><a href="/userstories/" class="">USER STORIES</a></li>  
           <li><a href="/qtips" class="">"Q" TIP VIDEOS</a></li>          
           <li><a href="/books" class="">BOOKS</a></li>
           </ul>
@@ -189,7 +189,11 @@
         
         
         
-        <option value="latest" selected>3.17.0 - Latest</option>
+        <option value="latest" selected>3.23.4 - Latest</option>
+        
+        
+        
+        <option value="3.20" >3.20</option>
         
         
         
@@ -224,6 +228,9 @@
 <p>This guide explains how <a href="https://openjdk.org/jeps/328">Java Flight Recorder</a> (JFR) can be extended to provide additional insight into your Quarkus application.
 JFR records various information from the Java standard API and JVM as events.
 By adding the Quarkus JFR extension, you can add custom Quarkus events to JFR. This will help you solve potential problems in your application.</p>
+</div>
+<div class="paragraph">
+<p>This document is part of the <a href="observability">Observability in Quarkus reference guide</a> which features this and other observability related components.</p>
 </div>
 <div class="paragraph">
 <p>JFR can be preconfigured to dump a file, and when the application exits, JFR will output the file.
@@ -300,7 +307,7 @@ cd jfr-quickstart</code></pre>
 <div class="title">Maven</div>
 <div class="listingblock">
 <div class="content">
-<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">mvn io.quarkus.platform:quarkus-maven-plugin:3.17.0:create \
+<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">mvn io.quarkus.platform:quarkus-maven-plugin:3.23.4:create \
     -DprojectGroupId=org.acme \
     -DprojectArtifactId=jfr-quickstart \
     -Dextensions='quarkus-rest,quarkus-jfr' \
@@ -911,7 +918,8 @@ public class NewInterceptor {
 </tr>
 <tr class="row-collapsible row-collapsed row-with-desc odd">
 <td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
-<p><a id="quarkus-jfr_quarkus-jfr-enabled"></a> <span class="property-path"><a href="#quarkus-jfr_quarkus-jfr-enabled"><code>quarkus.jfr.enabled</code></a></span></p>
+<p><a id="quarkus-jfr_quarkus-jfr-enabled"></a> <span class="property-path"><a href="#quarkus-jfr_quarkus-jfr-enabled"><code>quarkus.jfr.enabled</code></a></span>
+<button class="btn-copy fa fa-clipboard inline-btn-copy" data-clipboard-action="copy" data-clipboard-text='quarkus.jfr.enabled' title="Copy to clipboard" do-not-collapse="true"></button></p>
 </div>
 <div id="conf-collapsible-desc-1" class="openblock description description-collapsed">
 <div class="content">
@@ -919,7 +927,7 @@ public class NewInterceptor {
 <p>If false, only quarkus-jfr events are not recorded even if JFR is enabled. In this case, Java standard API and virtual machine information will be recorded according to the setting. Default value is <code>true</code></p>
 </div>
 <div class="paragraph">
-<p>Environment variable: <code id="env-var-6498">QUARKUS_JFR_ENABLED</code><button class="btn-copy fa fa-clipboard inline-btn-copy" data-clipboard-action="copy" data-clipboard-target="#env-var-6498" title="Copy to clipboard" do-not-collapse="true"></button></p>
+<p>Environment variable: <code id="env-var-6655">QUARKUS_JFR_ENABLED</code><button class="btn-copy fa fa-clipboard inline-btn-copy" data-clipboard-action="copy" data-clipboard-target="#env-var-6655" title="Copy to clipboard" do-not-collapse="true"></button></p>
 </div>
 </div>
 </div>
@@ -931,7 +939,8 @@ public class NewInterceptor {
 </tr>
 <tr class="row-collapsible row-collapsed row-with-desc">
 <td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
-<p><a id="quarkus-jfr_quarkus-jfr-rest-enabled"></a> <span class="property-path"><a href="#quarkus-jfr_quarkus-jfr-rest-enabled"><code>quarkus.jfr.rest.enabled</code></a></span></p>
+<p><a id="quarkus-jfr_quarkus-jfr-rest-enabled"></a> <span class="property-path"><a href="#quarkus-jfr_quarkus-jfr-rest-enabled"><code>quarkus.jfr.rest.enabled</code></a></span>
+<button class="btn-copy fa fa-clipboard inline-btn-copy" data-clipboard-action="copy" data-clipboard-text='quarkus.jfr.rest.enabled' title="Copy to clipboard" do-not-collapse="true"></button></p>
 </div>
 <div id="conf-collapsible-desc-2" class="openblock description description-collapsed">
 <div class="content">
@@ -939,7 +948,7 @@ public class NewInterceptor {
 <p>If false, only REST events in quarkus-jfr are not recorded even if JFR is enabled. In this case, other quarkus-jfr, Java standard API and virtual machine information will be recorded according to the setting. Default value is <code>true</code></p>
 </div>
 <div class="paragraph">
-<p>Environment variable: <code id="env-var-6499">QUARKUS_JFR_REST_ENABLED</code><button class="btn-copy fa fa-clipboard inline-btn-copy" data-clipboard-action="copy" data-clipboard-target="#env-var-6499" title="Copy to clipboard" do-not-collapse="true"></button></p>
+<p>Environment variable: <code id="env-var-6656">QUARKUS_JFR_REST_ENABLED</code><button class="btn-copy fa fa-clipboard inline-btn-copy" data-clipboard-action="copy" data-clipboard-target="#env-var-6656" title="Copy to clipboard" do-not-collapse="true"></button></p>
 </div>
 </div>
 </div>
@@ -988,8 +997,19 @@ public class NewInterceptor {
   <h2>Related content</h2>
   <div class="grid-wrapper relations">
     <div class="grid__item width-6-12 width-12-12-m">
+      <h3>On the same extensions</h3>
+      <ul class="related-content">
+      
+        
+        <li class="reference"><a href="/guides/observability">Observability in Quarkus</a></li>
+      </ul>
+    </div>
+    <div class="grid__item width-6-12 width-12-12-m">
       <h3>On the same topics</h3>
       <ul class="related-content">
+      
+        
+        <li class="reference"><a href="/guides/observability">Observability in Quarkus</a></li>
       
         
         <li class="guide"><a href="/guides/centralized-log-management">Centralized log management (Graylog, Logstash, Fluentd)</a></li>
@@ -1004,6 +1024,9 @@ public class NewInterceptor {
         <li class="reference"><a href="/guides/management-interface-reference">Management interface reference</a></li>
       
         
+        <li class="reference"><a href="/guides/telemetry-micrometer-to-opentelemetry">Micrometer and OpenTelemetry extension</a></li>
+      
+        
         <li class="reference"><a href="/guides/telemetry-micrometer">Micrometer Metrics</a></li>
       
         
@@ -1011,6 +1034,9 @@ public class NewInterceptor {
       
         
         <li class="guide"><a href="/guides/observability-devservices">Observability Dev Services</a></li>
+      
+        
+        <li class="guide"><a href="/guides/observability-devservices-lgtm">Observability Dev Services with Grafana OTel LGTM</a></li>
       
         
         <li class="guide"><a href="/guides/smallrye-health">SmallRye Health</a></li>
@@ -1072,6 +1098,10 @@ public class NewInterceptor {
           
           
             <li><a href="/newsletter" target="_blank">Newsletter</a></li>
+          
+          
+          
+            <li><a href="/userstories" target="_blank">User Stories</a></li>
           
           
           

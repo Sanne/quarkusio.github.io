@@ -12,7 +12,7 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <meta http-equiv="Content-Security-Policy" content="
-  connect-src 'self' https://dpm.demdex.net https://adobedc.demdex.net https://route-default-test-mscherer-matamo.apps.ospo-osci.z3b1.p1.openshiftapps.com/ https://search.quarkus.io https://smetrics.redhat.com; 
+  connect-src 'self' https://dpm.demdex.net https://adobedc.demdex.net https://analytics.ossupstream.org/ https://search.quarkus.io https://smetrics.redhat.com; 
   script-src 'self' 'unsafe-inline' 'unsafe-eval'
       
       https://assets.adobedtm.com
@@ -27,13 +27,13 @@
       http://www.googleadservices.com
       https://googleads.g.doubleclick.net
       https://giscus.app
-      https://route-default-test-mscherer-matamo.apps.ospo-osci.z3b1.p1.openshiftapps.com/
+      https://analytics.ossupstream.org/
       https://app.mailjet.com;
 
   style-src 'self' https://fonts.googleapis.com https://use.fontawesome.com; 
   img-src 'self' * data:; 
   media-src 'self'; 
-  frame-src https://redhat.demdex.net https://www.youtube.com https://embed.restream.io https://app.mailjet.com http://xy0p2.mjt.lu https://mj.quarkus.io https://giscus.app; 
+  frame-src https://redhat.demdex.net https://www.youtube.com https://player.restream.io https://app.mailjet.com http://xy0p2.mjt.lu https://mj.quarkus.io https://giscus.app; 
   base-uri 'none'; 
   object-src 'none'; 
   form-action 'none'; 
@@ -100,13 +100,12 @@
         <span href="/about/">Why<i class="fas fa-chevron-down"></i></span>
         <ul class="submenu">
           <li><a href="/about" class="">WHAT IS QUARKUS?</a></li>
-          <li><a href="/container-first" class="">CONTAINER FIRST</a></li>
-          <li><a href="/continuum" class="">VERSATILITY</a></li>
-          <li><a href="/standards" class="">STANDARDS</a></li>
-          <li><a href="/kubernetes-native" class="">KUBERNETES NATIVE</a></li>
-          <li><a href="/performance" class="">PERFORMANCE</a></li>
           <li><a href="/developer-joy" class="">DEVELOPER JOY</a></li>
-          
+          <li><a href="/performance" class="">PERFORMANCE</a></li>
+          <li><a href="/kubernetes-native" class="">KUBERNETES NATIVE</a></li>
+          <li><a href="/standards" class="">STANDARDS</a></li>
+          <li><a href="/versatility" class="">VERSATILITY</a></li>
+          <li><a href="/container-first" class="">CONTAINER FIRST</a></li>          
         </ul>
       </li>
       <li class="dropdown">
@@ -114,6 +113,7 @@
         <ul class="submenu">
           <li><a href="/get-started" class="">GET STARTED</a></li>
           <li><a href="/guides" class="active">DOCUMENTATION</a></li>
+          <li><a href="/userstories/" class="">USER STORIES</a></li>  
           <li><a href="/qtips" class="">"Q" TIP VIDEOS</a></li>          
           <li><a href="/books" class="">BOOKS</a></li>
           </ul>
@@ -189,7 +189,11 @@
         
         
         
-        <option value="latest" >3.17.0 - Latest</option>
+        <option value="latest" >3.23.4 - Latest</option>
+        
+        
+        
+        <option value="3.20" >3.20</option>
         
         
         
@@ -409,10 +413,7 @@ public class RolesAugmentor implements SecurityIdentityAugmentor {
 
     @Override
     public Uni&lt;SecurityIdentity&gt; augment(SecurityIdentity identity, AuthenticationRequestContext context) {
-        return Uni.createFrom().item(build(identity));
-
-        // Do 'return context.runBlocking(build(identity));'
-        // if a blocking call is required to customize the identity
+        return Uni.createFrom().item(build(identity)); <i class="conum" data-value="1"></i><b>(1)</b>
     }
 
     private Supplier&lt;SecurityIdentity&gt; build(SecurityIdentity identity) {
@@ -429,6 +430,14 @@ public class RolesAugmentor implements SecurityIdentityAugmentor {
     }
 }</code></pre>
 </div>
+</div>
+<div class="colist arabic">
+<table>
+<tr>
+<td><i class="conum" data-value="1"></i><b>1</b></td>
+<td>Augment the security identity. See the <a href="#security-augmentation-request-context">Activate Request Context</a> section for an example of how to augment the identity in a blocking mode.</td>
+</tr>
+</table>
 </div>
 <div class="paragraph">
 <p>Here is another example showing how to use the client certificate available in the current <a href="security-authentication-mechanisms#mutual-tls">mutual TLS (mTLS) authentication</a> request to add more roles:</p>
@@ -496,61 +505,68 @@ You can enforce the order by implementing a default <code>SecurityIdentityAugmen
 </tr>
 </table>
 </div>
+<div class="sect2">
+<h3 id="security-augmentation-request-context"><a class="anchor" href="#security-augmentation-request-context"></a>Activate Request Context</h3>
 <div class="paragraph">
 <p>By default, the request context is not activated when augmenting the security identity, this means that if you want to use for example Hibernate
 that mandates a request context, you will have a <code>jakarta.enterprise.context.ContextNotActiveException</code>.</p>
+</div>
+<div class="admonitionblock important">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-important" title="Important"></i>
+</td>
+<td class="content">
+Please also review the <a href="security-proactive-authentication#cdi-request-context-activation">Activating the CDI request context</a> section of the "Proactive authentication" guide.
+</td>
+</tr>
+</table>
 </div>
 <div class="paragraph">
 <p>The solution is to activate the request context, the following example shows how to get the roles from an Hibernate with Panache <code>UserRoleEntity</code>.</p>
 </div>
 <div class="listingblock">
 <div class="content">
-<pre class="highlightjs highlight"><code class="language-java hljs" data-lang="java">import io.quarkus.security.identity.AuthenticationRequestContext;
+<pre class="highlightjs highlight"><code class="language-java hljs" data-lang="java">import jakarta.enterprise.context.ApplicationScoped;
+import jakarta.inject.Inject;
+
+import io.quarkus.security.identity.AuthenticationRequestContext;
 import io.quarkus.security.identity.SecurityIdentity;
 import io.quarkus.security.identity.SecurityIdentityAugmentor;
 import io.smallrye.mutiny.Uni;
-
-import jakarta.enterprise.context.ApplicationScoped;
-import jakarta.enterprise.inject.Instance;
-import jakarta.inject.Inject;
 
 @ApplicationScoped
 public class RolesAugmentor implements SecurityIdentityAugmentor {
 
     @Inject
-    Instance&lt;SecurityIdentitySupplier&gt; identitySupplierInstance;
+    UserEntityAugmentor userEntityAugmentor;
 
     @Override
     public Uni&lt;SecurityIdentity&gt; augment(SecurityIdentity identity, AuthenticationRequestContext context) {
-        if(identity.isAnonymous()) {
+        if (identity.isAnonymous()) {
             return Uni.createFrom().item(identity);
         }
 
         // Hibernate ORM is blocking
-        SecurityIdentitySupplier identitySupplier = identitySupplierInstance.get();
-        identitySupplier.setIdentity(identity);
-        return context.runBlocking(identitySupplier);
+        return context.runBlocking(() -&gt; userEntityAugmentor.augment(identity));
     }
 }</code></pre>
 </div>
 </div>
 <div class="listingblock">
 <div class="content">
-<pre class="highlightjs highlight"><code class="language-java hljs" data-lang="java">import io.quarkus.security.identity.SecurityIdentity;
+<pre class="highlightjs highlight"><code class="language-java hljs" data-lang="java">import jakarta.enterprise.context.ApplicationScoped;
+import jakarta.enterprise.context.control.ActivateRequestContext;
+
+import io.quarkus.security.identity.SecurityIdentity;
 import io.quarkus.security.runtime.QuarkusSecurityIdentity;
 
-import jakarta.enterprise.context.Dependent;
-import jakarta.enterprise.context.control.ActivateRequestContext;
-import java.util.function.Supplier;
+@ApplicationScoped
+class UserEntityAugmentor {
 
-@Dependent
-class SecurityIdentitySupplier implements Supplier&lt;SecurityIdentity&gt; {
-
-    private SecurityIdentity identity;
-
-    @Override
     @ActivateRequestContext
-    public SecurityIdentity get() {
+    public SecurityIdentity augment(SecurityIdentity identity) {
         QuarkusSecurityIdentity.Builder builder = QuarkusSecurityIdentity.builder(identity);
         String user = identity.getPrincipal().getName();
 
@@ -559,10 +575,6 @@ class SecurityIdentitySupplier implements Supplier&lt;SecurityIdentity&gt; {
                 .forEach(role -&gt; builder.addRole(role.role));
 
         return builder.build();
-    }
-
-    public void setIdentity(SecurityIdentity identity) {
-        this.identity = identity;
     }
 }</code></pre>
 </div>
@@ -625,6 +637,7 @@ Otherwise, the <code>RoutingContext</code> will not be available during augmenta
 </td>
 </tr>
 </table>
+</div>
 </div>
 </div>
 </div>
@@ -1113,6 +1126,67 @@ For that reason, asynchronous processing can have positive effect on performance
 </div>
 </div>
 <div class="sect1">
+<h2 id="securityidentity-injection-in-vert-x-route-handlers"><a class="anchor" href="#securityidentity-injection-in-vert-x-route-handlers"></a><code>SecurityIdentity</code> injection in Vert.x route handlers</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>When you need to inject <code>SecurityIdentity</code> in a Vert.x route handler registered directly on the <a href="reactive-routes#using-vertx-web-router">Vert.x Web Router</a>, then requesting the <code>SecurityIdentity</code> propagation is required.
+For example:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-java hljs" data-lang="java">package io.quarkus.it.security;
+
+public class RouterObserver {
+
+    public void route(@Observes Router router, UserInformation userInformation) {
+        router.route("/user-info").handler(event -&gt; event.response().end(userInformation.getPrincipalName()));
+    }
+
+}</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>The <code>UserInformation</code> bean in the example can look like this:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-java hljs" data-lang="java">package io.quarkus.it.security;
+
+@ApplicationScoped
+public class UserInformation {
+
+    @Inject
+    SecurityIdentity identity;
+
+    @ActivateRequestContext
+    String getPrincipalName() {
+        return identity.getPrincipal().getName();
+    }
+
+}</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>For the <code>SecurityIdentity</code> injection in this example to work, you must activate the <code>SecurityIdentity</code> propagation:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-properties hljs" data-lang="properties">quarkus.http.auth.propagate-security-identity=true <i class="conum" data-value="1"></i><b>(1)</b></code></pre>
+</div>
+</div>
+<div class="colist arabic">
+<table>
+<tr>
+<td><i class="conum" data-value="1"></i><b>1</b></td>
+<td>Propagate the <code>SecurityIdentity</code> when a Vert.x route handler is registered programmatically on the Vert.x HTTP router.
+It is required because Quarkus cannot detect that the <code>SecurityIdentity</code> injection point is used in the programmatically registered Vert.x route handler.
+For the routes registered declaratively with the <code>@Route</code> annotation as well as Jakarta REST endpoints, this configuration is not required.</td>
+</tr>
+</table>
+</div>
+</div>
+</div>
+<div class="sect1">
 <h2 id="references"><a class="anchor" href="#references"></a>References</h2>
 <div class="sectionbody">
 <div class="ulist">
@@ -1139,7 +1213,11 @@ For that reason, asynchronous processing can have positive effect on performance
 <li><a href="#quarkus-security-dependency">Quarkus Security Dependency</a></li>
 <li><a href="#httpauthenticationmechanism-customization">HttpAuthenticationMechanism Customization</a></li>
 <li><a href="#dealing-with-more-than-one-http-auth-mechanisms">Dealing with more than one HttpAuthenticationMechanism</a></li>
-<li><a href="#security-identity-customization">Security Identity Customization</a></li>
+<li><a href="#security-identity-customization">Security Identity Customization</a>
+<ul class="sectlevel2">
+<li><a href="#security-augmentation-request-context">Activate Request Context</a></li>
+</ul>
+</li>
 <li><a href="#jaxrs-security-context">Custom Jakarta REST SecurityContext</a></li>
 <li><a href="#disabling-authorization">Disabling Authorization</a></li>
 <li><a href="#registering-security-providers">Registering Security Providers</a>
@@ -1154,6 +1232,7 @@ For that reason, asynchronous processing can have positive effect on performance
 </li>
 <li><a href="#reactive-security">Reactive Security</a></li>
 <li><a href="#observe-security-events">Observe security events</a></li>
+<li><a href="#securityidentity-injection-in-vert-x-route-handlers"><code>SecurityIdentity</code> injection in Vert.x route handlers</a></li>
 <li><a href="#references">References</a></li>
 </ul></div>
     </div>
@@ -1189,7 +1268,7 @@ For that reason, asynchronous processing can have positive effect on performance
         <li class="howto"><a href="/version/main/guides/security-basic-authentication-howto">Enable Basic authentication</a></li>
       
         
-        <li class="tutorial"><a href="/version/main/guides/security-getting-started-tutorial">Getting started with Security by using Basic authentication and Jakarta Persistence</a></li>
+        <li class="tutorial"><a href="/version/main/guides/security-getting-started-tutorial">Getting started with security by using Basic authentication and Jakarta Persistence</a></li>
       
         
         <li class="concepts"><a href="/version/main/guides/security-identity-providers">Identity providers</a></li>
@@ -1222,7 +1301,7 @@ For that reason, asynchronous processing can have positive effect on performance
         <li class="tutorial"><a href="/version/main/guides/security-oidc-code-flow-authentication-tutorial">Protect a web application by using OpenID Connect (OIDC) authorization code flow</a></li>
       
         
-        <li class="concepts"><a href="/version/main/guides/security-architecture">Quarkus Security architecture</a></li>
+        <li class="concepts"><a href="/version/main/guides/security-oidc-expanded-configuration">Quarkus OpenId Connect (OIDC) Expanded Configuration Reference</a></li>
       </ul>
     </div>
     </div>
@@ -1266,6 +1345,10 @@ For that reason, asynchronous processing can have positive effect on performance
           
           
             <li><a href="/newsletter" target="_blank">Newsletter</a></li>
+          
+          
+          
+            <li><a href="/userstories" target="_blank">User Stories</a></li>
           
           
           

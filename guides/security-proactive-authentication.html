@@ -12,7 +12,7 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <meta http-equiv="Content-Security-Policy" content="
-  connect-src 'self' https://dpm.demdex.net https://adobedc.demdex.net https://route-default-test-mscherer-matamo.apps.ospo-osci.z3b1.p1.openshiftapps.com/ https://search.quarkus.io https://smetrics.redhat.com; 
+  connect-src 'self' https://dpm.demdex.net https://adobedc.demdex.net https://analytics.ossupstream.org/ https://search.quarkus.io https://smetrics.redhat.com; 
   script-src 'self' 'unsafe-inline' 'unsafe-eval'
       
       https://assets.adobedtm.com
@@ -27,13 +27,13 @@
       http://www.googleadservices.com
       https://googleads.g.doubleclick.net
       https://giscus.app
-      https://route-default-test-mscherer-matamo.apps.ospo-osci.z3b1.p1.openshiftapps.com/
+      https://analytics.ossupstream.org/
       https://app.mailjet.com;
 
   style-src 'self' https://fonts.googleapis.com https://use.fontawesome.com; 
   img-src 'self' * data:; 
   media-src 'self'; 
-  frame-src https://redhat.demdex.net https://www.youtube.com https://embed.restream.io https://app.mailjet.com http://xy0p2.mjt.lu https://mj.quarkus.io https://giscus.app; 
+  frame-src https://redhat.demdex.net https://www.youtube.com https://player.restream.io https://app.mailjet.com http://xy0p2.mjt.lu https://mj.quarkus.io https://giscus.app; 
   base-uri 'none'; 
   object-src 'none'; 
   form-action 'none'; 
@@ -100,13 +100,12 @@
         <span href="/about/">Why<i class="fas fa-chevron-down"></i></span>
         <ul class="submenu">
           <li><a href="/about" class="">WHAT IS QUARKUS?</a></li>
-          <li><a href="/container-first" class="">CONTAINER FIRST</a></li>
-          <li><a href="/continuum" class="">VERSATILITY</a></li>
-          <li><a href="/standards" class="">STANDARDS</a></li>
-          <li><a href="/kubernetes-native" class="">KUBERNETES NATIVE</a></li>
-          <li><a href="/performance" class="">PERFORMANCE</a></li>
           <li><a href="/developer-joy" class="">DEVELOPER JOY</a></li>
-          
+          <li><a href="/performance" class="">PERFORMANCE</a></li>
+          <li><a href="/kubernetes-native" class="">KUBERNETES NATIVE</a></li>
+          <li><a href="/standards" class="">STANDARDS</a></li>
+          <li><a href="/versatility" class="">VERSATILITY</a></li>
+          <li><a href="/container-first" class="">CONTAINER FIRST</a></li>          
         </ul>
       </li>
       <li class="dropdown">
@@ -114,6 +113,7 @@
         <ul class="submenu">
           <li><a href="/get-started" class="">GET STARTED</a></li>
           <li><a href="/guides" class="active">DOCUMENTATION</a></li>
+          <li><a href="/userstories/" class="">USER STORIES</a></li>  
           <li><a href="/qtips" class="">"Q" TIP VIDEOS</a></li>          
           <li><a href="/books" class="">BOOKS</a></li>
           </ul>
@@ -189,7 +189,11 @@
         
         
         
-        <option value="latest" selected>3.17.0 - Latest</option>
+        <option value="latest" selected>3.23.4 - Latest</option>
+        
+        
+        
+        <option value="3.20" >3.20</option>
         
         
         
@@ -229,7 +233,8 @@ Gain practical insights and strategies for various application scenarios.</p>
 <div class="paragraph">
 <p>Proactive authentication is enabled in Quarkus by default.
 It ensures that all incoming requests with credentials are authenticated, even if the target page does not require authentication.
-As a result, requests with invalid credentials are rejected, even if the target page is public.</p>
+As a result, requests with invalid credentials are rejected, even if the target page is public.
+Requests without credentials are not rejected, because anonymous requests are allowed.</p>
 </div>
 <div class="paragraph">
 <p>You can turn off this default behavior if you want to authenticate only when the target page requires it.
@@ -245,7 +250,7 @@ To turn off proactive authentication so that authentication occurs only when the
 An identity can be requested because of security rules that require the user to authenticate or because programmatic access to the current identity is required.</p>
 </div>
 <div class="paragraph">
-<p>If proactive authentication is used, accessing <code>SecurityIdentity</code> is a blocking operation.
+<p>If proactive authentication is not used, accessing <code>SecurityIdentity</code> is a blocking operation.
 This is because authentication might have yet to happen, and accessing <code>SecurityIdentity</code> might require calls to external systems, such as databases, that might block the operation.
 For blocking applications, this is not an issue.
 However, if you have disabled authentication in a reactive application, this fails because you cannot do blocking operations on the I/O thread.
@@ -331,6 +336,23 @@ public class HelloService {
 
 }</code></pre>
 </div>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="cdi-request-context-activation"><a class="anchor" href="#cdi-request-context-activation"></a>Activating the CDI request context</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>You may need to inject <code>@RequestScoped</code> beans during authentication and authorization.
+A good example of this is accessing a database during a <code>SecurityIdentity</code> augmentation,
+which is described in the <a href="security-customization#security-identity-customization">Security Identity Customization</a> section of the "Security Tips and Tricks" guide.
+If authentication or authorization fails with the <code>jakarta.enterprise.context.ContextNotActiveException</code>, disabling proactive authentication is most often the best solution.
+Users can also activate <a href="cdi-reference#request-context-lifecycle">CDI request context</a>, for example, by using the <code>@ActivateRequestContext</code> annotation.
+However, some CDI beans may not be ready for use.</p>
+</div>
+<div class="paragraph">
+<p>One exception to this solution is a situation when application endpoints are secured with the <a href="security-authorize-web-endpoints-reference#authorization-using-configuration">Authorization using configuration</a>.
+For more information, see the <a href="security-authorize-web-endpoints-reference#policy-active-cdi-request-context">Inject RequestScoped beans into HttpSecurityPolicy</a> section of the "Authorization of Web endpoints" guide for more information.</p>
 </div>
 </div>
 </div>
@@ -442,6 +464,7 @@ public class AuthenticationFailedExceptionHandler {
     </div>
     <div class="grid__item width-4-12 width-12-12-m tocwrapper">
       <div class="hide-mobile toc"><ul class="sectlevel1">
+<li><a href="#cdi-request-context-activation">Activating the CDI request context</a></li>
 <li><a href="#customize-auth-exception-responses">Customize authentication exception responses</a></li>
 <li><a href="#references">References</a></li>
 </ul></div>
@@ -460,13 +483,13 @@ public class AuthenticationFailedExceptionHandler {
         <li class="concepts"><a href="/guides/security-basic-authentication">Basic authentication</a></li>
       
         
-        <li class="concepts"><a href="/guides/security-cors">Cross-origin resource sharing</a></li>
+        <li class="reference"><a href="/guides/security-cors">Cross-Origin Resource Sharing (CORS)</a></li>
       
         
         <li class="howto"><a href="/guides/security-basic-authentication-howto">Enable Basic authentication</a></li>
       
         
-        <li class="tutorial"><a href="/guides/security-getting-started-tutorial">Getting started with Security by using Basic authentication and Jakarta Persistence</a></li>
+        <li class="tutorial"><a href="/guides/security-getting-started-tutorial">Getting started with security by using Basic authentication and Jakarta Persistence</a></li>
       
         
         <li class="reference"><a href="/guides/http-reference">HTTP Reference</a></li>
@@ -489,7 +512,7 @@ public class AuthenticationFailedExceptionHandler {
         <li class="howto"><a href="/guides/security-basic-authentication-howto">Enable Basic authentication</a></li>
       
         
-        <li class="tutorial"><a href="/guides/security-getting-started-tutorial">Getting started with Security by using Basic authentication and Jakarta Persistence</a></li>
+        <li class="tutorial"><a href="/guides/security-getting-started-tutorial">Getting started with security by using Basic authentication and Jakarta Persistence</a></li>
       
         
         <li class="concepts"><a href="/guides/security-oidc-bearer-token-authentication">OpenID Connect (OIDC) Bearer token authentication</a></li>
@@ -510,7 +533,7 @@ public class AuthenticationFailedExceptionHandler {
         <li class="reference"><a href="/guides/security-authorize-web-endpoints-reference">Authorization of web endpoints</a></li>
       
         
-        <li class="guide"><a href="/guides/security-jwt-build">Build, Sign and Encrypt JSON Web Tokens</a></li>
+        <li class="guide"><a href="/guides/security-jwt-build">Build, sign, and encrypt JSON Web Tokens</a></li>
       
         
         <li class="concepts"><a href="/guides/security-openid-connect-providers">Configuring Well-Known OpenID Connect Providers</a></li>
@@ -581,6 +604,10 @@ public class AuthenticationFailedExceptionHandler {
           
           
             <li><a href="/newsletter" target="_blank">Newsletter</a></li>
+          
+          
+          
+            <li><a href="/userstories" target="_blank">User Stories</a></li>
           
           
           

@@ -12,7 +12,7 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <meta http-equiv="Content-Security-Policy" content="
-  connect-src 'self' https://dpm.demdex.net https://adobedc.demdex.net https://route-default-test-mscherer-matamo.apps.ospo-osci.z3b1.p1.openshiftapps.com/ https://search.quarkus.io https://smetrics.redhat.com; 
+  connect-src 'self' https://dpm.demdex.net https://adobedc.demdex.net https://analytics.ossupstream.org/ https://search.quarkus.io https://smetrics.redhat.com; 
   script-src 'self' 'unsafe-inline' 'unsafe-eval'
       
       https://assets.adobedtm.com
@@ -27,13 +27,13 @@
       http://www.googleadservices.com
       https://googleads.g.doubleclick.net
       https://giscus.app
-      https://route-default-test-mscherer-matamo.apps.ospo-osci.z3b1.p1.openshiftapps.com/
+      https://analytics.ossupstream.org/
       https://app.mailjet.com;
 
   style-src 'self' https://fonts.googleapis.com https://use.fontawesome.com; 
   img-src 'self' * data:; 
   media-src 'self'; 
-  frame-src https://redhat.demdex.net https://www.youtube.com https://embed.restream.io https://app.mailjet.com http://xy0p2.mjt.lu https://mj.quarkus.io https://giscus.app; 
+  frame-src https://redhat.demdex.net https://www.youtube.com https://player.restream.io https://app.mailjet.com http://xy0p2.mjt.lu https://mj.quarkus.io https://giscus.app; 
   base-uri 'none'; 
   object-src 'none'; 
   form-action 'none'; 
@@ -100,13 +100,12 @@
         <span href="/about/">Why<i class="fas fa-chevron-down"></i></span>
         <ul class="submenu">
           <li><a href="/about" class="">WHAT IS QUARKUS?</a></li>
-          <li><a href="/container-first" class="">CONTAINER FIRST</a></li>
-          <li><a href="/continuum" class="">VERSATILITY</a></li>
-          <li><a href="/standards" class="">STANDARDS</a></li>
-          <li><a href="/kubernetes-native" class="">KUBERNETES NATIVE</a></li>
-          <li><a href="/performance" class="">PERFORMANCE</a></li>
           <li><a href="/developer-joy" class="">DEVELOPER JOY</a></li>
-          
+          <li><a href="/performance" class="">PERFORMANCE</a></li>
+          <li><a href="/kubernetes-native" class="">KUBERNETES NATIVE</a></li>
+          <li><a href="/standards" class="">STANDARDS</a></li>
+          <li><a href="/versatility" class="">VERSATILITY</a></li>
+          <li><a href="/container-first" class="">CONTAINER FIRST</a></li>          
         </ul>
       </li>
       <li class="dropdown">
@@ -114,6 +113,7 @@
         <ul class="submenu">
           <li><a href="/get-started" class="">GET STARTED</a></li>
           <li><a href="/guides" class="active">DOCUMENTATION</a></li>
+          <li><a href="/userstories/" class="">USER STORIES</a></li>  
           <li><a href="/qtips" class="">"Q" TIP VIDEOS</a></li>          
           <li><a href="/books" class="">BOOKS</a></li>
           </ul>
@@ -189,7 +189,11 @@
         
         
         
-        <option value="latest" selected>3.17.0 - Latest</option>
+        <option value="latest" selected>3.23.4 - Latest</option>
+        
+        
+        
+        <option value="3.20" >3.20</option>
         
         
         
@@ -734,7 +738,7 @@ Refer to the <a href="./container-image">containerization guide</a> to learn mor
 <pre class="highlightjs highlight"><code class="language-properties hljs" data-lang="properties">quarkus.container-image.build=true
 quarkus.container-image.group=&lt;your-group-name&gt;
 quarkus.container-image.name=&lt;you-container-name&gt;
-quarkus.jib.base-jvm-image=registry.access.redhat.com/ubi8/openjdk-21-runtime <i class="conum" data-value="1"></i><b>(1)</b>
+quarkus.jib.base-jvm-image=registry.access.redhat.com/ubi9/openjdk-21-runtime <i class="conum" data-value="1"></i><b>(1)</b>
 quarkus.jib.platforms=linux/amd64,linux/arm64 <i class="conum" data-value="2"></i><b>(2)</b></code></pre>
 </div>
 </div>
@@ -1027,6 +1031,46 @@ public class LoomUnitExampleTest {
 </div>
 </div>
 <div class="sect1">
+<h2 id="virtual-thread-metrics"><a class="anchor" href="#virtual-thread-metrics"></a>Virtual thread metrics</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>You can enable the Micrometer Virtual Thread <em>binder</em> by adding the following artifact to your application:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-xml hljs" data-lang="xml">&lt;dependency&gt;
+    &lt;groupId&gt;io.micrometer&lt;/groupId&gt;
+    &lt;artifactId&gt;micrometer-java21&lt;/artifactId&gt;
+&lt;/dependency&gt;</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>This binder keeps track of the number of pinning events and the number of virtual threads failed to be started or un-parked.
+See the <a href="https://docs.micrometer.io/micrometer/reference/reference/jvm.html#_java_21_metrics">MicroMeter documentation</a> for more information.</p>
+</div>
+<div class="paragraph">
+<p>You can explicitly disable the binder by setting the following property in your <code>application.properties</code>:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-properties hljs" data-lang="properties"># The binder is automatically enabled if the micrometer-java21 dependency is present
+quarkus.micrometer.binder.virtual-threads.enabled=false</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>In addition, if the application is running on a JVM that does not support virtual threads (prior to Java 21), the binder is automatically disabled.</p>
+</div>
+<div class="paragraph">
+<p>You can associate tags to the collected metrics by setting the following properties in your <code>application.properties</code>:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-properties hljs" data-lang="properties">quarkus.micrometer.binder.virtual-threads.tags=tag_1=value_1, tag_2=value_2</code></pre>
+</div>
+</div>
+</div>
+</div>
+<div class="sect1">
 <h2 id="additional-references"><a class="anchor" href="#additional-references"></a>Additional references</h2>
 <div class="sectionbody">
 <div class="ulist">
@@ -1070,6 +1114,7 @@ public class LoomUnitExampleTest {
 <li><a href="#virtual-thread-names">Virtual thread names</a></li>
 <li><a href="#inject-the-virtual-thread-executor">Inject the virtual thread executor</a></li>
 <li><a href="#testing-virtual-thread-applications">Testing virtual thread applications</a></li>
+<li><a href="#virtual-thread-metrics">Virtual thread metrics</a></li>
 <li><a href="#additional-references">Additional references</a></li>
 </ul></div>
     </div>
@@ -1134,6 +1179,10 @@ public class LoomUnitExampleTest {
           
           
             <li><a href="/newsletter" target="_blank">Newsletter</a></li>
+          
+          
+          
+            <li><a href="/userstories" target="_blank">User Stories</a></li>
           
           
           

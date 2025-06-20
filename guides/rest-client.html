@@ -12,7 +12,7 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <meta http-equiv="Content-Security-Policy" content="
-  connect-src 'self' https://dpm.demdex.net https://adobedc.demdex.net https://route-default-test-mscherer-matamo.apps.ospo-osci.z3b1.p1.openshiftapps.com/ https://search.quarkus.io https://smetrics.redhat.com; 
+  connect-src 'self' https://dpm.demdex.net https://adobedc.demdex.net https://analytics.ossupstream.org/ https://search.quarkus.io https://smetrics.redhat.com; 
   script-src 'self' 'unsafe-inline' 'unsafe-eval'
       
       https://assets.adobedtm.com
@@ -27,13 +27,13 @@
       http://www.googleadservices.com
       https://googleads.g.doubleclick.net
       https://giscus.app
-      https://route-default-test-mscherer-matamo.apps.ospo-osci.z3b1.p1.openshiftapps.com/
+      https://analytics.ossupstream.org/
       https://app.mailjet.com;
 
   style-src 'self' https://fonts.googleapis.com https://use.fontawesome.com; 
   img-src 'self' * data:; 
   media-src 'self'; 
-  frame-src https://redhat.demdex.net https://www.youtube.com https://embed.restream.io https://app.mailjet.com http://xy0p2.mjt.lu https://mj.quarkus.io https://giscus.app; 
+  frame-src https://redhat.demdex.net https://www.youtube.com https://player.restream.io https://app.mailjet.com http://xy0p2.mjt.lu https://mj.quarkus.io https://giscus.app; 
   base-uri 'none'; 
   object-src 'none'; 
   form-action 'none'; 
@@ -100,13 +100,12 @@
         <span href="/about/">Why<i class="fas fa-chevron-down"></i></span>
         <ul class="submenu">
           <li><a href="/about" class="">WHAT IS QUARKUS?</a></li>
-          <li><a href="/container-first" class="">CONTAINER FIRST</a></li>
-          <li><a href="/continuum" class="">VERSATILITY</a></li>
-          <li><a href="/standards" class="">STANDARDS</a></li>
-          <li><a href="/kubernetes-native" class="">KUBERNETES NATIVE</a></li>
-          <li><a href="/performance" class="">PERFORMANCE</a></li>
           <li><a href="/developer-joy" class="">DEVELOPER JOY</a></li>
-          
+          <li><a href="/performance" class="">PERFORMANCE</a></li>
+          <li><a href="/kubernetes-native" class="">KUBERNETES NATIVE</a></li>
+          <li><a href="/standards" class="">STANDARDS</a></li>
+          <li><a href="/versatility" class="">VERSATILITY</a></li>
+          <li><a href="/container-first" class="">CONTAINER FIRST</a></li>          
         </ul>
       </li>
       <li class="dropdown">
@@ -114,6 +113,7 @@
         <ul class="submenu">
           <li><a href="/get-started" class="">GET STARTED</a></li>
           <li><a href="/guides" class="active">DOCUMENTATION</a></li>
+          <li><a href="/userstories/" class="">USER STORIES</a></li>  
           <li><a href="/qtips" class="">"Q" TIP VIDEOS</a></li>          
           <li><a href="/books" class="">BOOKS</a></li>
           </ul>
@@ -189,7 +189,11 @@
         
         
         
-        <option value="latest" selected>3.17.0 - Latest</option>
+        <option value="latest" selected>3.23.4 - Latest</option>
+        
+        
+        
+        <option value="3.20" >3.20</option>
         
         
         
@@ -308,7 +312,7 @@ cd rest-client-quickstart</code></pre>
 <div class="title">Maven</div>
 <div class="listingblock">
 <div class="content">
-<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">mvn io.quarkus.platform:quarkus-maven-plugin:3.17.0:create \
+<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">mvn io.quarkus.platform:quarkus-maven-plugin:3.23.4:create \
     -DprojectGroupId=org.acme \
     -DprojectArtifactId=rest-client-quickstart \
     -Dextensions='rest-jackson,rest-client-jackson' \
@@ -517,6 +521,7 @@ import jakarta.ws.rs.QueryParam;
 import jakarta.ws.rs.core.MultivaluedMap;
 import java.util.Map;
 import java.util.Set;
+import java util.Optional;
 
 @Path("/extensions")
 @RegisterRestClient(configKey = "extensions-api")
@@ -527,6 +532,9 @@ public interface ExtensionsService {
 
     @GET
     Set&lt;Extension&gt; getByName(@RestQuery String name); <i class="conum" data-value="1"></i><b>(1)</b>
+
+    @GET
+    Set&lt;Extension&gt; getByOptionalName(@RestQuery Optional&lt;String&gt; name);
 
     @GET
     Set&lt;Extension&gt; getByFilter(@RestQuery Map&lt;String, String&gt; filter); <i class="conum" data-value="2"></i><b>(2)</b>
@@ -541,7 +549,7 @@ public interface ExtensionsService {
 <table>
 <tr>
 <td><i class="conum" data-value="1"></i><b>1</b></td>
-<td>Request query will include parameter with key <code>name</code></td>
+<td>@RestQuery will include parameter with key <code>name</code></td>
 </tr>
 <tr>
 <td><i class="conum" data-value="2"></i><b>2</b></td>
@@ -733,6 +741,42 @@ public interface ExtensionsService {
 </div>
 </div>
 <div class="sect2">
+<h3 id="dynamic-base-urls"><a class="anchor" href="#dynamic-base-urls"></a>Dynamic base URLs</h3>
+<div class="paragraph">
+<p>The REST client allows for a per invocation override of the base URL using the <code>io.quarkus.rest.client.reactive.Url</code> annotation.</p>
+</div>
+<div class="paragraph">
+<p>Here is a simple example:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-java hljs" data-lang="java">package org.acme.rest.client;
+
+import org.eclipse.microprofile.rest.client.inject.RegisterRestClient;
+
+import jakarta.ws.rs.GET;
+import jakarta.ws.rs.Path;
+import jakarta.ws.rs.PathParam;
+import jakarta.ws.rs.QueryParam;
+import java.util.Set;
+
+import io.quarkus.rest.client.reactive.Url;
+
+@Path("/extensions")
+@RegisterRestClient
+public interface ExtensionsService {
+
+    @GET
+    @Path("/stream/{stream}")
+    Set&lt;Extension&gt; getByStream(@Url String url, @PathParam("stream") String stream, @QueryParam("id") String id);
+}</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>When the <code>url</code> parameter is non-null, it will override the base URL that is configured for the client (the default base URL configuration is still mandatory).</p>
+</div>
+</div>
+<div class="sect2">
 <h3 id="sending-large-payloads"><a class="anchor" href="#sending-large-payloads"></a>Sending large payloads</h3>
 <div class="paragraph">
 <p>The REST Client is capable of sending arbitrarily large HTTP bodies without buffering the contents in memory, if one of the following types is used:</p>
@@ -799,7 +843,7 @@ public interface ExtensionsService {
 <i class="fa icon-note" title="Note"></i>
 </td>
 <td class="content">
-You can also use the Jakarta REST type <a href="{jaxrsapi}/jakarta/ws/rs/core/Response.html"><code>Response</code></a> but it is
+You can also use the Jakarta REST type <a href="https://javadoc.io/doc/jakarta.ws.rs/jakarta.ws.rs-api/3.1.0/jakarta.ws.rs/jakarta/ws/rs/core/Response.html"><code>Response</code></a> but it is
 not strongly typed to your entity.
 </td>
 </tr>
@@ -931,15 +975,7 @@ quarkus.rest-client.extensions-api.scope=jakarta.inject.Singleton</code></pre>
 </table>
 </div>
 <div class="sect2">
-<h3 id="disabling-hostname-verification"><a class="anchor" href="#disabling-hostname-verification"></a>Disabling Hostname Verification</h3>
-<div class="paragraph">
-<p>To disable the SSL hostname verification for a specific REST client, add the following property to your configuration:</p>
-</div>
-<div class="listingblock">
-<div class="content">
-<pre class="highlightjs highlight"><code class="language-properties hljs" data-lang="properties">quarkus.rest-client.extensions-api.verify-host=false</code></pre>
-</div>
-</div>
+<h3 id="trusting-all-certificates-and-disabling-ssl-hostname-verification"><a class="anchor" href="#trusting-all-certificates-and-disabling-ssl-hostname-verification"></a>Trusting all certificates and Disabling SSL hostname verification</h3>
 <div class="admonitionblock warning">
 <table>
 <tr>
@@ -948,11 +984,39 @@ quarkus.rest-client.extensions-api.scope=jakarta.inject.Singleton</code></pre>
 </td>
 <td class="content">
 <div class="paragraph">
-<p>This setting should not be used in production as it will disable the SSL hostname verification.</p>
+<p>This properties set should not be used in production.</p>
 </div>
 </td>
 </tr>
 </table>
+</div>
+<div class="paragraph">
+<p>You can configure TLS connection of specific REST client to trust all certificates and disable the hostname verification using tls extension.
+First of all, you should configure tls configuration bucket.</p>
+</div>
+<div class="paragraph">
+<p>To trust all certificates:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-properties hljs" data-lang="properties">quarkus.tls.tls-disabled.trust-all=true</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>To disable SSL hostname verification:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-properties hljs" data-lang="properties">quarkus.tls.tls-disabled.hostname-verification-algorithm=NONE</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Finally, lets configure our REST client with apropriate tls configuration name:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-properties hljs" data-lang="properties">quarkus.rest-client.extensions-api.tls-configuration-name=tls-disabled</code></pre>
+</div>
 </div>
 </div>
 <div class="sect2">
@@ -2031,7 +2095,7 @@ public interface ExtensionsService {
 If <code>toThrowable</code> returns an exception, then that exception will be thrown. If <code>null</code> is returned, the next implementation of <code>ResponseExceptionMapper</code> in the chain will be called (if there is any).</p>
 </div>
 <div class="paragraph">
-<p>The class as written above, would not be automatically be used by any REST Client. To make it available to every REST Client of the application, the class needs to be annotated with <code>@Provider</code> (as long as <code>quarkus.rest-client-reactive.provider-autodiscovery</code> is not set to <code>false</code>).
+<p>The class as written above, would not be automatically be used by any REST Client. To make it available to every REST Client of the application, the class needs to be annotated with <code>@Provider</code> (as long as <code>quarkus.rest-client.provider-autodiscovery</code> is not set to <code>false</code>).
 Alternatively, if the exception handling class should only apply to specific REST Client interfaces, you can either annotate the interfaces with <code>@RegisterProvider(MyResponseExceptionMapper.class)</code>, or register it using configuration using the <code>providers</code> property of the proper <code>quarkus.rest-client</code> configuration group.</p>
 </div>
 <div class="sect2">
@@ -2154,6 +2218,48 @@ public interface EchoClient {
     }
 }</code></pre>
 </div>
+</div>
+</div>
+<div class="sect2">
+<h3 id="disabling-the-default-mapper"><a class="anchor" href="#disabling-the-default-mapper"></a>Disabling the default mapper</h3>
+<div class="paragraph">
+<p>As mandated by the REST Client specification, a default exception mapper is included, that throws an exception when HTTP status code is higher than 400.
+While this behavior is fine when the client returns a regular object, it is however very unintuitive when the client needs to return a <code>jakarta.ws.rs.core.Response</code>
+(with the intention of allowing the caller to decide how to handle the HTTP status code).</p>
+</div>
+<div class="paragraph">
+<p>For this reason, the REST Client includes a property named <code>disable-default-mapper</code> which can be used to disable the default mapper when using a REST client in a declarative manner.</p>
+</div>
+<div class="paragraph">
+<p>For example, with a client like so:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-java hljs" data-lang="java">    @Path("foo")
+    @RegisterRestClient(configKey = "bar")
+    public interface Client {
+        @GET
+        Response get();
+    }</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>The default exception mapper can be disabled by setting <code>quarkus.rest-client.bar.disable-default-mapper=true</code> to disable the exception mapper for the REST Client configured with the key <code>bar</code>.</p>
+</div>
+<div class="admonitionblock note">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-note" title="Note"></i>
+</td>
+<td class="content">
+<div class="paragraph">
+<p>When using the programmatic approach for creating a REST Client, <code>QuarkusRestClientBuilder</code> provides a method named <code>disableDefaultMapper</code>
+that provides the same feature.</p>
+</div>
+</td>
+</tr>
+</table>
 </div>
 </div>
 </div>
@@ -2511,8 +2617,23 @@ public interface CRMService {
 <div class="sect2">
 <h3 id="receiving-compressed-messages"><a class="anchor" href="#receiving-compressed-messages"></a>Receiving compressed messages</h3>
 <div class="paragraph">
-<p>REST Client also supports receiving compressed messages using GZIP. You can enable the HTTP compression support by adding the property <code>quarkus.http.enable-compression=true</code>.
+<p>REST Client also supports receiving compressed messages using GZIP and can be enabled via configuration.
 When this feature is enabled and a server returns a response that includes the header <code>Content-Encoding: gzip</code>, REST Client will automatically decode the content and proceed with the message handling.</p>
+</div>
+<div class="paragraph">
+<p>An example configuration could be:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-properties hljs" data-lang="properties"># global configuration is used for all clients
+quarkus.rest-client.enable-compression=true
+
+# per-client configuration overrides the global settings for a specific client
+quarkus.rest-client.my-client.enable-compression=true</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>The REST Client falls back onto the Quarkus wide <code>quarkus.http.enable-compression</code> configuration property (which defaults to <code>false</code>) if no REST Client specific property is set.</p>
 </div>
 </div>
 </div>
@@ -2716,6 +2837,10 @@ REST Client is logging the traffic with level DEBUG and does not alter logger pr
 </table>
 </div>
 <div class="paragraph">
+<p>These configuration properties work globally for all clients injected by CDI.
+If you want configure logging for a specific declarative client, you should do it by specifying named "client" properties, also known as <code>quarkus.rest-client."client".logging.*</code> properties.</p>
+</div>
+<div class="paragraph">
 <p>An example logging configuration:</p>
 </div>
 <div class="listingblock">
@@ -2723,7 +2848,10 @@ REST Client is logging the traffic with level DEBUG and does not alter logger pr
 <pre class="highlightjs highlight"><code class="language-properties hljs" data-lang="properties">quarkus.rest-client.logging.scope=request-response
 quarkus.rest-client.logging.body-limit=50
 
-quarkus.log.category."org.jboss.resteasy.reactive.client.logging".level=DEBUG</code></pre>
+quarkus.rest-client.extensions-api.scope=all
+
+quarkus.log.category."org.jboss.resteasy.reactive.client.logging".level=DEBUG
+quarkus.log.console.level=DEBUG</code></pre>
 </div>
 </div>
 <div class="admonitionblock tip">
@@ -3084,10 +3212,10 @@ and limitations:</p>
 <ul>
 <li>
 <p>the default scope of the client for the new extension is <code>@ApplicationScoped</code> while the <code>quarkus-resteasy-client</code> defaults to <code>@Dependent</code>
-To change this behavior, set the <code>quarkus.rest-client-reactive.scope</code> property to the fully qualified scope name.</p>
+To change this behavior, set the <code>quarkus.rest-client.scope</code> property to the fully qualified scope name.</p>
 </li>
 <li>
-<p>it is not possible to set <code>HostnameVerifier</code> or <code>SSLContext</code></p>
+<p>it is not possible to set <code>SSLContext</code></p>
 </li>
 <li>
 <p>a few things that don&#8217;t make sense for a non-blocking implementations, such as setting the <code>ExecutorService</code>, don&#8217;t work</p>
@@ -3102,7 +3230,7 @@ To change this behavior, set the <code>quarkus.rest-client-reactive.scope</code>
 <div class="ulist">
 <ul>
 <li>
-<p><a href="https://download.eclipse.org/microprofile/microprofile-rest-client-2.0/microprofile-rest-client-spec-2.0.html">MicroProfile Rest Client specification</a></p>
+<p><a href="https://download.eclipse.org/microprofile/microprofile-rest-client-4.0/microprofile-rest-client-spec-4.0.html">MicroProfile Rest Client specification</a></p>
 </li>
 </ul>
 </div>
@@ -3128,7 +3256,8 @@ To change this behavior, set the <code>quarkus.rest-client-reactive.scope</code>
 </tr>
 <tr class="row-collapsible row-collapsed row-with-desc odd">
 <td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
-<p><span class="icon"><i class="fa fa-lock" title="Fixed at build time"></i></span> <a id="quarkus-rest-client_quarkus-rest-client-disable-smart-produces"></a> <span class="property-path"><a href="#quarkus-rest-client_quarkus-rest-client-disable-smart-produces"><code>quarkus.rest-client.disable-smart-produces</code></a></span></p>
+<p><span class="icon"><i class="fa fa-lock" title="Fixed at build time"></i></span> <a id="quarkus-rest-client_quarkus-rest-client-disable-smart-produces"></a> <span class="property-path"><a href="#quarkus-rest-client_quarkus-rest-client-disable-smart-produces"><code>quarkus.rest-client.disable-smart-produces</code></a></span>
+<button class="btn-copy fa fa-clipboard inline-btn-copy" data-clipboard-action="copy" data-clipboard-text='quarkus.rest-client.disable-smart-produces' title="Copy to clipboard" do-not-collapse="true"></button></p>
 </div>
 <div id="conf-collapsible-desc-1" class="openblock description description-collapsed">
 <div class="content">
@@ -3139,7 +3268,7 @@ To change this behavior, set the <code>quarkus.rest-client-reactive.scope</code>
 <p>MicroProfile Rest Client spec requires the implementations to always default to application/json. This build item disables the "smart" behavior of RESTEasy Reactive to comply to the spec</p>
 </div>
 <div class="paragraph">
-<p>Environment variable: <code id="env-var-7574">QUARKUS_REST_CLIENT_DISABLE_SMART_PRODUCES</code><button class="btn-copy fa fa-clipboard inline-btn-copy" data-clipboard-action="copy" data-clipboard-target="#env-var-7574" title="Copy to clipboard" do-not-collapse="true"></button></p>
+<p>Environment variable: <code id="env-var-7761">QUARKUS_REST_CLIENT_DISABLE_SMART_PRODUCES</code><button class="btn-copy fa fa-clipboard inline-btn-copy" data-clipboard-action="copy" data-clipboard-target="#env-var-7761" title="Copy to clipboard" do-not-collapse="true"></button></p>
 </div>
 </div>
 </div>
@@ -3151,7 +3280,8 @@ To change this behavior, set the <code>quarkus.rest-client-reactive.scope</code>
 </tr>
 <tr class="row-collapsible row-collapsed row-with-desc">
 <td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
-<p><span class="icon"><i class="fa fa-lock" title="Fixed at build time"></i></span> <a id="quarkus-rest-client_quarkus-rest-client-provider-autodiscovery"></a> <span class="property-path"><a href="#quarkus-rest-client_quarkus-rest-client-provider-autodiscovery"><code>quarkus.rest-client.provider-autodiscovery</code></a></span></p>
+<p><span class="icon"><i class="fa fa-lock" title="Fixed at build time"></i></span> <a id="quarkus-rest-client_quarkus-rest-client-provider-autodiscovery"></a> <span class="property-path"><a href="#quarkus-rest-client_quarkus-rest-client-provider-autodiscovery"><code>quarkus.rest-client.provider-autodiscovery</code></a></span>
+<button class="btn-copy fa fa-clipboard inline-btn-copy" data-clipboard-action="copy" data-clipboard-text='quarkus.rest-client.provider-autodiscovery' title="Copy to clipboard" do-not-collapse="true"></button></p>
 </div>
 <div id="conf-collapsible-desc-2" class="openblock description description-collapsed">
 <div class="content">
@@ -3159,7 +3289,7 @@ To change this behavior, set the <code>quarkus.rest-client-reactive.scope</code>
 <p>Whether providers (filters, etc.) annotated with <code>jakarta.ws.rs.ext.Provider</code> should be automatically registered for all the clients in the application.</p>
 </div>
 <div class="paragraph">
-<p>Environment variable: <code id="env-var-7575">QUARKUS_REST_CLIENT_PROVIDER_AUTODISCOVERY</code><button class="btn-copy fa fa-clipboard inline-btn-copy" data-clipboard-action="copy" data-clipboard-target="#env-var-7575" title="Copy to clipboard" do-not-collapse="true"></button></p>
+<p>Environment variable: <code id="env-var-7762">QUARKUS_REST_CLIENT_PROVIDER_AUTODISCOVERY</code><button class="btn-copy fa fa-clipboard inline-btn-copy" data-clipboard-action="copy" data-clipboard-target="#env-var-7762" title="Copy to clipboard" do-not-collapse="true"></button></p>
 </div>
 </div>
 </div>
@@ -3188,7 +3318,8 @@ To change this behavior, set the <code>quarkus.rest-client-reactive.scope</code>
 </tr>
 <tr class="row-collapsible row-collapsed row-with-desc odd">
 <td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
-<p><span class="icon"><i class="fa fa-lock" title="Fixed at build time"></i></span> <a id="quarkus-rest-client-config_quarkus-rest-client-removes-trailing-slash"></a> <span class="property-path"><a href="#quarkus-rest-client-config_quarkus-rest-client-removes-trailing-slash"><code>quarkus.rest-client.removes-trailing-slash</code></a></span></p>
+<p><span class="icon"><i class="fa fa-lock" title="Fixed at build time"></i></span> <a id="quarkus-rest-client-config_quarkus-rest-client-removes-trailing-slash"></a> <span class="property-path"><a href="#quarkus-rest-client-config_quarkus-rest-client-removes-trailing-slash"><code>quarkus.rest-client.removes-trailing-slash</code></a></span>
+<button class="btn-copy fa fa-clipboard inline-btn-copy" data-clipboard-action="copy" data-clipboard-text='quarkus.rest-client.removes-trailing-slash' title="Copy to clipboard" do-not-collapse="true"></button></p>
 </div>
 <div id="conf-collapsible-desc-3" class="openblock description description-collapsed">
 <div class="content">
@@ -3196,7 +3327,7 @@ To change this behavior, set the <code>quarkus.rest-client-reactive.scope</code>
 <p>If true, the extension will automatically remove the trailing slash in the paths if any. This property is not applicable to the RESTEasy Client.</p>
 </div>
 <div class="paragraph">
-<p>Environment variable: <code id="env-var-7576">QUARKUS_REST_CLIENT_REMOVES_TRAILING_SLASH</code><button class="btn-copy fa fa-clipboard inline-btn-copy" data-clipboard-action="copy" data-clipboard-target="#env-var-7576" title="Copy to clipboard" do-not-collapse="true"></button></p>
+<p>Environment variable: <code id="env-var-7763">QUARKUS_REST_CLIENT_REMOVES_TRAILING_SLASH</code><button class="btn-copy fa fa-clipboard inline-btn-copy" data-clipboard-action="copy" data-clipboard-target="#env-var-7763" title="Copy to clipboard" do-not-collapse="true"></button></p>
 </div>
 </div>
 </div>
@@ -3208,7 +3339,8 @@ To change this behavior, set the <code>quarkus.rest-client-reactive.scope</code>
 </tr>
 <tr class="row-collapsible row-collapsed row-with-desc">
 <td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
-<p><a id="quarkus-rest-client-config_quarkus-rest-client-multipart-post-encoder-mode"></a> <span class="property-path"><a href="#quarkus-rest-client-config_quarkus-rest-client-multipart-post-encoder-mode"><code>quarkus.rest-client.multipart-post-encoder-mode</code></a></span></p>
+<p><a id="quarkus-rest-client-config_quarkus-rest-client-multipart-post-encoder-mode"></a> <span class="property-path"><a href="#quarkus-rest-client-config_quarkus-rest-client-multipart-post-encoder-mode"><code>quarkus.rest-client.multipart-post-encoder-mode</code></a></span>
+<button class="btn-copy fa fa-clipboard inline-btn-copy" data-clipboard-action="copy" data-clipboard-text='quarkus.rest-client.multipart-post-encoder-mode' title="Copy to clipboard" do-not-collapse="true"></button></p>
 </div>
 <div id="conf-collapsible-desc-4" class="openblock description description-collapsed">
 <div class="content">
@@ -3222,7 +3354,7 @@ To change this behavior, set the <code>quarkus.rest-client-reactive.scope</code>
 <p>This property is not applicable to the RESTEasy Client.</p>
 </div>
 <div class="paragraph">
-<p>Environment variable: <code id="env-var-7577">QUARKUS_REST_CLIENT_MULTIPART_POST_ENCODER_MODE</code><button class="btn-copy fa fa-clipboard inline-btn-copy" data-clipboard-action="copy" data-clipboard-target="#env-var-7577" title="Copy to clipboard" do-not-collapse="true"></button></p>
+<p>Environment variable: <code id="env-var-7764">QUARKUS_REST_CLIENT_MULTIPART_POST_ENCODER_MODE</code><button class="btn-copy fa fa-clipboard inline-btn-copy" data-clipboard-action="copy" data-clipboard-target="#env-var-7764" title="Copy to clipboard" do-not-collapse="true"></button></p>
 </div>
 </div>
 </div>
@@ -3234,7 +3366,8 @@ To change this behavior, set the <code>quarkus.rest-client-reactive.scope</code>
 </tr>
 <tr class="row-collapsible row-collapsed row-with-desc odd">
 <td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
-<p><a id="quarkus-rest-client-config_quarkus-rest-client-proxy-address"></a> <span class="property-path"><a href="#quarkus-rest-client-config_quarkus-rest-client-proxy-address"><code>quarkus.rest-client.proxy-address</code></a></span></p>
+<p><a id="quarkus-rest-client-config_quarkus-rest-client-proxy-address"></a> <span class="property-path"><a href="#quarkus-rest-client-config_quarkus-rest-client-proxy-address"><code>quarkus.rest-client.proxy-address</code></a></span>
+<button class="btn-copy fa fa-clipboard inline-btn-copy" data-clipboard-action="copy" data-clipboard-text='quarkus.rest-client.proxy-address' title="Copy to clipboard" do-not-collapse="true"></button></p>
 </div>
 <div id="conf-collapsible-desc-5" class="openblock description description-collapsed">
 <div class="content">
@@ -3245,7 +3378,7 @@ To change this behavior, set the <code>quarkus.rest-client-reactive.scope</code>
 <p>Can be overwritten by client-specific settings.</p>
 </div>
 <div class="paragraph">
-<p>Environment variable: <code id="env-var-7578">QUARKUS_REST_CLIENT_PROXY_ADDRESS</code><button class="btn-copy fa fa-clipboard inline-btn-copy" data-clipboard-action="copy" data-clipboard-target="#env-var-7578" title="Copy to clipboard" do-not-collapse="true"></button></p>
+<p>Environment variable: <code id="env-var-7765">QUARKUS_REST_CLIENT_PROXY_ADDRESS</code><button class="btn-copy fa fa-clipboard inline-btn-copy" data-clipboard-action="copy" data-clipboard-target="#env-var-7765" title="Copy to clipboard" do-not-collapse="true"></button></p>
 </div>
 </div>
 </div>
@@ -3257,7 +3390,8 @@ To change this behavior, set the <code>quarkus.rest-client-reactive.scope</code>
 </tr>
 <tr class="row-collapsible row-collapsed row-with-desc">
 <td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
-<p><a id="quarkus-rest-client-config_quarkus-rest-client-proxy-user"></a> <span class="property-path"><a href="#quarkus-rest-client-config_quarkus-rest-client-proxy-user"><code>quarkus.rest-client.proxy-user</code></a></span></p>
+<p><a id="quarkus-rest-client-config_quarkus-rest-client-proxy-user"></a> <span class="property-path"><a href="#quarkus-rest-client-config_quarkus-rest-client-proxy-user"><code>quarkus.rest-client.proxy-user</code></a></span>
+<button class="btn-copy fa fa-clipboard inline-btn-copy" data-clipboard-action="copy" data-clipboard-text='quarkus.rest-client.proxy-user' title="Copy to clipboard" do-not-collapse="true"></button></p>
 </div>
 <div id="conf-collapsible-desc-6" class="openblock description description-collapsed">
 <div class="content">
@@ -3271,7 +3405,7 @@ To change this behavior, set the <code>quarkus.rest-client-reactive.scope</code>
 <p>This property is not applicable to the RESTEasy Client.</p>
 </div>
 <div class="paragraph">
-<p>Environment variable: <code id="env-var-7579">QUARKUS_REST_CLIENT_PROXY_USER</code><button class="btn-copy fa fa-clipboard inline-btn-copy" data-clipboard-action="copy" data-clipboard-target="#env-var-7579" title="Copy to clipboard" do-not-collapse="true"></button></p>
+<p>Environment variable: <code id="env-var-7766">QUARKUS_REST_CLIENT_PROXY_USER</code><button class="btn-copy fa fa-clipboard inline-btn-copy" data-clipboard-action="copy" data-clipboard-target="#env-var-7766" title="Copy to clipboard" do-not-collapse="true"></button></p>
 </div>
 </div>
 </div>
@@ -3283,7 +3417,8 @@ To change this behavior, set the <code>quarkus.rest-client-reactive.scope</code>
 </tr>
 <tr class="row-collapsible row-collapsed row-with-desc odd">
 <td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
-<p><a id="quarkus-rest-client-config_quarkus-rest-client-proxy-password"></a> <span class="property-path"><a href="#quarkus-rest-client-config_quarkus-rest-client-proxy-password"><code>quarkus.rest-client.proxy-password</code></a></span></p>
+<p><a id="quarkus-rest-client-config_quarkus-rest-client-proxy-password"></a> <span class="property-path"><a href="#quarkus-rest-client-config_quarkus-rest-client-proxy-password"><code>quarkus.rest-client.proxy-password</code></a></span>
+<button class="btn-copy fa fa-clipboard inline-btn-copy" data-clipboard-action="copy" data-clipboard-text='quarkus.rest-client.proxy-password' title="Copy to clipboard" do-not-collapse="true"></button></p>
 </div>
 <div id="conf-collapsible-desc-7" class="openblock description description-collapsed">
 <div class="content">
@@ -3297,7 +3432,7 @@ To change this behavior, set the <code>quarkus.rest-client-reactive.scope</code>
 <p>This property is not applicable to the RESTEasy Client.</p>
 </div>
 <div class="paragraph">
-<p>Environment variable: <code id="env-var-7580">QUARKUS_REST_CLIENT_PROXY_PASSWORD</code><button class="btn-copy fa fa-clipboard inline-btn-copy" data-clipboard-action="copy" data-clipboard-target="#env-var-7580" title="Copy to clipboard" do-not-collapse="true"></button></p>
+<p>Environment variable: <code id="env-var-7767">QUARKUS_REST_CLIENT_PROXY_PASSWORD</code><button class="btn-copy fa fa-clipboard inline-btn-copy" data-clipboard-action="copy" data-clipboard-target="#env-var-7767" title="Copy to clipboard" do-not-collapse="true"></button></p>
 </div>
 </div>
 </div>
@@ -3309,7 +3444,8 @@ To change this behavior, set the <code>quarkus.rest-client-reactive.scope</code>
 </tr>
 <tr class="row-collapsible row-collapsed row-with-desc">
 <td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
-<p><a id="quarkus-rest-client-config_quarkus-rest-client-non-proxy-hosts"></a> <span class="property-path"><a href="#quarkus-rest-client-config_quarkus-rest-client-non-proxy-hosts"><code>quarkus.rest-client.non-proxy-hosts</code></a></span></p>
+<p><a id="quarkus-rest-client-config_quarkus-rest-client-non-proxy-hosts"></a> <span class="property-path"><a href="#quarkus-rest-client-config_quarkus-rest-client-non-proxy-hosts"><code>quarkus.rest-client.non-proxy-hosts</code></a></span>
+<button class="btn-copy fa fa-clipboard inline-btn-copy" data-clipboard-action="copy" data-clipboard-text='quarkus.rest-client.non-proxy-hosts' title="Copy to clipboard" do-not-collapse="true"></button></p>
 </div>
 <div id="conf-collapsible-desc-8" class="openblock description description-collapsed">
 <div class="content">
@@ -3323,7 +3459,7 @@ To change this behavior, set the <code>quarkus.rest-client-reactive.scope</code>
 <p>This property is not applicable to the RESTEasy Client.</p>
 </div>
 <div class="paragraph">
-<p>Environment variable: <code id="env-var-7581">QUARKUS_REST_CLIENT_NON_PROXY_HOSTS</code><button class="btn-copy fa fa-clipboard inline-btn-copy" data-clipboard-action="copy" data-clipboard-target="#env-var-7581" title="Copy to clipboard" do-not-collapse="true"></button></p>
+<p>Environment variable: <code id="env-var-7768">QUARKUS_REST_CLIENT_NON_PROXY_HOSTS</code><button class="btn-copy fa fa-clipboard inline-btn-copy" data-clipboard-action="copy" data-clipboard-target="#env-var-7768" title="Copy to clipboard" do-not-collapse="true"></button></p>
 </div>
 </div>
 </div>
@@ -3335,7 +3471,8 @@ To change this behavior, set the <code>quarkus.rest-client-reactive.scope</code>
 </tr>
 <tr class="row-collapsible row-collapsed row-with-desc odd">
 <td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
-<p><a id="quarkus-rest-client-config_quarkus-rest-client-connect-timeout"></a> <span class="property-path"><a href="#quarkus-rest-client-config_quarkus-rest-client-connect-timeout"><code>quarkus.rest-client.connect-timeout</code></a></span></p>
+<p><a id="quarkus-rest-client-config_quarkus-rest-client-connect-timeout"></a> <span class="property-path"><a href="#quarkus-rest-client-config_quarkus-rest-client-connect-timeout"><code>quarkus.rest-client.connect-timeout</code></a></span>
+<button class="btn-copy fa fa-clipboard inline-btn-copy" data-clipboard-action="copy" data-clipboard-text='quarkus.rest-client.connect-timeout' title="Copy to clipboard" do-not-collapse="true"></button></p>
 </div>
 <div id="conf-collapsible-desc-9" class="openblock description description-collapsed">
 <div class="content">
@@ -3346,7 +3483,7 @@ To change this behavior, set the <code>quarkus.rest-client-reactive.scope</code>
 <p>Can be overwritten by client-specific settings.</p>
 </div>
 <div class="paragraph">
-<p>Environment variable: <code id="env-var-7582">QUARKUS_REST_CLIENT_CONNECT_TIMEOUT</code><button class="btn-copy fa fa-clipboard inline-btn-copy" data-clipboard-action="copy" data-clipboard-target="#env-var-7582" title="Copy to clipboard" do-not-collapse="true"></button></p>
+<p>Environment variable: <code id="env-var-7769">QUARKUS_REST_CLIENT_CONNECT_TIMEOUT</code><button class="btn-copy fa fa-clipboard inline-btn-copy" data-clipboard-action="copy" data-clipboard-target="#env-var-7769" title="Copy to clipboard" do-not-collapse="true"></button></p>
 </div>
 </div>
 </div>
@@ -3358,7 +3495,8 @@ To change this behavior, set the <code>quarkus.rest-client-reactive.scope</code>
 </tr>
 <tr class="row-collapsible row-collapsed row-with-desc">
 <td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
-<p><a id="quarkus-rest-client-config_quarkus-rest-client-read-timeout"></a> <span class="property-path"><a href="#quarkus-rest-client-config_quarkus-rest-client-read-timeout"><code>quarkus.rest-client.read-timeout</code></a></span></p>
+<p><a id="quarkus-rest-client-config_quarkus-rest-client-read-timeout"></a> <span class="property-path"><a href="#quarkus-rest-client-config_quarkus-rest-client-read-timeout"><code>quarkus.rest-client.read-timeout</code></a></span>
+<button class="btn-copy fa fa-clipboard inline-btn-copy" data-clipboard-action="copy" data-clipboard-text='quarkus.rest-client.read-timeout' title="Copy to clipboard" do-not-collapse="true"></button></p>
 </div>
 <div id="conf-collapsible-desc-10" class="openblock description description-collapsed">
 <div class="content">
@@ -3369,7 +3507,7 @@ To change this behavior, set the <code>quarkus.rest-client-reactive.scope</code>
 <p>Can be overwritten by client-specific settings.</p>
 </div>
 <div class="paragraph">
-<p>Environment variable: <code id="env-var-7583">QUARKUS_REST_CLIENT_READ_TIMEOUT</code><button class="btn-copy fa fa-clipboard inline-btn-copy" data-clipboard-action="copy" data-clipboard-target="#env-var-7583" title="Copy to clipboard" do-not-collapse="true"></button></p>
+<p>Environment variable: <code id="env-var-7770">QUARKUS_REST_CLIENT_READ_TIMEOUT</code><button class="btn-copy fa fa-clipboard inline-btn-copy" data-clipboard-action="copy" data-clipboard-target="#env-var-7770" title="Copy to clipboard" do-not-collapse="true"></button></p>
 </div>
 </div>
 </div>
@@ -3381,7 +3519,8 @@ To change this behavior, set the <code>quarkus.rest-client-reactive.scope</code>
 </tr>
 <tr class="row-collapsible row-collapsed row-with-desc odd">
 <td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
-<p><a id="quarkus-rest-client-config_quarkus-rest-client-disable-contextual-error-messages"></a> <span class="property-path"><a href="#quarkus-rest-client-config_quarkus-rest-client-disable-contextual-error-messages"><code>quarkus.rest-client.disable-contextual-error-messages</code></a></span></p>
+<p><a id="quarkus-rest-client-config_quarkus-rest-client-disable-contextual-error-messages"></a> <span class="property-path"><a href="#quarkus-rest-client-config_quarkus-rest-client-disable-contextual-error-messages"><code>quarkus.rest-client.disable-contextual-error-messages</code></a></span>
+<button class="btn-copy fa fa-clipboard inline-btn-copy" data-clipboard-action="copy" data-clipboard-text='quarkus.rest-client.disable-contextual-error-messages' title="Copy to clipboard" do-not-collapse="true"></button></p>
 </div>
 <div id="conf-collapsible-desc-11" class="openblock description description-collapsed">
 <div class="content">
@@ -3392,7 +3531,7 @@ To change this behavior, set the <code>quarkus.rest-client-reactive.scope</code>
 <p>This property is not applicable to the RESTEasy Client.</p>
 </div>
 <div class="paragraph">
-<p>Environment variable: <code id="env-var-7584">QUARKUS_REST_CLIENT_DISABLE_CONTEXTUAL_ERROR_MESSAGES</code><button class="btn-copy fa fa-clipboard inline-btn-copy" data-clipboard-action="copy" data-clipboard-target="#env-var-7584" title="Copy to clipboard" do-not-collapse="true"></button></p>
+<p>Environment variable: <code id="env-var-7771">QUARKUS_REST_CLIENT_DISABLE_CONTEXTUAL_ERROR_MESSAGES</code><button class="btn-copy fa fa-clipboard inline-btn-copy" data-clipboard-action="copy" data-clipboard-target="#env-var-7771" title="Copy to clipboard" do-not-collapse="true"></button></p>
 </div>
 </div>
 </div>
@@ -3404,7 +3543,8 @@ To change this behavior, set the <code>quarkus.rest-client-reactive.scope</code>
 </tr>
 <tr class="row-collapsible row-collapsed row-with-desc">
 <td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
-<p><a id="quarkus-rest-client-config_quarkus-rest-client-user-agent"></a> <span class="property-path"><a href="#quarkus-rest-client-config_quarkus-rest-client-user-agent"><code>quarkus.rest-client.user-agent</code></a></span></p>
+<p><a id="quarkus-rest-client-config_quarkus-rest-client-user-agent"></a> <span class="property-path"><a href="#quarkus-rest-client-config_quarkus-rest-client-user-agent"><code>quarkus.rest-client.user-agent</code></a></span>
+<button class="btn-copy fa fa-clipboard inline-btn-copy" data-clipboard-action="copy" data-clipboard-text='quarkus.rest-client.user-agent' title="Copy to clipboard" do-not-collapse="true"></button></p>
 </div>
 <div id="conf-collapsible-desc-12" class="openblock description description-collapsed">
 <div class="content">
@@ -3418,7 +3558,7 @@ To change this behavior, set the <code>quarkus.rest-client-reactive.scope</code>
 <p>This property is not applicable to the RESTEasy Client.</p>
 </div>
 <div class="paragraph">
-<p>Environment variable: <code id="env-var-7585">QUARKUS_REST_CLIENT_USER_AGENT</code><button class="btn-copy fa fa-clipboard inline-btn-copy" data-clipboard-action="copy" data-clipboard-target="#env-var-7585" title="Copy to clipboard" do-not-collapse="true"></button></p>
+<p>Environment variable: <code id="env-var-7772">QUARKUS_REST_CLIENT_USER_AGENT</code><button class="btn-copy fa fa-clipboard inline-btn-copy" data-clipboard-action="copy" data-clipboard-target="#env-var-7772" title="Copy to clipboard" do-not-collapse="true"></button></p>
 </div>
 </div>
 </div>
@@ -3430,7 +3570,8 @@ To change this behavior, set the <code>quarkus.rest-client-reactive.scope</code>
 </tr>
 <tr class="row-collapsible row-collapsed row-with-desc odd">
 <td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
-<p><a id="quarkus-rest-client-config_quarkus-rest-client-headers-header-name"></a> <span class="property-path"><a href="#quarkus-rest-client-config_quarkus-rest-client-headers-header-name"><code>quarkus.rest-client.headers."header-name"</code></a></span></p>
+<p><a id="quarkus-rest-client-config_quarkus-rest-client-headers-header-name"></a> <span class="property-path"><a href="#quarkus-rest-client-config_quarkus-rest-client-headers-header-name"><code>quarkus.rest-client.headers."header-name"</code></a></span>
+<button class="btn-copy fa fa-clipboard inline-btn-copy" data-clipboard-action="copy" data-clipboard-text='quarkus.rest-client.headers."header-name"' title="Copy to clipboard" do-not-collapse="true"></button></p>
 </div>
 <div id="conf-collapsible-desc-13" class="openblock description description-collapsed">
 <div class="content">
@@ -3438,7 +3579,7 @@ To change this behavior, set the <code>quarkus.rest-client-reactive.scope</code>
 <p>The HTTP headers that should be applied to all requests of the rest client.</p>
 </div>
 <div class="paragraph">
-<p>Environment variable: <code id="env-var-7586">QUARKUS_REST_CLIENT_HEADERS__HEADER_NAME_</code><button class="btn-copy fa fa-clipboard inline-btn-copy" data-clipboard-action="copy" data-clipboard-target="#env-var-7586" title="Copy to clipboard" do-not-collapse="true"></button></p>
+<p>Environment variable: <code id="env-var-7773">QUARKUS_REST_CLIENT_HEADERS__HEADER_NAME_</code><button class="btn-copy fa fa-clipboard inline-btn-copy" data-clipboard-action="copy" data-clipboard-target="#env-var-7773" title="Copy to clipboard" do-not-collapse="true"></button></p>
 </div>
 </div>
 </div>
@@ -3450,7 +3591,8 @@ To change this behavior, set the <code>quarkus.rest-client-reactive.scope</code>
 </tr>
 <tr class="row-collapsible row-collapsed row-with-desc">
 <td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
-<p><a id="quarkus-rest-client-config_quarkus-rest-client-hostname-verifier"></a> <span class="property-path"><a href="#quarkus-rest-client-config_quarkus-rest-client-hostname-verifier"><code>quarkus.rest-client.hostname-verifier</code></a></span></p>
+<p><a id="quarkus-rest-client-config_quarkus-rest-client-hostname-verifier"></a> <span class="property-path"><a href="#quarkus-rest-client-config_quarkus-rest-client-hostname-verifier"><code>quarkus.rest-client.hostname-verifier</code></a></span>
+<button class="btn-copy fa fa-clipboard inline-btn-copy" data-clipboard-action="copy" data-clipboard-text='quarkus.rest-client.hostname-verifier' title="Copy to clipboard" do-not-collapse="true"></button></p>
 </div>
 <div id="conf-collapsible-desc-14" class="openblock description description-collapsed">
 <div class="content">
@@ -3461,7 +3603,7 @@ To change this behavior, set the <code>quarkus.rest-client-reactive.scope</code>
 <p>Can be overwritten by client-specific settings.</p>
 </div>
 <div class="paragraph">
-<p>Environment variable: <code id="env-var-7587">QUARKUS_REST_CLIENT_HOSTNAME_VERIFIER</code><button class="btn-copy fa fa-clipboard inline-btn-copy" data-clipboard-action="copy" data-clipboard-target="#env-var-7587" title="Copy to clipboard" do-not-collapse="true"></button></p>
+<p>Environment variable: <code id="env-var-7774">QUARKUS_REST_CLIENT_HOSTNAME_VERIFIER</code><button class="btn-copy fa fa-clipboard inline-btn-copy" data-clipboard-action="copy" data-clipboard-target="#env-var-7774" title="Copy to clipboard" do-not-collapse="true"></button></p>
 </div>
 </div>
 </div>
@@ -3473,7 +3615,8 @@ To change this behavior, set the <code>quarkus.rest-client-reactive.scope</code>
 </tr>
 <tr class="row-collapsible row-collapsed row-with-desc odd">
 <td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
-<p><a id="quarkus-rest-client-config_quarkus-rest-client-connection-ttl"></a> <span class="property-path"><a href="#quarkus-rest-client-config_quarkus-rest-client-connection-ttl"><code>quarkus.rest-client.connection-ttl</code></a></span></p>
+<p><a id="quarkus-rest-client-config_quarkus-rest-client-connection-ttl"></a> <span class="property-path"><a href="#quarkus-rest-client-config_quarkus-rest-client-connection-ttl"><code>quarkus.rest-client.connection-ttl</code></a></span>
+<button class="btn-copy fa fa-clipboard inline-btn-copy" data-clipboard-action="copy" data-clipboard-text='quarkus.rest-client.connection-ttl' title="Copy to clipboard" do-not-collapse="true"></button></p>
 </div>
 <div id="conf-collapsible-desc-15" class="openblock description description-collapsed">
 <div class="content">
@@ -3484,7 +3627,7 @@ To change this behavior, set the <code>quarkus.rest-client-reactive.scope</code>
 <p>Can be overwritten by client-specific settings.</p>
 </div>
 <div class="paragraph">
-<p>Environment variable: <code id="env-var-7588">QUARKUS_REST_CLIENT_CONNECTION_TTL</code><button class="btn-copy fa fa-clipboard inline-btn-copy" data-clipboard-action="copy" data-clipboard-target="#env-var-7588" title="Copy to clipboard" do-not-collapse="true"></button></p>
+<p>Environment variable: <code id="env-var-7775">QUARKUS_REST_CLIENT_CONNECTION_TTL</code><button class="btn-copy fa fa-clipboard inline-btn-copy" data-clipboard-action="copy" data-clipboard-target="#env-var-7775" title="Copy to clipboard" do-not-collapse="true"></button></p>
 </div>
 </div>
 </div>
@@ -3496,7 +3639,8 @@ To change this behavior, set the <code>quarkus.rest-client-reactive.scope</code>
 </tr>
 <tr class="row-collapsible row-collapsed row-with-desc">
 <td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
-<p><a id="quarkus-rest-client-config_quarkus-rest-client-connection-pool-size"></a> <span class="property-path"><a href="#quarkus-rest-client-config_quarkus-rest-client-connection-pool-size"><code>quarkus.rest-client.connection-pool-size</code></a></span></p>
+<p><a id="quarkus-rest-client-config_quarkus-rest-client-connection-pool-size"></a> <span class="property-path"><a href="#quarkus-rest-client-config_quarkus-rest-client-connection-pool-size"><code>quarkus.rest-client.connection-pool-size</code></a></span>
+<button class="btn-copy fa fa-clipboard inline-btn-copy" data-clipboard-action="copy" data-clipboard-text='quarkus.rest-client.connection-pool-size' title="Copy to clipboard" do-not-collapse="true"></button></p>
 </div>
 <div id="conf-collapsible-desc-16" class="openblock description description-collapsed">
 <div class="content">
@@ -3507,7 +3651,7 @@ To change this behavior, set the <code>quarkus.rest-client-reactive.scope</code>
 <p>Can be overwritten by client-specific settings.</p>
 </div>
 <div class="paragraph">
-<p>Environment variable: <code id="env-var-7589">QUARKUS_REST_CLIENT_CONNECTION_POOL_SIZE</code><button class="btn-copy fa fa-clipboard inline-btn-copy" data-clipboard-action="copy" data-clipboard-target="#env-var-7589" title="Copy to clipboard" do-not-collapse="true"></button></p>
+<p>Environment variable: <code id="env-var-7776">QUARKUS_REST_CLIENT_CONNECTION_POOL_SIZE</code><button class="btn-copy fa fa-clipboard inline-btn-copy" data-clipboard-action="copy" data-clipboard-target="#env-var-7776" title="Copy to clipboard" do-not-collapse="true"></button></p>
 </div>
 </div>
 </div>
@@ -3515,11 +3659,12 @@ To change this behavior, set the <code>quarkus.rest-client-reactive.scope</code>
 <p><i class="fa fa-chevron-down"></i><span>Show more</span></p>
 </div></div></td>
 <td class="tableblock halign-left valign-middle"><p class="tableblock">int</p></td>
-<td class="tableblock halign-left valign-middle"></td>
+<td class="tableblock halign-left valign-middle"><p class="tableblock"><code>50</code></p></td>
 </tr>
 <tr class="row-collapsible row-collapsed row-with-desc odd">
 <td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
-<p><a id="quarkus-rest-client-config_quarkus-rest-client-keep-alive-enabled"></a> <span class="property-path"><a href="#quarkus-rest-client-config_quarkus-rest-client-keep-alive-enabled"><code>quarkus.rest-client.keep-alive-enabled</code></a></span></p>
+<p><a id="quarkus-rest-client-config_quarkus-rest-client-keep-alive-enabled"></a> <span class="property-path"><a href="#quarkus-rest-client-config_quarkus-rest-client-keep-alive-enabled"><code>quarkus.rest-client.keep-alive-enabled</code></a></span>
+<button class="btn-copy fa fa-clipboard inline-btn-copy" data-clipboard-action="copy" data-clipboard-text='quarkus.rest-client.keep-alive-enabled' title="Copy to clipboard" do-not-collapse="true"></button></p>
 </div>
 <div id="conf-collapsible-desc-17" class="openblock description description-collapsed">
 <div class="content">
@@ -3530,7 +3675,7 @@ To change this behavior, set the <code>quarkus.rest-client-reactive.scope</code>
 <p>Can be overwritten by client-specific settings.</p>
 </div>
 <div class="paragraph">
-<p>Environment variable: <code id="env-var-7590">QUARKUS_REST_CLIENT_KEEP_ALIVE_ENABLED</code><button class="btn-copy fa fa-clipboard inline-btn-copy" data-clipboard-action="copy" data-clipboard-target="#env-var-7590" title="Copy to clipboard" do-not-collapse="true"></button></p>
+<p>Environment variable: <code id="env-var-7777">QUARKUS_REST_CLIENT_KEEP_ALIVE_ENABLED</code><button class="btn-copy fa fa-clipboard inline-btn-copy" data-clipboard-action="copy" data-clipboard-target="#env-var-7777" title="Copy to clipboard" do-not-collapse="true"></button></p>
 </div>
 </div>
 </div>
@@ -3542,7 +3687,8 @@ To change this behavior, set the <code>quarkus.rest-client-reactive.scope</code>
 </tr>
 <tr class="row-collapsible row-collapsed row-with-desc">
 <td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
-<p><a id="quarkus-rest-client-config_quarkus-rest-client-max-redirects"></a> <span class="property-path"><a href="#quarkus-rest-client-config_quarkus-rest-client-max-redirects"><code>quarkus.rest-client.max-redirects</code></a></span></p>
+<p><a id="quarkus-rest-client-config_quarkus-rest-client-max-redirects"></a> <span class="property-path"><a href="#quarkus-rest-client-config_quarkus-rest-client-max-redirects"><code>quarkus.rest-client.max-redirects</code></a></span>
+<button class="btn-copy fa fa-clipboard inline-btn-copy" data-clipboard-action="copy" data-clipboard-text='quarkus.rest-client.max-redirects' title="Copy to clipboard" do-not-collapse="true"></button></p>
 </div>
 <div id="conf-collapsible-desc-18" class="openblock description description-collapsed">
 <div class="content">
@@ -3556,7 +3702,7 @@ To change this behavior, set the <code>quarkus.rest-client-reactive.scope</code>
 <p>This property is not applicable to the RESTEasy Client.</p>
 </div>
 <div class="paragraph">
-<p>Environment variable: <code id="env-var-7591">QUARKUS_REST_CLIENT_MAX_REDIRECTS</code><button class="btn-copy fa fa-clipboard inline-btn-copy" data-clipboard-action="copy" data-clipboard-target="#env-var-7591" title="Copy to clipboard" do-not-collapse="true"></button></p>
+<p>Environment variable: <code id="env-var-7778">QUARKUS_REST_CLIENT_MAX_REDIRECTS</code><button class="btn-copy fa fa-clipboard inline-btn-copy" data-clipboard-action="copy" data-clipboard-target="#env-var-7778" title="Copy to clipboard" do-not-collapse="true"></button></p>
 </div>
 </div>
 </div>
@@ -3568,7 +3714,8 @@ To change this behavior, set the <code>quarkus.rest-client-reactive.scope</code>
 </tr>
 <tr class="row-collapsible row-collapsed row-with-desc odd">
 <td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
-<p><a id="quarkus-rest-client-config_quarkus-rest-client-follow-redirects"></a> <span class="property-path"><a href="#quarkus-rest-client-config_quarkus-rest-client-follow-redirects"><code>quarkus.rest-client.follow-redirects</code></a></span></p>
+<p><a id="quarkus-rest-client-config_quarkus-rest-client-follow-redirects"></a> <span class="property-path"><a href="#quarkus-rest-client-config_quarkus-rest-client-follow-redirects"><code>quarkus.rest-client.follow-redirects</code></a></span>
+<button class="btn-copy fa fa-clipboard inline-btn-copy" data-clipboard-action="copy" data-clipboard-text='quarkus.rest-client.follow-redirects' title="Copy to clipboard" do-not-collapse="true"></button></p>
 </div>
 <div id="conf-collapsible-desc-19" class="openblock description description-collapsed">
 <div class="content">
@@ -3579,7 +3726,7 @@ To change this behavior, set the <code>quarkus.rest-client-reactive.scope</code>
 <p>Can be overwritten by client-specific settings.</p>
 </div>
 <div class="paragraph">
-<p>Environment variable: <code id="env-var-7592">QUARKUS_REST_CLIENT_FOLLOW_REDIRECTS</code><button class="btn-copy fa fa-clipboard inline-btn-copy" data-clipboard-action="copy" data-clipboard-target="#env-var-7592" title="Copy to clipboard" do-not-collapse="true"></button></p>
+<p>Environment variable: <code id="env-var-7779">QUARKUS_REST_CLIENT_FOLLOW_REDIRECTS</code><button class="btn-copy fa fa-clipboard inline-btn-copy" data-clipboard-action="copy" data-clipboard-target="#env-var-7779" title="Copy to clipboard" do-not-collapse="true"></button></p>
 </div>
 </div>
 </div>
@@ -3591,18 +3738,19 @@ To change this behavior, set the <code>quarkus.rest-client-reactive.scope</code>
 </tr>
 <tr class="row-collapsible row-collapsed row-with-desc">
 <td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
-<p><a id="quarkus-rest-client-config_quarkus-rest-client-providers"></a> <span class="property-path"><a href="#quarkus-rest-client-config_quarkus-rest-client-providers"><code>quarkus.rest-client.providers</code></a></span></p>
+<p><a id="quarkus-rest-client-config_quarkus-rest-client-providers"></a> <span class="property-path"><a href="#quarkus-rest-client-config_quarkus-rest-client-providers"><code>quarkus.rest-client.providers</code></a></span>
+<button class="btn-copy fa fa-clipboard inline-btn-copy" data-clipboard-action="copy" data-clipboard-text='quarkus.rest-client.providers' title="Copy to clipboard" do-not-collapse="true"></button></p>
 </div>
 <div id="conf-collapsible-desc-20" class="openblock description description-collapsed">
 <div class="content">
 <div class="paragraph">
-<p>Map where keys are fully-qualified provider classnames to include in the client, and values are their integer priorities. The equivalent of the <code>@RegisterProvider</code> annotation.</p>
+<p>Fully-qualified provider classnames to include in the client. The equivalent of the <code>@RegisterProvider</code> annotation.</p>
 </div>
 <div class="paragraph">
 <p>Can be overwritten by client-specific settings.</p>
 </div>
 <div class="paragraph">
-<p>Environment variable: <code id="env-var-7593">QUARKUS_REST_CLIENT_PROVIDERS</code><button class="btn-copy fa fa-clipboard inline-btn-copy" data-clipboard-action="copy" data-clipboard-target="#env-var-7593" title="Copy to clipboard" do-not-collapse="true"></button></p>
+<p>Environment variable: <code id="env-var-7780">QUARKUS_REST_CLIENT_PROVIDERS</code><button class="btn-copy fa fa-clipboard inline-btn-copy" data-clipboard-action="copy" data-clipboard-target="#env-var-7780" title="Copy to clipboard" do-not-collapse="true"></button></p>
 </div>
 </div>
 </div>
@@ -3614,7 +3762,8 @@ To change this behavior, set the <code>quarkus.rest-client-reactive.scope</code>
 </tr>
 <tr class="row-collapsible row-collapsed row-with-desc odd">
 <td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
-<p><a id="quarkus-rest-client-config_quarkus-rest-client-scope"></a> <span class="property-path"><a href="#quarkus-rest-client-config_quarkus-rest-client-scope"><code>quarkus.rest-client.scope</code></a></span></p>
+<p><a id="quarkus-rest-client-config_quarkus-rest-client-scope"></a> <span class="property-path"><a href="#quarkus-rest-client-config_quarkus-rest-client-scope"><code>quarkus.rest-client.scope</code></a></span>
+<button class="btn-copy fa fa-clipboard inline-btn-copy" data-clipboard-action="copy" data-clipboard-text='quarkus.rest-client.scope' title="Copy to clipboard" do-not-collapse="true"></button></p>
 </div>
 <div id="conf-collapsible-desc-21" class="openblock description description-collapsed">
 <div class="content">
@@ -3631,7 +3780,7 @@ To change this behavior, set the <code>quarkus.rest-client-reactive.scope</code>
 <p>Can be overwritten by client-specific settings.</p>
 </div>
 <div class="paragraph">
-<p>Environment variable: <code id="env-var-7594">QUARKUS_REST_CLIENT_SCOPE</code><button class="btn-copy fa fa-clipboard inline-btn-copy" data-clipboard-action="copy" data-clipboard-target="#env-var-7594" title="Copy to clipboard" do-not-collapse="true"></button></p>
+<p>Environment variable: <code id="env-var-7781">QUARKUS_REST_CLIENT_SCOPE</code><button class="btn-copy fa fa-clipboard inline-btn-copy" data-clipboard-action="copy" data-clipboard-target="#env-var-7781" title="Copy to clipboard" do-not-collapse="true"></button></p>
 </div>
 </div>
 </div>
@@ -3643,7 +3792,8 @@ To change this behavior, set the <code>quarkus.rest-client-reactive.scope</code>
 </tr>
 <tr class="row-collapsible row-collapsed row-with-desc">
 <td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
-<p><a id="quarkus-rest-client-config_quarkus-rest-client-query-param-style"></a> <span class="property-path"><a href="#quarkus-rest-client-config_quarkus-rest-client-query-param-style"><code>quarkus.rest-client.query-param-style</code></a></span></p>
+<p><a id="quarkus-rest-client-config_quarkus-rest-client-query-param-style"></a> <span class="property-path"><a href="#quarkus-rest-client-config_quarkus-rest-client-query-param-style"><code>quarkus.rest-client.query-param-style</code></a></span>
+<button class="btn-copy fa fa-clipboard inline-btn-copy" data-clipboard-action="copy" data-clipboard-text='quarkus.rest-client.query-param-style' title="Copy to clipboard" do-not-collapse="true"></button></p>
 </div>
 <div id="conf-collapsible-desc-22" class="openblock description description-collapsed">
 <div class="content">
@@ -3654,7 +3804,7 @@ To change this behavior, set the <code>quarkus.rest-client-reactive.scope</code>
 <p>Can be overwritten by client-specific settings.</p>
 </div>
 <div class="paragraph">
-<p>Environment variable: <code id="env-var-7595">QUARKUS_REST_CLIENT_QUERY_PARAM_STYLE</code><button class="btn-copy fa fa-clipboard inline-btn-copy" data-clipboard-action="copy" data-clipboard-target="#env-var-7595" title="Copy to clipboard" do-not-collapse="true"></button></p>
+<p>Environment variable: <code id="env-var-7782">QUARKUS_REST_CLIENT_QUERY_PARAM_STYLE</code><button class="btn-copy fa fa-clipboard inline-btn-copy" data-clipboard-action="copy" data-clipboard-target="#env-var-7782" title="Copy to clipboard" do-not-collapse="true"></button></p>
 </div>
 </div>
 </div>
@@ -3668,7 +3818,8 @@ To change this behavior, set the <code>quarkus.rest-client-reactive.scope</code>
 </tr>
 <tr class="row-collapsible row-collapsed row-with-desc odd">
 <td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
-<p><a id="quarkus-rest-client-config_quarkus-rest-client-verify-host"></a> <span class="property-path"><a href="#quarkus-rest-client-config_quarkus-rest-client-verify-host"><code>quarkus.rest-client.verify-host</code></a></span></p>
+<p><a id="quarkus-rest-client-config_quarkus-rest-client-verify-host"></a> <span class="property-path"><a href="#quarkus-rest-client-config_quarkus-rest-client-verify-host"><code>quarkus.rest-client.verify-host</code></a></span>
+<button class="btn-copy fa fa-clipboard inline-btn-copy" data-clipboard-action="copy" data-clipboard-text='quarkus.rest-client.verify-host' title="Copy to clipboard" do-not-collapse="true"></button></p>
 </div>
 <div id="conf-collapsible-desc-23" class="openblock description description-collapsed">
 <div class="content">
@@ -3679,7 +3830,7 @@ To change this behavior, set the <code>quarkus.rest-client-reactive.scope</code>
 <p>Can be overwritten by client-specific settings.</p>
 </div>
 <div class="paragraph">
-<p>Environment variable: <code id="env-var-7596">QUARKUS_REST_CLIENT_VERIFY_HOST</code><button class="btn-copy fa fa-clipboard inline-btn-copy" data-clipboard-action="copy" data-clipboard-target="#env-var-7596" title="Copy to clipboard" do-not-collapse="true"></button></p>
+<p>Environment variable: <code id="env-var-7783">QUARKUS_REST_CLIENT_VERIFY_HOST</code><button class="btn-copy fa fa-clipboard inline-btn-copy" data-clipboard-action="copy" data-clipboard-target="#env-var-7783" title="Copy to clipboard" do-not-collapse="true"></button></p>
 </div>
 </div>
 </div>
@@ -3691,7 +3842,8 @@ To change this behavior, set the <code>quarkus.rest-client-reactive.scope</code>
 </tr>
 <tr class="row-collapsible row-collapsed row-with-desc">
 <td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
-<p><a id="quarkus-rest-client-config_quarkus-rest-client-trust-store"></a> <span class="property-path"><a href="#quarkus-rest-client-config_quarkus-rest-client-trust-store"><code>quarkus.rest-client.trust-store</code></a></span></p>
+<p><a id="quarkus-rest-client-config_quarkus-rest-client-trust-store"></a> <span class="property-path"><a href="#quarkus-rest-client-config_quarkus-rest-client-trust-store"><code>quarkus.rest-client.trust-store</code></a></span>
+<button class="btn-copy fa fa-clipboard inline-btn-copy" data-clipboard-action="copy" data-clipboard-text='quarkus.rest-client.trust-store' title="Copy to clipboard" do-not-collapse="true"></button></p>
 </div>
 <div id="conf-collapsible-desc-24" class="openblock description description-collapsed">
 <div class="content">
@@ -3702,7 +3854,7 @@ To change this behavior, set the <code>quarkus.rest-client-reactive.scope</code>
 <p>Can be overwritten by client-specific settings.</p>
 </div>
 <div class="paragraph">
-<p>Environment variable: <code id="env-var-7597">QUARKUS_REST_CLIENT_TRUST_STORE</code><button class="btn-copy fa fa-clipboard inline-btn-copy" data-clipboard-action="copy" data-clipboard-target="#env-var-7597" title="Copy to clipboard" do-not-collapse="true"></button></p>
+<p>Environment variable: <code id="env-var-7784">QUARKUS_REST_CLIENT_TRUST_STORE</code><button class="btn-copy fa fa-clipboard inline-btn-copy" data-clipboard-action="copy" data-clipboard-target="#env-var-7784" title="Copy to clipboard" do-not-collapse="true"></button></p>
 </div>
 </div>
 </div>
@@ -3714,7 +3866,8 @@ To change this behavior, set the <code>quarkus.rest-client-reactive.scope</code>
 </tr>
 <tr class="row-collapsible row-collapsed row-with-desc odd">
 <td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
-<p><a id="quarkus-rest-client-config_quarkus-rest-client-trust-store-password"></a> <span class="property-path"><a href="#quarkus-rest-client-config_quarkus-rest-client-trust-store-password"><code>quarkus.rest-client.trust-store-password</code></a></span></p>
+<p><a id="quarkus-rest-client-config_quarkus-rest-client-trust-store-password"></a> <span class="property-path"><a href="#quarkus-rest-client-config_quarkus-rest-client-trust-store-password"><code>quarkus.rest-client.trust-store-password</code></a></span>
+<button class="btn-copy fa fa-clipboard inline-btn-copy" data-clipboard-action="copy" data-clipboard-text='quarkus.rest-client.trust-store-password' title="Copy to clipboard" do-not-collapse="true"></button></p>
 </div>
 <div id="conf-collapsible-desc-25" class="openblock description description-collapsed">
 <div class="content">
@@ -3725,7 +3878,7 @@ To change this behavior, set the <code>quarkus.rest-client-reactive.scope</code>
 <p>Can be overwritten by client-specific settings.</p>
 </div>
 <div class="paragraph">
-<p>Environment variable: <code id="env-var-7598">QUARKUS_REST_CLIENT_TRUST_STORE_PASSWORD</code><button class="btn-copy fa fa-clipboard inline-btn-copy" data-clipboard-action="copy" data-clipboard-target="#env-var-7598" title="Copy to clipboard" do-not-collapse="true"></button></p>
+<p>Environment variable: <code id="env-var-7785">QUARKUS_REST_CLIENT_TRUST_STORE_PASSWORD</code><button class="btn-copy fa fa-clipboard inline-btn-copy" data-clipboard-action="copy" data-clipboard-target="#env-var-7785" title="Copy to clipboard" do-not-collapse="true"></button></p>
 </div>
 </div>
 </div>
@@ -3737,7 +3890,8 @@ To change this behavior, set the <code>quarkus.rest-client-reactive.scope</code>
 </tr>
 <tr class="row-collapsible row-collapsed row-with-desc">
 <td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
-<p><a id="quarkus-rest-client-config_quarkus-rest-client-trust-store-type"></a> <span class="property-path"><a href="#quarkus-rest-client-config_quarkus-rest-client-trust-store-type"><code>quarkus.rest-client.trust-store-type</code></a></span></p>
+<p><a id="quarkus-rest-client-config_quarkus-rest-client-trust-store-type"></a> <span class="property-path"><a href="#quarkus-rest-client-config_quarkus-rest-client-trust-store-type"><code>quarkus.rest-client.trust-store-type</code></a></span>
+<button class="btn-copy fa fa-clipboard inline-btn-copy" data-clipboard-action="copy" data-clipboard-text='quarkus.rest-client.trust-store-type' title="Copy to clipboard" do-not-collapse="true"></button></p>
 </div>
 <div id="conf-collapsible-desc-26" class="openblock description description-collapsed">
 <div class="content">
@@ -3748,7 +3902,7 @@ To change this behavior, set the <code>quarkus.rest-client-reactive.scope</code>
 <p>Can be overwritten by client-specific settings.</p>
 </div>
 <div class="paragraph">
-<p>Environment variable: <code id="env-var-7599">QUARKUS_REST_CLIENT_TRUST_STORE_TYPE</code><button class="btn-copy fa fa-clipboard inline-btn-copy" data-clipboard-action="copy" data-clipboard-target="#env-var-7599" title="Copy to clipboard" do-not-collapse="true"></button></p>
+<p>Environment variable: <code id="env-var-7786">QUARKUS_REST_CLIENT_TRUST_STORE_TYPE</code><button class="btn-copy fa fa-clipboard inline-btn-copy" data-clipboard-action="copy" data-clipboard-target="#env-var-7786" title="Copy to clipboard" do-not-collapse="true"></button></p>
 </div>
 </div>
 </div>
@@ -3760,7 +3914,8 @@ To change this behavior, set the <code>quarkus.rest-client-reactive.scope</code>
 </tr>
 <tr class="row-collapsible row-collapsed row-with-desc odd">
 <td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
-<p><a id="quarkus-rest-client-config_quarkus-rest-client-key-store"></a> <span class="property-path"><a href="#quarkus-rest-client-config_quarkus-rest-client-key-store"><code>quarkus.rest-client.key-store</code></a></span></p>
+<p><a id="quarkus-rest-client-config_quarkus-rest-client-key-store"></a> <span class="property-path"><a href="#quarkus-rest-client-config_quarkus-rest-client-key-store"><code>quarkus.rest-client.key-store</code></a></span>
+<button class="btn-copy fa fa-clipboard inline-btn-copy" data-clipboard-action="copy" data-clipboard-text='quarkus.rest-client.key-store' title="Copy to clipboard" do-not-collapse="true"></button></p>
 </div>
 <div id="conf-collapsible-desc-27" class="openblock description description-collapsed">
 <div class="content">
@@ -3771,7 +3926,7 @@ To change this behavior, set the <code>quarkus.rest-client-reactive.scope</code>
 <p>Can be overwritten by client-specific settings.</p>
 </div>
 <div class="paragraph">
-<p>Environment variable: <code id="env-var-7600">QUARKUS_REST_CLIENT_KEY_STORE</code><button class="btn-copy fa fa-clipboard inline-btn-copy" data-clipboard-action="copy" data-clipboard-target="#env-var-7600" title="Copy to clipboard" do-not-collapse="true"></button></p>
+<p>Environment variable: <code id="env-var-7787">QUARKUS_REST_CLIENT_KEY_STORE</code><button class="btn-copy fa fa-clipboard inline-btn-copy" data-clipboard-action="copy" data-clipboard-target="#env-var-7787" title="Copy to clipboard" do-not-collapse="true"></button></p>
 </div>
 </div>
 </div>
@@ -3783,7 +3938,8 @@ To change this behavior, set the <code>quarkus.rest-client-reactive.scope</code>
 </tr>
 <tr class="row-collapsible row-collapsed row-with-desc">
 <td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
-<p><a id="quarkus-rest-client-config_quarkus-rest-client-key-store-password"></a> <span class="property-path"><a href="#quarkus-rest-client-config_quarkus-rest-client-key-store-password"><code>quarkus.rest-client.key-store-password</code></a></span></p>
+<p><a id="quarkus-rest-client-config_quarkus-rest-client-key-store-password"></a> <span class="property-path"><a href="#quarkus-rest-client-config_quarkus-rest-client-key-store-password"><code>quarkus.rest-client.key-store-password</code></a></span>
+<button class="btn-copy fa fa-clipboard inline-btn-copy" data-clipboard-action="copy" data-clipboard-text='quarkus.rest-client.key-store-password' title="Copy to clipboard" do-not-collapse="true"></button></p>
 </div>
 <div id="conf-collapsible-desc-28" class="openblock description description-collapsed">
 <div class="content">
@@ -3794,7 +3950,7 @@ To change this behavior, set the <code>quarkus.rest-client-reactive.scope</code>
 <p>Can be overwritten by client-specific settings.</p>
 </div>
 <div class="paragraph">
-<p>Environment variable: <code id="env-var-7601">QUARKUS_REST_CLIENT_KEY_STORE_PASSWORD</code><button class="btn-copy fa fa-clipboard inline-btn-copy" data-clipboard-action="copy" data-clipboard-target="#env-var-7601" title="Copy to clipboard" do-not-collapse="true"></button></p>
+<p>Environment variable: <code id="env-var-7788">QUARKUS_REST_CLIENT_KEY_STORE_PASSWORD</code><button class="btn-copy fa fa-clipboard inline-btn-copy" data-clipboard-action="copy" data-clipboard-target="#env-var-7788" title="Copy to clipboard" do-not-collapse="true"></button></p>
 </div>
 </div>
 </div>
@@ -3806,7 +3962,8 @@ To change this behavior, set the <code>quarkus.rest-client-reactive.scope</code>
 </tr>
 <tr class="row-collapsible row-collapsed row-with-desc odd">
 <td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
-<p><a id="quarkus-rest-client-config_quarkus-rest-client-key-store-type"></a> <span class="property-path"><a href="#quarkus-rest-client-config_quarkus-rest-client-key-store-type"><code>quarkus.rest-client.key-store-type</code></a></span></p>
+<p><a id="quarkus-rest-client-config_quarkus-rest-client-key-store-type"></a> <span class="property-path"><a href="#quarkus-rest-client-config_quarkus-rest-client-key-store-type"><code>quarkus.rest-client.key-store-type</code></a></span>
+<button class="btn-copy fa fa-clipboard inline-btn-copy" data-clipboard-action="copy" data-clipboard-text='quarkus.rest-client.key-store-type' title="Copy to clipboard" do-not-collapse="true"></button></p>
 </div>
 <div id="conf-collapsible-desc-29" class="openblock description description-collapsed">
 <div class="content">
@@ -3817,7 +3974,7 @@ To change this behavior, set the <code>quarkus.rest-client-reactive.scope</code>
 <p>Can be overwritten by client-specific settings.</p>
 </div>
 <div class="paragraph">
-<p>Environment variable: <code id="env-var-7602">QUARKUS_REST_CLIENT_KEY_STORE_TYPE</code><button class="btn-copy fa fa-clipboard inline-btn-copy" data-clipboard-action="copy" data-clipboard-target="#env-var-7602" title="Copy to clipboard" do-not-collapse="true"></button></p>
+<p>Environment variable: <code id="env-var-7789">QUARKUS_REST_CLIENT_KEY_STORE_TYPE</code><button class="btn-copy fa fa-clipboard inline-btn-copy" data-clipboard-action="copy" data-clipboard-target="#env-var-7789" title="Copy to clipboard" do-not-collapse="true"></button></p>
 </div>
 </div>
 </div>
@@ -3829,7 +3986,8 @@ To change this behavior, set the <code>quarkus.rest-client-reactive.scope</code>
 </tr>
 <tr class="row-collapsible row-collapsed row-with-desc">
 <td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
-<p><a id="quarkus-rest-client-config_quarkus-rest-client-tls-configuration-name"></a> <span class="property-path"><a href="#quarkus-rest-client-config_quarkus-rest-client-tls-configuration-name"><code>quarkus.rest-client.tls-configuration-name</code></a></span></p>
+<p><a id="quarkus-rest-client-config_quarkus-rest-client-tls-configuration-name"></a> <span class="property-path"><a href="#quarkus-rest-client-config_quarkus-rest-client-tls-configuration-name"><code>quarkus.rest-client.tls-configuration-name</code></a></span>
+<button class="btn-copy fa fa-clipboard inline-btn-copy" data-clipboard-action="copy" data-clipboard-text='quarkus.rest-client.tls-configuration-name' title="Copy to clipboard" do-not-collapse="true"></button></p>
 </div>
 <div id="conf-collapsible-desc-30" class="openblock description description-collapsed">
 <div class="content">
@@ -3837,16 +3995,16 @@ To change this behavior, set the <code>quarkus.rest-client-reactive.scope</code>
 <p>The name of the TLS configuration to use.</p>
 </div>
 <div class="paragraph">
-<p>If not set and the default TLS configuration is configured (<code>quarkus.tls.*</code>) then that will be used. If a name is configured, it uses the configuration from <code>quarkus.tls.&lt;name&gt;.*</code> If a name is configured, but no TLS configuration is found with that name then an error will be thrown.</p>
+<p>If a name is configured, it uses the configuration from <code>quarkus.tls.&lt;name&gt;.*</code> If a name is configured, but no TLS configuration is found with that name then an error will be thrown. The default TLS configuration will be ignored.</p>
 </div>
 <div class="paragraph">
-<p>If no TLS configuration is set, then the keys-tore, trust-store, etc. properties will be used.</p>
+<p>If no named TLS configuration is set, then the key-store, trust-store, etc. properties will be used.</p>
 </div>
 <div class="paragraph">
 <p>This property is not applicable to the RESTEasy Client.</p>
 </div>
 <div class="paragraph">
-<p>Environment variable: <code id="env-var-7603">QUARKUS_REST_CLIENT_TLS_CONFIGURATION_NAME</code><button class="btn-copy fa fa-clipboard inline-btn-copy" data-clipboard-action="copy" data-clipboard-target="#env-var-7603" title="Copy to clipboard" do-not-collapse="true"></button></p>
+<p>Environment variable: <code id="env-var-7790">QUARKUS_REST_CLIENT_TLS_CONFIGURATION_NAME</code><button class="btn-copy fa fa-clipboard inline-btn-copy" data-clipboard-action="copy" data-clipboard-target="#env-var-7790" title="Copy to clipboard" do-not-collapse="true"></button></p>
 </div>
 </div>
 </div>
@@ -3858,7 +4016,8 @@ To change this behavior, set the <code>quarkus.rest-client-reactive.scope</code>
 </tr>
 <tr class="row-collapsible row-collapsed row-with-desc row-hidden odd">
 <td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
-<p><a id="quarkus-rest-client-config_quarkus-rest-client-http2"></a> <span class="property-path"><a href="#quarkus-rest-client-config_quarkus-rest-client-http2"><code>quarkus.rest-client.http2</code></a></span></p>
+<p><a id="quarkus-rest-client-config_quarkus-rest-client-http2"></a> <span class="property-path"><a href="#quarkus-rest-client-config_quarkus-rest-client-http2"><code>quarkus.rest-client.http2</code></a></span>
+<button class="btn-copy fa fa-clipboard inline-btn-copy" data-clipboard-action="copy" data-clipboard-text='quarkus.rest-client.http2' title="Copy to clipboard" do-not-collapse="true"></button></p>
 </div>
 <div id="conf-collapsible-desc-31" class="openblock description description-collapsed">
 <div class="content">
@@ -3866,7 +4025,7 @@ To change this behavior, set the <code>quarkus.rest-client-reactive.scope</code>
 <p>If this is true then HTTP/2 will be enabled.</p>
 </div>
 <div class="paragraph">
-<p>Environment variable: <code id="env-var-7604">QUARKUS_REST_CLIENT_HTTP2</code><button class="btn-copy fa fa-clipboard inline-btn-copy" data-clipboard-action="copy" data-clipboard-target="#env-var-7604" title="Copy to clipboard" do-not-collapse="true"></button></p>
+<p>Environment variable: <code id="env-var-7791">QUARKUS_REST_CLIENT_HTTP2</code><button class="btn-copy fa fa-clipboard inline-btn-copy" data-clipboard-action="copy" data-clipboard-target="#env-var-7791" title="Copy to clipboard" do-not-collapse="true"></button></p>
 </div>
 </div>
 </div>
@@ -3878,18 +4037,32 @@ To change this behavior, set the <code>quarkus.rest-client-reactive.scope</code>
 </tr>
 <tr class="row-collapsible row-collapsed row-with-desc row-hidden">
 <td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
-<p><a id="quarkus-rest-client-config_quarkus-rest-client-max-chunk-size"></a> <span class="property-path"><a href="#quarkus-rest-client-config_quarkus-rest-client-max-chunk-size"><code>quarkus.rest-client.max-chunk-size</code></a></span></p>
+<p><a id="quarkus-rest-client-config_quarkus-rest-client-max-chunk-size"></a> <span class="property-path"><a href="#quarkus-rest-client-config_quarkus-rest-client-max-chunk-size"><code>quarkus.rest-client.max-chunk-size</code></a></span>
+<button class="btn-copy fa fa-clipboard inline-btn-copy" data-clipboard-action="copy" data-clipboard-text='quarkus.rest-client.max-chunk-size' title="Copy to clipboard" do-not-collapse="true"></button></p>
 </div>
 <div id="conf-collapsible-desc-32" class="openblock description description-collapsed">
 <div class="content">
 <div class="paragraph">
-<p>The max HTTP chunk size (8096 bytes by default).</p>
+<p>Configures two different things:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>The max HTTP chunk size, up to <code>Integer.MAX_VALUE</code> bytes.</p>
+</li>
+<li>
+<p>The size of the chunk to be read when an <code>InputStream</code> is being used as an input</p>
+</li>
+</ul>
 </div>
 <div class="paragraph">
 <p>Can be overwritten by client-specific settings.</p>
 </div>
 <div class="paragraph">
-<p>Environment variable: <code id="env-var-7605">QUARKUS_REST_CLIENT_MAX_CHUNK_SIZE</code><button class="btn-copy fa fa-clipboard inline-btn-copy" data-clipboard-action="copy" data-clipboard-target="#env-var-7605" title="Copy to clipboard" do-not-collapse="true"></button></p>
+<p>This property is not applicable to the RESTEasy Client.</p>
+</div>
+<div class="paragraph">
+<p>Environment variable: <code id="env-var-7792">QUARKUS_REST_CLIENT_MAX_CHUNK_SIZE</code><button class="btn-copy fa fa-clipboard inline-btn-copy" data-clipboard-action="copy" data-clipboard-target="#env-var-7792" title="Copy to clipboard" do-not-collapse="true"></button></p>
 </div>
 </div>
 </div>
@@ -3901,15 +4074,22 @@ To change this behavior, set the <code>quarkus.rest-client-reactive.scope</code>
 </tr>
 <tr class="row-collapsible row-collapsed row-with-desc row-hidden odd">
 <td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
-<p><a id="quarkus-rest-client-config_quarkus-rest-client-alpn"></a> <span class="property-path"><a href="#quarkus-rest-client-config_quarkus-rest-client-alpn"><code>quarkus.rest-client.alpn</code></a></span></p>
+<p><a id="quarkus-rest-client-config_quarkus-rest-client-enable-compression"></a> <span class="property-path"><a href="#quarkus-rest-client-config_quarkus-rest-client-enable-compression"><code>quarkus.rest-client.enable-compression</code></a></span>
+<button class="btn-copy fa fa-clipboard inline-btn-copy" data-clipboard-action="copy" data-clipboard-text='quarkus.rest-client.enable-compression' title="Copy to clipboard" do-not-collapse="true"></button></p>
 </div>
 <div id="conf-collapsible-desc-33" class="openblock description description-collapsed">
 <div class="content">
 <div class="paragraph">
-<p>If the Application-Layer Protocol Negotiation is enabled, the client will negotiate which protocol to use over the protocols exposed by the server. By default, it will try to use HTTP/2 first and if it&#8217;s not enabled, it will use HTTP/1.1. When the property <code>http2</code> is enabled, this flag will be automatically enabled.</p>
+<p>Supports receiving compressed messages using GZIP. When this feature is enabled and a server returns a response that includes the header <code>Content-Encoding: gzip</code>, REST Client will automatically decode the content and proceed with the message handling.</p>
 </div>
 <div class="paragraph">
-<p>Environment variable: <code id="env-var-7606">QUARKUS_REST_CLIENT_ALPN</code><button class="btn-copy fa fa-clipboard inline-btn-copy" data-clipboard-action="copy" data-clipboard-target="#env-var-7606" title="Copy to clipboard" do-not-collapse="true"></button></p>
+<p>This property is not applicable to the RESTEasy Client.</p>
+</div>
+<div class="paragraph">
+<p>Can be overwritten by client-specific settings.</p>
+</div>
+<div class="paragraph">
+<p>Environment variable: <code id="env-var-7793">QUARKUS_REST_CLIENT_ENABLE_COMPRESSION</code><button class="btn-copy fa fa-clipboard inline-btn-copy" data-clipboard-action="copy" data-clipboard-target="#env-var-7793" title="Copy to clipboard" do-not-collapse="true"></button></p>
 </div>
 </div>
 </div>
@@ -3921,15 +4101,37 @@ To change this behavior, set the <code>quarkus.rest-client-reactive.scope</code>
 </tr>
 <tr class="row-collapsible row-collapsed row-with-desc row-hidden">
 <td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
-<p><a id="quarkus-rest-client-config_quarkus-rest-client-capture-stacktrace"></a> <span class="property-path"><a href="#quarkus-rest-client-config_quarkus-rest-client-capture-stacktrace"><code>quarkus.rest-client.capture-stacktrace</code></a></span></p>
+<p><a id="quarkus-rest-client-config_quarkus-rest-client-alpn"></a> <span class="property-path"><a href="#quarkus-rest-client-config_quarkus-rest-client-alpn"><code>quarkus.rest-client.alpn</code></a></span>
+<button class="btn-copy fa fa-clipboard inline-btn-copy" data-clipboard-action="copy" data-clipboard-text='quarkus.rest-client.alpn' title="Copy to clipboard" do-not-collapse="true"></button></p>
 </div>
 <div id="conf-collapsible-desc-34" class="openblock description description-collapsed">
+<div class="content">
+<div class="paragraph">
+<p>If the Application-Layer Protocol Negotiation is enabled, the client will negotiate which protocol to use over the protocols exposed by the server. By default, it will try to use HTTP/2 first and if it&#8217;s not enabled, it will use HTTP/1.1. When the property <code>http2</code> is enabled, this flag will be automatically enabled.</p>
+</div>
+<div class="paragraph">
+<p>Environment variable: <code id="env-var-7794">QUARKUS_REST_CLIENT_ALPN</code><button class="btn-copy fa fa-clipboard inline-btn-copy" data-clipboard-action="copy" data-clipboard-target="#env-var-7794" title="Copy to clipboard" do-not-collapse="true"></button></p>
+</div>
+</div>
+</div>
+<div class="paragraph description-decoration">
+<p><i class="fa fa-chevron-down"></i><span>Show more</span></p>
+</div></div></td>
+<td class="tableblock halign-left valign-middle"><p class="tableblock">boolean</p></td>
+<td class="tableblock halign-left valign-middle"></td>
+</tr>
+<tr class="row-collapsible row-collapsed row-with-desc row-hidden odd">
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p><a id="quarkus-rest-client-config_quarkus-rest-client-capture-stacktrace"></a> <span class="property-path"><a href="#quarkus-rest-client-config_quarkus-rest-client-capture-stacktrace"><code>quarkus.rest-client.capture-stacktrace</code></a></span>
+<button class="btn-copy fa fa-clipboard inline-btn-copy" data-clipboard-action="copy" data-clipboard-text='quarkus.rest-client.capture-stacktrace' title="Copy to clipboard" do-not-collapse="true"></button></p>
+</div>
+<div id="conf-collapsible-desc-35" class="openblock description description-collapsed">
 <div class="content">
 <div class="paragraph">
 <p>If <code>true</code>, the stacktrace of the invocation of the REST Client method is captured. This stacktrace will be used if the invocation throws an exception</p>
 </div>
 <div class="paragraph">
-<p>Environment variable: <code id="env-var-7607">QUARKUS_REST_CLIENT_CAPTURE_STACKTRACE</code><button class="btn-copy fa fa-clipboard inline-btn-copy" data-clipboard-action="copy" data-clipboard-target="#env-var-7607" title="Copy to clipboard" do-not-collapse="true"></button></p>
+<p>Environment variable: <code id="env-var-7795">QUARKUS_REST_CLIENT_CAPTURE_STACKTRACE</code><button class="btn-copy fa fa-clipboard inline-btn-copy" data-clipboard-action="copy" data-clipboard-target="#env-var-7795" title="Copy to clipboard" do-not-collapse="true"></button></p>
 </div>
 </div>
 </div>
@@ -3939,11 +4141,12 @@ To change this behavior, set the <code>quarkus.rest-client-reactive.scope</code>
 <td class="tableblock halign-left valign-middle"><p class="tableblock">boolean</p></td>
 <td class="tableblock halign-left valign-middle"><p class="tableblock"><code>false</code></p></td>
 </tr>
-<tr class="row-collapsible row-collapsed row-with-desc row-hidden odd">
+<tr class="row-collapsible row-collapsed row-with-desc row-hidden">
 <td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
-<p><a id="quarkus-rest-client-config_quarkus-rest-client-logging-scope"></a> <span class="property-path"><a href="#quarkus-rest-client-config_quarkus-rest-client-logging-scope"><code>quarkus.rest-client.logging.scope</code></a></span></p>
+<p><a id="quarkus-rest-client-config_quarkus-rest-client-logging-scope"></a> <span class="property-path"><a href="#quarkus-rest-client-config_quarkus-rest-client-logging-scope"><code>quarkus.rest-client.logging.scope</code></a></span>
+<button class="btn-copy fa fa-clipboard inline-btn-copy" data-clipboard-action="copy" data-clipboard-text='quarkus.rest-client.logging.scope' title="Copy to clipboard" do-not-collapse="true"></button></p>
 </div>
-<div id="conf-collapsible-desc-35" class="openblock description description-collapsed">
+<div id="conf-collapsible-desc-36" class="openblock description description-collapsed">
 <div class="content">
 <div class="paragraph">
 <p>Scope of logging for the client. <br>
@@ -3959,12 +4162,15 @@ The possible values are:</p>
 <p><code>all</code> - enables logging requests and responses and lower-level logging</p>
 </li>
 <li>
-<p><code>none</code> - no additional logging  This property is applicable to reactive REST clients only.</p>
+<p><code>none</code> - no additional logging</p>
 </li>
 </ul>
 </div>
 <div class="paragraph">
-<p>Environment variable: <code id="env-var-7608">QUARKUS_REST_CLIENT_LOGGING_SCOPE</code><button class="btn-copy fa fa-clipboard inline-btn-copy" data-clipboard-action="copy" data-clipboard-target="#env-var-7608" title="Copy to clipboard" do-not-collapse="true"></button></p>
+<p>This property is applicable to reactive REST clients only.</p>
+</div>
+<div class="paragraph">
+<p>Environment variable: <code id="env-var-7796">QUARKUS_REST_CLIENT_LOGGING_SCOPE</code><button class="btn-copy fa fa-clipboard inline-btn-copy" data-clipboard-action="copy" data-clipboard-target="#env-var-7796" title="Copy to clipboard" do-not-collapse="true"></button></p>
 </div>
 </div>
 </div>
@@ -3974,11 +4180,12 @@ The possible values are:</p>
 <td class="tableblock halign-left valign-middle"><p class="tableblock">string</p></td>
 <td class="tableblock halign-left valign-middle"></td>
 </tr>
-<tr class="row-collapsible row-collapsed row-with-desc row-hidden">
+<tr class="row-collapsible row-collapsed row-with-desc row-hidden odd">
 <td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
-<p><a id="quarkus-rest-client-config_quarkus-rest-client-logging-body-limit"></a> <span class="property-path"><a href="#quarkus-rest-client-config_quarkus-rest-client-logging-body-limit"><code>quarkus.rest-client.logging.body-limit</code></a></span></p>
+<p><a id="quarkus-rest-client-config_quarkus-rest-client-logging-body-limit"></a> <span class="property-path"><a href="#quarkus-rest-client-config_quarkus-rest-client-logging-body-limit"><code>quarkus.rest-client.logging.body-limit</code></a></span>
+<button class="btn-copy fa fa-clipboard inline-btn-copy" data-clipboard-action="copy" data-clipboard-text='quarkus.rest-client.logging.body-limit' title="Copy to clipboard" do-not-collapse="true"></button></p>
 </div>
-<div id="conf-collapsible-desc-36" class="openblock description description-collapsed">
+<div id="conf-collapsible-desc-37" class="openblock description description-collapsed">
 <div class="content">
 <div class="paragraph">
 <p>How many characters of the body should be logged. Message body can be large and can easily pollute the logs.</p>
@@ -3990,7 +4197,7 @@ The possible values are:</p>
 <p>This property is applicable to reactive REST clients only.</p>
 </div>
 <div class="paragraph">
-<p>Environment variable: <code id="env-var-7609">QUARKUS_REST_CLIENT_LOGGING_BODY_LIMIT</code><button class="btn-copy fa fa-clipboard inline-btn-copy" data-clipboard-action="copy" data-clipboard-target="#env-var-7609" title="Copy to clipboard" do-not-collapse="true"></button></p>
+<p>Environment variable: <code id="env-var-7797">QUARKUS_REST_CLIENT_LOGGING_BODY_LIMIT</code><button class="btn-copy fa fa-clipboard inline-btn-copy" data-clipboard-action="copy" data-clipboard-target="#env-var-7797" title="Copy to clipboard" do-not-collapse="true"></button></p>
 </div>
 </div>
 </div>
@@ -4000,17 +4207,18 @@ The possible values are:</p>
 <td class="tableblock halign-left valign-middle"><p class="tableblock">int</p></td>
 <td class="tableblock halign-left valign-middle"><p class="tableblock"><code>100</code></p></td>
 </tr>
-<tr class="row-collapsible row-collapsed row-with-desc row-hidden odd">
+<tr class="row-collapsible row-collapsed row-with-desc row-hidden">
 <td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
-<p><span class="icon"><i class="fa fa-lock" title="Fixed at build time"></i></span> <a id="quarkus-rest-client-config_quarkus-rest-client-clients-scope"></a> <span class="property-path"><a href="#quarkus-rest-client-config_quarkus-rest-client-clients-scope"><code>quarkus.rest-client."clients".scope</code></a></span></p>
+<p><span class="icon"><i class="fa fa-lock" title="Fixed at build time"></i></span> <a id="quarkus-rest-client-config_quarkus-rest-client-clients-scope"></a> <span class="property-path"><a href="#quarkus-rest-client-config_quarkus-rest-client-clients-scope"><code>quarkus.rest-client."clients".scope</code></a></span>
+<button class="btn-copy fa fa-clipboard inline-btn-copy" data-clipboard-action="copy" data-clipboard-text='quarkus.rest-client."clients".scope' title="Copy to clipboard" do-not-collapse="true"></button></p>
 </div>
-<div id="conf-collapsible-desc-37" class="openblock description description-collapsed">
+<div id="conf-collapsible-desc-38" class="openblock description description-collapsed">
 <div class="content">
 <div class="paragraph">
 <p>The CDI scope to use for injection. This property can contain either a fully qualified class name of a CDI scope annotation (such as "jakarta.enterprise.context.ApplicationScoped") or its simple name (such as "ApplicationScoped"). By default, this is not set which means the interface is not registered as a bean unless it is annotated with <code>RegisterRestClient</code>. If an interface is not annotated with <code>RegisterRestClient</code> and this property is set, then Quarkus will make the interface a bean of the configured scope.</p>
 </div>
 <div class="paragraph">
-<p>Environment variable: <code id="env-var-7610">QUARKUS_REST_CLIENT__CLIENTS__SCOPE</code><button class="btn-copy fa fa-clipboard inline-btn-copy" data-clipboard-action="copy" data-clipboard-target="#env-var-7610" title="Copy to clipboard" do-not-collapse="true"></button></p>
+<p>Environment variable: <code id="env-var-7798">QUARKUS_REST_CLIENT__CLIENTS__SCOPE</code><button class="btn-copy fa fa-clipboard inline-btn-copy" data-clipboard-action="copy" data-clipboard-target="#env-var-7798" title="Copy to clipboard" do-not-collapse="true"></button></p>
 </div>
 </div>
 </div>
@@ -4020,11 +4228,12 @@ The possible values are:</p>
 <td class="tableblock halign-left valign-middle"><p class="tableblock">string</p></td>
 <td class="tableblock halign-left valign-middle"></td>
 </tr>
-<tr class="row-collapsible row-collapsed row-with-desc row-hidden">
+<tr class="row-collapsible row-collapsed row-with-desc row-hidden odd">
 <td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
-<p><span class="icon"><i class="fa fa-lock" title="Fixed at build time"></i></span> <a id="quarkus-rest-client-config_quarkus-rest-client-clients-enable-local-proxy"></a> <span class="property-path"><a href="#quarkus-rest-client-config_quarkus-rest-client-clients-enable-local-proxy"><code>quarkus.rest-client."clients".enable-local-proxy</code></a></span></p>
+<p><span class="icon"><i class="fa fa-lock" title="Fixed at build time"></i></span> <a id="quarkus-rest-client-config_quarkus-rest-client-clients-enable-local-proxy"></a> <span class="property-path"><a href="#quarkus-rest-client-config_quarkus-rest-client-clients-enable-local-proxy"><code>quarkus.rest-client."clients".enable-local-proxy</code></a></span>
+<button class="btn-copy fa fa-clipboard inline-btn-copy" data-clipboard-action="copy" data-clipboard-text='quarkus.rest-client."clients".enable-local-proxy' title="Copy to clipboard" do-not-collapse="true"></button></p>
 </div>
-<div id="conf-collapsible-desc-38" class="openblock description description-collapsed">
+<div id="conf-collapsible-desc-39" class="openblock description description-collapsed">
 <div class="content">
 <div class="paragraph">
 <p>If set to true, then Quarkus will ensure that all calls from the REST client go through a local proxy server (that is managed by Quarkus). This can be very useful for capturing network traffic to a service that uses HTTPS.</p>
@@ -4036,7 +4245,7 @@ The possible values are:</p>
 <p>This property only applicable to dev and test mode.</p>
 </div>
 <div class="paragraph">
-<p>Environment variable: <code id="env-var-7611">QUARKUS_REST_CLIENT__CLIENTS__ENABLE_LOCAL_PROXY</code><button class="btn-copy fa fa-clipboard inline-btn-copy" data-clipboard-action="copy" data-clipboard-target="#env-var-7611" title="Copy to clipboard" do-not-collapse="true"></button></p>
+<p>Environment variable: <code id="env-var-7799">QUARKUS_REST_CLIENT__CLIENTS__ENABLE_LOCAL_PROXY</code><button class="btn-copy fa fa-clipboard inline-btn-copy" data-clipboard-action="copy" data-clipboard-target="#env-var-7799" title="Copy to clipboard" do-not-collapse="true"></button></p>
 </div>
 </div>
 </div>
@@ -4046,11 +4255,12 @@ The possible values are:</p>
 <td class="tableblock halign-left valign-middle"><p class="tableblock">boolean</p></td>
 <td class="tableblock halign-left valign-middle"><p class="tableblock"><code>false</code></p></td>
 </tr>
-<tr class="row-collapsible row-collapsed row-with-desc row-hidden odd">
+<tr class="row-collapsible row-collapsed row-with-desc row-hidden">
 <td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
-<p><span class="icon"><i class="fa fa-lock" title="Fixed at build time"></i></span> <a id="quarkus-rest-client-config_quarkus-rest-client-clients-local-proxy-provider"></a> <span class="property-path"><a href="#quarkus-rest-client-config_quarkus-rest-client-clients-local-proxy-provider"><code>quarkus.rest-client."clients".local-proxy-provider</code></a></span></p>
+<p><span class="icon"><i class="fa fa-lock" title="Fixed at build time"></i></span> <a id="quarkus-rest-client-config_quarkus-rest-client-clients-local-proxy-provider"></a> <span class="property-path"><a href="#quarkus-rest-client-config_quarkus-rest-client-clients-local-proxy-provider"><code>quarkus.rest-client."clients".local-proxy-provider</code></a></span>
+<button class="btn-copy fa fa-clipboard inline-btn-copy" data-clipboard-action="copy" data-clipboard-text='quarkus.rest-client."clients".local-proxy-provider' title="Copy to clipboard" do-not-collapse="true"></button></p>
 </div>
-<div id="conf-collapsible-desc-39" class="openblock description description-collapsed">
+<div id="conf-collapsible-desc-40" class="openblock description description-collapsed">
 <div class="content">
 <div class="paragraph">
 <p>This setting is used to select which proxy provider to use if there are multiple ones. It only applies if <code>enable-local-proxy</code> is true.</p>
@@ -4072,7 +4282,7 @@ The possible values are:</p>
 </ul>
 </div>
 <div class="paragraph">
-<p>Environment variable: <code id="env-var-7612">QUARKUS_REST_CLIENT__CLIENTS__LOCAL_PROXY_PROVIDER</code><button class="btn-copy fa fa-clipboard inline-btn-copy" data-clipboard-action="copy" data-clipboard-target="#env-var-7612" title="Copy to clipboard" do-not-collapse="true"></button></p>
+<p>Environment variable: <code id="env-var-7800">QUARKUS_REST_CLIENT__CLIENTS__LOCAL_PROXY_PROVIDER</code><button class="btn-copy fa fa-clipboard inline-btn-copy" data-clipboard-action="copy" data-clipboard-target="#env-var-7800" title="Copy to clipboard" do-not-collapse="true"></button></p>
 </div>
 </div>
 </div>
@@ -4082,17 +4292,18 @@ The possible values are:</p>
 <td class="tableblock halign-left valign-middle"><p class="tableblock">string</p></td>
 <td class="tableblock halign-left valign-middle"></td>
 </tr>
-<tr class="row-collapsible row-collapsed row-with-desc row-hidden">
+<tr class="row-collapsible row-collapsed row-with-desc row-hidden odd">
 <td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
-<p><span class="icon"><i class="fa fa-lock" title="Fixed at build time"></i></span> <a id="quarkus-rest-client-config_quarkus-rest-client-clients-removes-trailing-slash"></a> <span class="property-path"><a href="#quarkus-rest-client-config_quarkus-rest-client-clients-removes-trailing-slash"><code>quarkus.rest-client."clients".removes-trailing-slash</code></a></span></p>
+<p><span class="icon"><i class="fa fa-lock" title="Fixed at build time"></i></span> <a id="quarkus-rest-client-config_quarkus-rest-client-clients-removes-trailing-slash"></a> <span class="property-path"><a href="#quarkus-rest-client-config_quarkus-rest-client-clients-removes-trailing-slash"><code>quarkus.rest-client."clients".removes-trailing-slash</code></a></span>
+<button class="btn-copy fa fa-clipboard inline-btn-copy" data-clipboard-action="copy" data-clipboard-text='quarkus.rest-client."clients".removes-trailing-slash' title="Copy to clipboard" do-not-collapse="true"></button></p>
 </div>
-<div id="conf-collapsible-desc-40" class="openblock description description-collapsed">
+<div id="conf-collapsible-desc-41" class="openblock description description-collapsed">
 <div class="content">
 <div class="paragraph">
 <p>If true, the extension will automatically remove the trailing slash in the paths if any. This property is not applicable to the RESTEasy Client.</p>
 </div>
 <div class="paragraph">
-<p>Environment variable: <code id="env-var-7613">QUARKUS_REST_CLIENT__CLIENTS__REMOVES_TRAILING_SLASH</code><button class="btn-copy fa fa-clipboard inline-btn-copy" data-clipboard-action="copy" data-clipboard-target="#env-var-7613" title="Copy to clipboard" do-not-collapse="true"></button></p>
+<p>Environment variable: <code id="env-var-7801">QUARKUS_REST_CLIENT__CLIENTS__REMOVES_TRAILING_SLASH</code><button class="btn-copy fa fa-clipboard inline-btn-copy" data-clipboard-action="copy" data-clipboard-target="#env-var-7801" title="Copy to clipboard" do-not-collapse="true"></button></p>
 </div>
 </div>
 </div>
@@ -4102,17 +4313,39 @@ The possible values are:</p>
 <td class="tableblock halign-left valign-middle"><p class="tableblock">boolean</p></td>
 <td class="tableblock halign-left valign-middle"><p class="tableblock"><code>true</code></p></td>
 </tr>
-<tr class="row-collapsible row-collapsed row-with-desc row-hidden odd">
+<tr class="row-collapsible row-collapsed row-with-desc row-hidden">
 <td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
-<p><a id="quarkus-rest-client-config_quarkus-rest-client-client-url"></a> <span class="property-path"><a href="#quarkus-rest-client-config_quarkus-rest-client-client-url"><code>quarkus.rest-client."client".url</code></a></span></p>
+<p><a id="quarkus-rest-client-config_quarkus-rest-client-client-url"></a> <span class="property-path"><a href="#quarkus-rest-client-config_quarkus-rest-client-client-url"><code>quarkus.rest-client."client".url</code></a></span>
+<button class="btn-copy fa fa-clipboard inline-btn-copy" data-clipboard-action="copy" data-clipboard-text='quarkus.rest-client."client".url' title="Copy to clipboard" do-not-collapse="true"></button></p>
 </div>
-<div id="conf-collapsible-desc-41" class="openblock description description-collapsed">
+<div id="conf-collapsible-desc-42" class="openblock description description-collapsed">
 <div class="content">
 <div class="paragraph">
 <p>The base URL to use for this service. This property or the <code>uri</code> property is considered required, unless the <code>baseUri</code> attribute is configured in the <code>@RegisterRestClient</code> annotation.</p>
 </div>
 <div class="paragraph">
-<p>Environment variable: <code id="env-var-7614">QUARKUS_REST_CLIENT__CLIENT__URL</code><button class="btn-copy fa fa-clipboard inline-btn-copy" data-clipboard-action="copy" data-clipboard-target="#env-var-7614" title="Copy to clipboard" do-not-collapse="true"></button></p>
+<p>Environment variable: <code id="env-var-7802">QUARKUS_REST_CLIENT__CLIENT__URL</code><button class="btn-copy fa fa-clipboard inline-btn-copy" data-clipboard-action="copy" data-clipboard-target="#env-var-7802" title="Copy to clipboard" do-not-collapse="true"></button></p>
+</div>
+</div>
+</div>
+<div class="paragraph description-decoration">
+<p><i class="fa fa-chevron-down"></i><span>Show more</span></p>
+</div></div></td>
+<td class="tableblock halign-left valign-middle"><p class="tableblock">string</p></td>
+<td class="tableblock halign-left valign-middle"></td>
+</tr>
+<tr class="row-collapsible row-collapsed row-with-desc row-hidden odd">
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p><a id="quarkus-rest-client-config_quarkus-rest-client-client-uri"></a> <span class="property-path"><a href="#quarkus-rest-client-config_quarkus-rest-client-client-uri"><code>quarkus.rest-client."client".uri</code></a></span>
+<button class="btn-copy fa fa-clipboard inline-btn-copy" data-clipboard-action="copy" data-clipboard-text='quarkus.rest-client."client".uri' title="Copy to clipboard" do-not-collapse="true"></button></p>
+</div>
+<div id="conf-collapsible-desc-43" class="openblock description description-collapsed">
+<div class="content">
+<div class="paragraph">
+<p>The base URI to use for this service. This property or the <code>url</code> property is considered required, unless the <code>baseUri</code> attribute is configured in the <code>@RegisterRestClient</code> annotation.</p>
+</div>
+<div class="paragraph">
+<p>Environment variable: <code id="env-var-7803">QUARKUS_REST_CLIENT__CLIENT__URI</code><button class="btn-copy fa fa-clipboard inline-btn-copy" data-clipboard-action="copy" data-clipboard-target="#env-var-7803" title="Copy to clipboard" do-not-collapse="true"></button></p>
 </div>
 </div>
 </div>
@@ -4124,29 +4357,10 @@ The possible values are:</p>
 </tr>
 <tr class="row-collapsible row-collapsed row-with-desc row-hidden">
 <td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
-<p><a id="quarkus-rest-client-config_quarkus-rest-client-client-uri"></a> <span class="property-path"><a href="#quarkus-rest-client-config_quarkus-rest-client-client-uri"><code>quarkus.rest-client."client".uri</code></a></span></p>
+<p><a id="quarkus-rest-client-config_quarkus-rest-client-client-override-uri"></a> <span class="property-path"><a href="#quarkus-rest-client-config_quarkus-rest-client-client-override-uri"><code>quarkus.rest-client."client".override-uri</code></a></span>
+<button class="btn-copy fa fa-clipboard inline-btn-copy" data-clipboard-action="copy" data-clipboard-text='quarkus.rest-client."client".override-uri' title="Copy to clipboard" do-not-collapse="true"></button></p>
 </div>
-<div id="conf-collapsible-desc-42" class="openblock description description-collapsed">
-<div class="content">
-<div class="paragraph">
-<p>The base URI to use for this service. This property or the <code>url</code> property is considered required, unless the <code>baseUri</code> attribute is configured in the <code>@RegisterRestClient</code> annotation.</p>
-</div>
-<div class="paragraph">
-<p>Environment variable: <code id="env-var-7615">QUARKUS_REST_CLIENT__CLIENT__URI</code><button class="btn-copy fa fa-clipboard inline-btn-copy" data-clipboard-action="copy" data-clipboard-target="#env-var-7615" title="Copy to clipboard" do-not-collapse="true"></button></p>
-</div>
-</div>
-</div>
-<div class="paragraph description-decoration">
-<p><i class="fa fa-chevron-down"></i><span>Show more</span></p>
-</div></div></td>
-<td class="tableblock halign-left valign-middle"><p class="tableblock">string</p></td>
-<td class="tableblock halign-left valign-middle"></td>
-</tr>
-<tr class="row-collapsible row-collapsed row-with-desc row-hidden odd">
-<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
-<p><a id="quarkus-rest-client-config_quarkus-rest-client-client-override-uri"></a> <span class="property-path"><a href="#quarkus-rest-client-config_quarkus-rest-client-client-override-uri"><code>quarkus.rest-client."client".override-uri</code></a></span></p>
-</div>
-<div id="conf-collapsible-desc-43" class="openblock description description-collapsed">
+<div id="conf-collapsible-desc-44" class="openblock description description-collapsed">
 <div class="content">
 <div class="paragraph">
 <p>This property is only meant to be set by advanced configurations to override whatever value was set for the uri or url. The override is done using the REST Client class name configuration syntax.</p>
@@ -4155,7 +4369,7 @@ The possible values are:</p>
 <p>This property is not applicable to the RESTEasy Client, only the Quarkus Rest client (formerly RESTEasy Reactive client).</p>
 </div>
 <div class="paragraph">
-<p>Environment variable: <code id="env-var-7616">QUARKUS_REST_CLIENT__CLIENT__OVERRIDE_URI</code><button class="btn-copy fa fa-clipboard inline-btn-copy" data-clipboard-action="copy" data-clipboard-target="#env-var-7616" title="Copy to clipboard" do-not-collapse="true"></button></p>
+<p>Environment variable: <code id="env-var-7804">QUARKUS_REST_CLIENT__CLIENT__OVERRIDE_URI</code><button class="btn-copy fa fa-clipboard inline-btn-copy" data-clipboard-action="copy" data-clipboard-target="#env-var-7804" title="Copy to clipboard" do-not-collapse="true"></button></p>
 </div>
 </div>
 </div>
@@ -4165,17 +4379,18 @@ The possible values are:</p>
 <td class="tableblock halign-left valign-middle"><p class="tableblock">string</p></td>
 <td class="tableblock halign-left valign-middle"></td>
 </tr>
-<tr class="row-collapsible row-collapsed row-with-desc row-hidden">
+<tr class="row-collapsible row-collapsed row-with-desc row-hidden odd">
 <td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
-<p><a id="quarkus-rest-client-config_quarkus-rest-client-client-providers"></a> <span class="property-path"><a href="#quarkus-rest-client-config_quarkus-rest-client-client-providers"><code>quarkus.rest-client."client".providers</code></a></span></p>
+<p><a id="quarkus-rest-client-config_quarkus-rest-client-client-providers"></a> <span class="property-path"><a href="#quarkus-rest-client-config_quarkus-rest-client-client-providers"><code>quarkus.rest-client."client".providers</code></a></span>
+<button class="btn-copy fa fa-clipboard inline-btn-copy" data-clipboard-action="copy" data-clipboard-text='quarkus.rest-client."client".providers' title="Copy to clipboard" do-not-collapse="true"></button></p>
 </div>
-<div id="conf-collapsible-desc-44" class="openblock description description-collapsed">
+<div id="conf-collapsible-desc-45" class="openblock description description-collapsed">
 <div class="content">
 <div class="paragraph">
 <p>Map where keys are fully-qualified provider classnames to include in the client, and values are their integer priorities. The equivalent of the <code>@RegisterProvider</code> annotation.</p>
 </div>
 <div class="paragraph">
-<p>Environment variable: <code id="env-var-7617">QUARKUS_REST_CLIENT__CLIENT__PROVIDERS</code><button class="btn-copy fa fa-clipboard inline-btn-copy" data-clipboard-action="copy" data-clipboard-target="#env-var-7617" title="Copy to clipboard" do-not-collapse="true"></button></p>
+<p>Environment variable: <code id="env-var-7805">QUARKUS_REST_CLIENT__CLIENT__PROVIDERS</code><button class="btn-copy fa fa-clipboard inline-btn-copy" data-clipboard-action="copy" data-clipboard-target="#env-var-7805" title="Copy to clipboard" do-not-collapse="true"></button></p>
 </div>
 </div>
 </div>
@@ -4185,17 +4400,39 @@ The possible values are:</p>
 <td class="tableblock halign-left valign-middle"><p class="tableblock">string</p></td>
 <td class="tableblock halign-left valign-middle"></td>
 </tr>
-<tr class="row-collapsible row-collapsed row-with-desc row-hidden odd">
+<tr class="row-collapsible row-collapsed row-with-desc row-hidden">
 <td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
-<p><a id="quarkus-rest-client-config_quarkus-rest-client-client-connect-timeout"></a> <span class="property-path"><a href="#quarkus-rest-client-config_quarkus-rest-client-client-connect-timeout"><code>quarkus.rest-client."client".connect-timeout</code></a></span></p>
+<p><a id="quarkus-rest-client-config_quarkus-rest-client-client-connect-timeout"></a> <span class="property-path"><a href="#quarkus-rest-client-config_quarkus-rest-client-client-connect-timeout"><code>quarkus.rest-client."client".connect-timeout</code></a></span>
+<button class="btn-copy fa fa-clipboard inline-btn-copy" data-clipboard-action="copy" data-clipboard-text='quarkus.rest-client."client".connect-timeout' title="Copy to clipboard" do-not-collapse="true"></button></p>
 </div>
-<div id="conf-collapsible-desc-45" class="openblock description description-collapsed">
+<div id="conf-collapsible-desc-46" class="openblock description description-collapsed">
 <div class="content">
 <div class="paragraph">
 <p>Timeout specified in milliseconds to wait to connect to the remote endpoint.</p>
 </div>
 <div class="paragraph">
-<p>Environment variable: <code id="env-var-7618">QUARKUS_REST_CLIENT__CLIENT__CONNECT_TIMEOUT</code><button class="btn-copy fa fa-clipboard inline-btn-copy" data-clipboard-action="copy" data-clipboard-target="#env-var-7618" title="Copy to clipboard" do-not-collapse="true"></button></p>
+<p>Environment variable: <code id="env-var-7806">QUARKUS_REST_CLIENT__CLIENT__CONNECT_TIMEOUT</code><button class="btn-copy fa fa-clipboard inline-btn-copy" data-clipboard-action="copy" data-clipboard-target="#env-var-7806" title="Copy to clipboard" do-not-collapse="true"></button></p>
+</div>
+</div>
+</div>
+<div class="paragraph description-decoration">
+<p><i class="fa fa-chevron-down"></i><span>Show more</span></p>
+</div></div></td>
+<td class="tableblock halign-left valign-middle"><p class="tableblock">long</p></td>
+<td class="tableblock halign-left valign-middle"></td>
+</tr>
+<tr class="row-collapsible row-collapsed row-with-desc row-hidden odd">
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p><a id="quarkus-rest-client-config_quarkus-rest-client-client-read-timeout"></a> <span class="property-path"><a href="#quarkus-rest-client-config_quarkus-rest-client-client-read-timeout"><code>quarkus.rest-client."client".read-timeout</code></a></span>
+<button class="btn-copy fa fa-clipboard inline-btn-copy" data-clipboard-action="copy" data-clipboard-text='quarkus.rest-client."client".read-timeout' title="Copy to clipboard" do-not-collapse="true"></button></p>
+</div>
+<div id="conf-collapsible-desc-47" class="openblock description description-collapsed">
+<div class="content">
+<div class="paragraph">
+<p>Timeout specified in milliseconds to wait for a response from the remote endpoint.</p>
+</div>
+<div class="paragraph">
+<p>Environment variable: <code id="env-var-7807">QUARKUS_REST_CLIENT__CLIENT__READ_TIMEOUT</code><button class="btn-copy fa fa-clipboard inline-btn-copy" data-clipboard-action="copy" data-clipboard-target="#env-var-7807" title="Copy to clipboard" do-not-collapse="true"></button></p>
 </div>
 </div>
 </div>
@@ -4207,35 +4444,16 @@ The possible values are:</p>
 </tr>
 <tr class="row-collapsible row-collapsed row-with-desc row-hidden">
 <td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
-<p><a id="quarkus-rest-client-config_quarkus-rest-client-client-read-timeout"></a> <span class="property-path"><a href="#quarkus-rest-client-config_quarkus-rest-client-client-read-timeout"><code>quarkus.rest-client."client".read-timeout</code></a></span></p>
+<p><a id="quarkus-rest-client-config_quarkus-rest-client-client-follow-redirects"></a> <span class="property-path"><a href="#quarkus-rest-client-config_quarkus-rest-client-client-follow-redirects"><code>quarkus.rest-client."client".follow-redirects</code></a></span>
+<button class="btn-copy fa fa-clipboard inline-btn-copy" data-clipboard-action="copy" data-clipboard-text='quarkus.rest-client."client".follow-redirects' title="Copy to clipboard" do-not-collapse="true"></button></p>
 </div>
-<div id="conf-collapsible-desc-46" class="openblock description description-collapsed">
-<div class="content">
-<div class="paragraph">
-<p>Timeout specified in milliseconds to wait for a response from the remote endpoint.</p>
-</div>
-<div class="paragraph">
-<p>Environment variable: <code id="env-var-7619">QUARKUS_REST_CLIENT__CLIENT__READ_TIMEOUT</code><button class="btn-copy fa fa-clipboard inline-btn-copy" data-clipboard-action="copy" data-clipboard-target="#env-var-7619" title="Copy to clipboard" do-not-collapse="true"></button></p>
-</div>
-</div>
-</div>
-<div class="paragraph description-decoration">
-<p><i class="fa fa-chevron-down"></i><span>Show more</span></p>
-</div></div></td>
-<td class="tableblock halign-left valign-middle"><p class="tableblock">long</p></td>
-<td class="tableblock halign-left valign-middle"></td>
-</tr>
-<tr class="row-collapsible row-collapsed row-with-desc row-hidden odd">
-<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
-<p><a id="quarkus-rest-client-config_quarkus-rest-client-client-follow-redirects"></a> <span class="property-path"><a href="#quarkus-rest-client-config_quarkus-rest-client-client-follow-redirects"><code>quarkus.rest-client."client".follow-redirects</code></a></span></p>
-</div>
-<div id="conf-collapsible-desc-47" class="openblock description description-collapsed">
+<div id="conf-collapsible-desc-48" class="openblock description description-collapsed">
 <div class="content">
 <div class="paragraph">
 <p>A boolean value used to determine whether the client should follow HTTP redirect responses.</p>
 </div>
 <div class="paragraph">
-<p>Environment variable: <code id="env-var-7620">QUARKUS_REST_CLIENT__CLIENT__FOLLOW_REDIRECTS</code><button class="btn-copy fa fa-clipboard inline-btn-copy" data-clipboard-action="copy" data-clipboard-target="#env-var-7620" title="Copy to clipboard" do-not-collapse="true"></button></p>
+<p>Environment variable: <code id="env-var-7808">QUARKUS_REST_CLIENT__CLIENT__FOLLOW_REDIRECTS</code><button class="btn-copy fa fa-clipboard inline-btn-copy" data-clipboard-action="copy" data-clipboard-target="#env-var-7808" title="Copy to clipboard" do-not-collapse="true"></button></p>
 </div>
 </div>
 </div>
@@ -4245,11 +4463,12 @@ The possible values are:</p>
 <td class="tableblock halign-left valign-middle"><p class="tableblock">boolean</p></td>
 <td class="tableblock halign-left valign-middle"></td>
 </tr>
-<tr class="row-collapsible row-collapsed row-with-desc row-hidden">
+<tr class="row-collapsible row-collapsed row-with-desc row-hidden odd">
 <td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
-<p><a id="quarkus-rest-client-config_quarkus-rest-client-client-multipart-post-encoder-mode"></a> <span class="property-path"><a href="#quarkus-rest-client-config_quarkus-rest-client-client-multipart-post-encoder-mode"><code>quarkus.rest-client."client".multipart-post-encoder-mode</code></a></span></p>
+<p><a id="quarkus-rest-client-config_quarkus-rest-client-client-multipart-post-encoder-mode"></a> <span class="property-path"><a href="#quarkus-rest-client-config_quarkus-rest-client-client-multipart-post-encoder-mode"><code>quarkus.rest-client."client".multipart-post-encoder-mode</code></a></span>
+<button class="btn-copy fa fa-clipboard inline-btn-copy" data-clipboard-action="copy" data-clipboard-text='quarkus.rest-client."client".multipart-post-encoder-mode' title="Copy to clipboard" do-not-collapse="true"></button></p>
 </div>
-<div id="conf-collapsible-desc-48" class="openblock description description-collapsed">
+<div id="conf-collapsible-desc-49" class="openblock description description-collapsed">
 <div class="content">
 <div class="paragraph">
 <p>Mode in which the form data are encoded. Possible values are <code>HTML5</code>, <code>RFC1738</code> and <code>RFC3986</code>. The modes are described in the <a href="https://netty.io/4.1/api/io/netty/handler/codec/http/multipart/HttpPostRequestEncoder.EncoderMode.html">Netty documentation</a></p>
@@ -4261,7 +4480,7 @@ The possible values are:</p>
 <p>This property is not applicable to the RESTEasy Client.</p>
 </div>
 <div class="paragraph">
-<p>Environment variable: <code id="env-var-7621">QUARKUS_REST_CLIENT__CLIENT__MULTIPART_POST_ENCODER_MODE</code><button class="btn-copy fa fa-clipboard inline-btn-copy" data-clipboard-action="copy" data-clipboard-target="#env-var-7621" title="Copy to clipboard" do-not-collapse="true"></button></p>
+<p>Environment variable: <code id="env-var-7809">QUARKUS_REST_CLIENT__CLIENT__MULTIPART_POST_ENCODER_MODE</code><button class="btn-copy fa fa-clipboard inline-btn-copy" data-clipboard-action="copy" data-clipboard-target="#env-var-7809" title="Copy to clipboard" do-not-collapse="true"></button></p>
 </div>
 </div>
 </div>
@@ -4271,11 +4490,12 @@ The possible values are:</p>
 <td class="tableblock halign-left valign-middle"><p class="tableblock">string</p></td>
 <td class="tableblock halign-left valign-middle"></td>
 </tr>
-<tr class="row-collapsible row-collapsed row-with-desc row-hidden odd">
+<tr class="row-collapsible row-collapsed row-with-desc row-hidden">
 <td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
-<p><a id="quarkus-rest-client-config_quarkus-rest-client-client-proxy-address"></a> <span class="property-path"><a href="#quarkus-rest-client-config_quarkus-rest-client-client-proxy-address"><code>quarkus.rest-client."client".proxy-address</code></a></span></p>
+<p><a id="quarkus-rest-client-config_quarkus-rest-client-client-proxy-address"></a> <span class="property-path"><a href="#quarkus-rest-client-config_quarkus-rest-client-client-proxy-address"><code>quarkus.rest-client."client".proxy-address</code></a></span>
+<button class="btn-copy fa fa-clipboard inline-btn-copy" data-clipboard-action="copy" data-clipboard-text='quarkus.rest-client."client".proxy-address' title="Copy to clipboard" do-not-collapse="true"></button></p>
 </div>
-<div id="conf-collapsible-desc-49" class="openblock description description-collapsed">
+<div id="conf-collapsible-desc-50" class="openblock description description-collapsed">
 <div class="content">
 <div class="paragraph">
 <p>A string value in the form of <code>:</code> that specifies the HTTP proxy server hostname (or IP address) and port for requests of this client to use.</p>
@@ -4284,7 +4504,7 @@ The possible values are:</p>
 <p>Use <code>none</code> to disable proxy</p>
 </div>
 <div class="paragraph">
-<p>Environment variable: <code id="env-var-7622">QUARKUS_REST_CLIENT__CLIENT__PROXY_ADDRESS</code><button class="btn-copy fa fa-clipboard inline-btn-copy" data-clipboard-action="copy" data-clipboard-target="#env-var-7622" title="Copy to clipboard" do-not-collapse="true"></button></p>
+<p>Environment variable: <code id="env-var-7810">QUARKUS_REST_CLIENT__CLIENT__PROXY_ADDRESS</code><button class="btn-copy fa fa-clipboard inline-btn-copy" data-clipboard-action="copy" data-clipboard-target="#env-var-7810" title="Copy to clipboard" do-not-collapse="true"></button></p>
 </div>
 </div>
 </div>
@@ -4294,11 +4514,12 @@ The possible values are:</p>
 <td class="tableblock halign-left valign-middle"><p class="tableblock">string</p></td>
 <td class="tableblock halign-left valign-middle"></td>
 </tr>
-<tr class="row-collapsible row-collapsed row-with-desc row-hidden">
+<tr class="row-collapsible row-collapsed row-with-desc row-hidden odd">
 <td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
-<p><a id="quarkus-rest-client-config_quarkus-rest-client-client-proxy-user"></a> <span class="property-path"><a href="#quarkus-rest-client-config_quarkus-rest-client-client-proxy-user"><code>quarkus.rest-client."client".proxy-user</code></a></span></p>
+<p><a id="quarkus-rest-client-config_quarkus-rest-client-client-proxy-user"></a> <span class="property-path"><a href="#quarkus-rest-client-config_quarkus-rest-client-client-proxy-user"><code>quarkus.rest-client."client".proxy-user</code></a></span>
+<button class="btn-copy fa fa-clipboard inline-btn-copy" data-clipboard-action="copy" data-clipboard-text='quarkus.rest-client."client".proxy-user' title="Copy to clipboard" do-not-collapse="true"></button></p>
 </div>
-<div id="conf-collapsible-desc-50" class="openblock description description-collapsed">
+<div id="conf-collapsible-desc-51" class="openblock description description-collapsed">
 <div class="content">
 <div class="paragraph">
 <p>Proxy username.</p>
@@ -4307,30 +4528,7 @@ The possible values are:</p>
 <p>This property is not applicable to the RESTEasy Client.</p>
 </div>
 <div class="paragraph">
-<p>Environment variable: <code id="env-var-7623">QUARKUS_REST_CLIENT__CLIENT__PROXY_USER</code><button class="btn-copy fa fa-clipboard inline-btn-copy" data-clipboard-action="copy" data-clipboard-target="#env-var-7623" title="Copy to clipboard" do-not-collapse="true"></button></p>
-</div>
-</div>
-</div>
-<div class="paragraph description-decoration">
-<p><i class="fa fa-chevron-down"></i><span>Show more</span></p>
-</div></div></td>
-<td class="tableblock halign-left valign-middle"><p class="tableblock">string</p></td>
-<td class="tableblock halign-left valign-middle"></td>
-</tr>
-<tr class="row-collapsible row-collapsed row-with-desc row-hidden odd">
-<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
-<p><a id="quarkus-rest-client-config_quarkus-rest-client-client-proxy-password"></a> <span class="property-path"><a href="#quarkus-rest-client-config_quarkus-rest-client-client-proxy-password"><code>quarkus.rest-client."client".proxy-password</code></a></span></p>
-</div>
-<div id="conf-collapsible-desc-51" class="openblock description description-collapsed">
-<div class="content">
-<div class="paragraph">
-<p>Proxy password.</p>
-</div>
-<div class="paragraph">
-<p>This property is not applicable to the RESTEasy Client.</p>
-</div>
-<div class="paragraph">
-<p>Environment variable: <code id="env-var-7624">QUARKUS_REST_CLIENT__CLIENT__PROXY_PASSWORD</code><button class="btn-copy fa fa-clipboard inline-btn-copy" data-clipboard-action="copy" data-clipboard-target="#env-var-7624" title="Copy to clipboard" do-not-collapse="true"></button></p>
+<p>Environment variable: <code id="env-var-7811">QUARKUS_REST_CLIENT__CLIENT__PROXY_USER</code><button class="btn-copy fa fa-clipboard inline-btn-copy" data-clipboard-action="copy" data-clipboard-target="#env-var-7811" title="Copy to clipboard" do-not-collapse="true"></button></p>
 </div>
 </div>
 </div>
@@ -4342,18 +4540,19 @@ The possible values are:</p>
 </tr>
 <tr class="row-collapsible row-collapsed row-with-desc row-hidden">
 <td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
-<p><a id="quarkus-rest-client-config_quarkus-rest-client-client-non-proxy-hosts"></a> <span class="property-path"><a href="#quarkus-rest-client-config_quarkus-rest-client-client-non-proxy-hosts"><code>quarkus.rest-client."client".non-proxy-hosts</code></a></span></p>
+<p><a id="quarkus-rest-client-config_quarkus-rest-client-client-proxy-password"></a> <span class="property-path"><a href="#quarkus-rest-client-config_quarkus-rest-client-client-proxy-password"><code>quarkus.rest-client."client".proxy-password</code></a></span>
+<button class="btn-copy fa fa-clipboard inline-btn-copy" data-clipboard-action="copy" data-clipboard-text='quarkus.rest-client."client".proxy-password' title="Copy to clipboard" do-not-collapse="true"></button></p>
 </div>
 <div id="conf-collapsible-desc-52" class="openblock description description-collapsed">
 <div class="content">
 <div class="paragraph">
-<p>Hosts to access without proxy</p>
+<p>Proxy password.</p>
 </div>
 <div class="paragraph">
 <p>This property is not applicable to the RESTEasy Client.</p>
 </div>
 <div class="paragraph">
-<p>Environment variable: <code id="env-var-7625">QUARKUS_REST_CLIENT__CLIENT__NON_PROXY_HOSTS</code><button class="btn-copy fa fa-clipboard inline-btn-copy" data-clipboard-action="copy" data-clipboard-target="#env-var-7625" title="Copy to clipboard" do-not-collapse="true"></button></p>
+<p>Environment variable: <code id="env-var-7812">QUARKUS_REST_CLIENT__CLIENT__PROXY_PASSWORD</code><button class="btn-copy fa fa-clipboard inline-btn-copy" data-clipboard-action="copy" data-clipboard-target="#env-var-7812" title="Copy to clipboard" do-not-collapse="true"></button></p>
 </div>
 </div>
 </div>
@@ -4365,15 +4564,40 @@ The possible values are:</p>
 </tr>
 <tr class="row-collapsible row-collapsed row-with-desc row-hidden odd">
 <td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
-<p><a id="quarkus-rest-client-config_quarkus-rest-client-client-query-param-style"></a> <span class="property-path"><a href="#quarkus-rest-client-config_quarkus-rest-client-client-query-param-style"><code>quarkus.rest-client."client".query-param-style</code></a></span></p>
+<p><a id="quarkus-rest-client-config_quarkus-rest-client-client-non-proxy-hosts"></a> <span class="property-path"><a href="#quarkus-rest-client-config_quarkus-rest-client-client-non-proxy-hosts"><code>quarkus.rest-client."client".non-proxy-hosts</code></a></span>
+<button class="btn-copy fa fa-clipboard inline-btn-copy" data-clipboard-action="copy" data-clipboard-text='quarkus.rest-client."client".non-proxy-hosts' title="Copy to clipboard" do-not-collapse="true"></button></p>
 </div>
 <div id="conf-collapsible-desc-53" class="openblock description description-collapsed">
+<div class="content">
+<div class="paragraph">
+<p>Hosts to access without proxy</p>
+</div>
+<div class="paragraph">
+<p>This property is not applicable to the RESTEasy Client.</p>
+</div>
+<div class="paragraph">
+<p>Environment variable: <code id="env-var-7813">QUARKUS_REST_CLIENT__CLIENT__NON_PROXY_HOSTS</code><button class="btn-copy fa fa-clipboard inline-btn-copy" data-clipboard-action="copy" data-clipboard-target="#env-var-7813" title="Copy to clipboard" do-not-collapse="true"></button></p>
+</div>
+</div>
+</div>
+<div class="paragraph description-decoration">
+<p><i class="fa fa-chevron-down"></i><span>Show more</span></p>
+</div></div></td>
+<td class="tableblock halign-left valign-middle"><p class="tableblock">string</p></td>
+<td class="tableblock halign-left valign-middle"></td>
+</tr>
+<tr class="row-collapsible row-collapsed row-with-desc row-hidden">
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p><a id="quarkus-rest-client-config_quarkus-rest-client-client-query-param-style"></a> <span class="property-path"><a href="#quarkus-rest-client-config_quarkus-rest-client-client-query-param-style"><code>quarkus.rest-client."client".query-param-style</code></a></span>
+<button class="btn-copy fa fa-clipboard inline-btn-copy" data-clipboard-action="copy" data-clipboard-text='quarkus.rest-client."client".query-param-style' title="Copy to clipboard" do-not-collapse="true"></button></p>
+</div>
+<div id="conf-collapsible-desc-54" class="openblock description description-collapsed">
 <div class="content">
 <div class="paragraph">
 <p>An enumerated type string value with possible values of "MULTI_PAIRS" (default), "COMMA_SEPARATED", or "ARRAY_PAIRS" that specifies the format in which multiple values for the same query parameter is used.</p>
 </div>
 <div class="paragraph">
-<p>Environment variable: <code id="env-var-7626">QUARKUS_REST_CLIENT__CLIENT__QUERY_PARAM_STYLE</code><button class="btn-copy fa fa-clipboard inline-btn-copy" data-clipboard-action="copy" data-clipboard-target="#env-var-7626" title="Copy to clipboard" do-not-collapse="true"></button></p>
+<p>Environment variable: <code id="env-var-7814">QUARKUS_REST_CLIENT__CLIENT__QUERY_PARAM_STYLE</code><button class="btn-copy fa fa-clipboard inline-btn-copy" data-clipboard-action="copy" data-clipboard-target="#env-var-7814" title="Copy to clipboard" do-not-collapse="true"></button></p>
 </div>
 </div>
 </div>
@@ -4385,17 +4609,18 @@ The possible values are:</p>
 </div></div></td>
 <td class="tableblock halign-left valign-middle"></td>
 </tr>
-<tr class="row-collapsible row-collapsed row-with-desc row-hidden">
+<tr class="row-collapsible row-collapsed row-with-desc row-hidden odd">
 <td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
-<p><a id="quarkus-rest-client-config_quarkus-rest-client-client-verify-host"></a> <span class="property-path"><a href="#quarkus-rest-client-config_quarkus-rest-client-client-verify-host"><code>quarkus.rest-client."client".verify-host</code></a></span></p>
+<p><a id="quarkus-rest-client-config_quarkus-rest-client-client-verify-host"></a> <span class="property-path"><a href="#quarkus-rest-client-config_quarkus-rest-client-client-verify-host"><code>quarkus.rest-client."client".verify-host</code></a></span>
+<button class="btn-copy fa fa-clipboard inline-btn-copy" data-clipboard-action="copy" data-clipboard-text='quarkus.rest-client."client".verify-host' title="Copy to clipboard" do-not-collapse="true"></button></p>
 </div>
-<div id="conf-collapsible-desc-54" class="openblock description description-collapsed">
+<div id="conf-collapsible-desc-55" class="openblock description description-collapsed">
 <div class="content">
 <div class="paragraph">
 <p>Set whether hostname verification is enabled. Default is enabled. This setting should not be disabled in production as it makes the client vulnerable to MITM attacks.</p>
 </div>
 <div class="paragraph">
-<p>Environment variable: <code id="env-var-7627">QUARKUS_REST_CLIENT__CLIENT__VERIFY_HOST</code><button class="btn-copy fa fa-clipboard inline-btn-copy" data-clipboard-action="copy" data-clipboard-target="#env-var-7627" title="Copy to clipboard" do-not-collapse="true"></button></p>
+<p>Environment variable: <code id="env-var-7815">QUARKUS_REST_CLIENT__CLIENT__VERIFY_HOST</code><button class="btn-copy fa fa-clipboard inline-btn-copy" data-clipboard-action="copy" data-clipboard-target="#env-var-7815" title="Copy to clipboard" do-not-collapse="true"></button></p>
 </div>
 </div>
 </div>
@@ -4405,17 +4630,18 @@ The possible values are:</p>
 <td class="tableblock halign-left valign-middle"><p class="tableblock">boolean</p></td>
 <td class="tableblock halign-left valign-middle"></td>
 </tr>
-<tr class="row-collapsible row-collapsed row-with-desc row-hidden odd">
+<tr class="row-collapsible row-collapsed row-with-desc row-hidden">
 <td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
-<p><a id="quarkus-rest-client-config_quarkus-rest-client-client-trust-store"></a> <span class="property-path"><a href="#quarkus-rest-client-config_quarkus-rest-client-client-trust-store"><code>quarkus.rest-client."client".trust-store</code></a></span></p>
+<p><a id="quarkus-rest-client-config_quarkus-rest-client-client-trust-store"></a> <span class="property-path"><a href="#quarkus-rest-client-config_quarkus-rest-client-client-trust-store"><code>quarkus.rest-client."client".trust-store</code></a></span>
+<button class="btn-copy fa fa-clipboard inline-btn-copy" data-clipboard-action="copy" data-clipboard-text='quarkus.rest-client."client".trust-store' title="Copy to clipboard" do-not-collapse="true"></button></p>
 </div>
-<div id="conf-collapsible-desc-55" class="openblock description description-collapsed">
+<div id="conf-collapsible-desc-56" class="openblock description description-collapsed">
 <div class="content">
 <div class="paragraph">
 <p>The trust store location. Can point to either a classpath resource or a file.</p>
 </div>
 <div class="paragraph">
-<p>Environment variable: <code id="env-var-7628">QUARKUS_REST_CLIENT__CLIENT__TRUST_STORE</code><button class="btn-copy fa fa-clipboard inline-btn-copy" data-clipboard-action="copy" data-clipboard-target="#env-var-7628" title="Copy to clipboard" do-not-collapse="true"></button></p>
+<p>Environment variable: <code id="env-var-7816">QUARKUS_REST_CLIENT__CLIENT__TRUST_STORE</code><button class="btn-copy fa fa-clipboard inline-btn-copy" data-clipboard-action="copy" data-clipboard-target="#env-var-7816" title="Copy to clipboard" do-not-collapse="true"></button></p>
 </div>
 </div>
 </div>
@@ -4425,17 +4651,18 @@ The possible values are:</p>
 <td class="tableblock halign-left valign-middle"><p class="tableblock">string</p></td>
 <td class="tableblock halign-left valign-middle"></td>
 </tr>
-<tr class="row-collapsible row-collapsed row-with-desc row-hidden">
+<tr class="row-collapsible row-collapsed row-with-desc row-hidden odd">
 <td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
-<p><a id="quarkus-rest-client-config_quarkus-rest-client-client-trust-store-password"></a> <span class="property-path"><a href="#quarkus-rest-client-config_quarkus-rest-client-client-trust-store-password"><code>quarkus.rest-client."client".trust-store-password</code></a></span></p>
+<p><a id="quarkus-rest-client-config_quarkus-rest-client-client-trust-store-password"></a> <span class="property-path"><a href="#quarkus-rest-client-config_quarkus-rest-client-client-trust-store-password"><code>quarkus.rest-client."client".trust-store-password</code></a></span>
+<button class="btn-copy fa fa-clipboard inline-btn-copy" data-clipboard-action="copy" data-clipboard-text='quarkus.rest-client."client".trust-store-password' title="Copy to clipboard" do-not-collapse="true"></button></p>
 </div>
-<div id="conf-collapsible-desc-56" class="openblock description description-collapsed">
+<div id="conf-collapsible-desc-57" class="openblock description description-collapsed">
 <div class="content">
 <div class="paragraph">
 <p>The trust store password.</p>
 </div>
 <div class="paragraph">
-<p>Environment variable: <code id="env-var-7629">QUARKUS_REST_CLIENT__CLIENT__TRUST_STORE_PASSWORD</code><button class="btn-copy fa fa-clipboard inline-btn-copy" data-clipboard-action="copy" data-clipboard-target="#env-var-7629" title="Copy to clipboard" do-not-collapse="true"></button></p>
+<p>Environment variable: <code id="env-var-7817">QUARKUS_REST_CLIENT__CLIENT__TRUST_STORE_PASSWORD</code><button class="btn-copy fa fa-clipboard inline-btn-copy" data-clipboard-action="copy" data-clipboard-target="#env-var-7817" title="Copy to clipboard" do-not-collapse="true"></button></p>
 </div>
 </div>
 </div>
@@ -4445,17 +4672,18 @@ The possible values are:</p>
 <td class="tableblock halign-left valign-middle"><p class="tableblock">string</p></td>
 <td class="tableblock halign-left valign-middle"></td>
 </tr>
-<tr class="row-collapsible row-collapsed row-with-desc row-hidden odd">
+<tr class="row-collapsible row-collapsed row-with-desc row-hidden">
 <td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
-<p><a id="quarkus-rest-client-config_quarkus-rest-client-client-trust-store-type"></a> <span class="property-path"><a href="#quarkus-rest-client-config_quarkus-rest-client-client-trust-store-type"><code>quarkus.rest-client."client".trust-store-type</code></a></span></p>
+<p><a id="quarkus-rest-client-config_quarkus-rest-client-client-trust-store-type"></a> <span class="property-path"><a href="#quarkus-rest-client-config_quarkus-rest-client-client-trust-store-type"><code>quarkus.rest-client."client".trust-store-type</code></a></span>
+<button class="btn-copy fa fa-clipboard inline-btn-copy" data-clipboard-action="copy" data-clipboard-text='quarkus.rest-client."client".trust-store-type' title="Copy to clipboard" do-not-collapse="true"></button></p>
 </div>
-<div id="conf-collapsible-desc-57" class="openblock description description-collapsed">
+<div id="conf-collapsible-desc-58" class="openblock description description-collapsed">
 <div class="content">
 <div class="paragraph">
 <p>The type of the trust store. Defaults to "JKS".</p>
 </div>
 <div class="paragraph">
-<p>Environment variable: <code id="env-var-7630">QUARKUS_REST_CLIENT__CLIENT__TRUST_STORE_TYPE</code><button class="btn-copy fa fa-clipboard inline-btn-copy" data-clipboard-action="copy" data-clipboard-target="#env-var-7630" title="Copy to clipboard" do-not-collapse="true"></button></p>
+<p>Environment variable: <code id="env-var-7818">QUARKUS_REST_CLIENT__CLIENT__TRUST_STORE_TYPE</code><button class="btn-copy fa fa-clipboard inline-btn-copy" data-clipboard-action="copy" data-clipboard-target="#env-var-7818" title="Copy to clipboard" do-not-collapse="true"></button></p>
 </div>
 </div>
 </div>
@@ -4465,17 +4693,18 @@ The possible values are:</p>
 <td class="tableblock halign-left valign-middle"><p class="tableblock">string</p></td>
 <td class="tableblock halign-left valign-middle"></td>
 </tr>
-<tr class="row-collapsible row-collapsed row-with-desc row-hidden">
+<tr class="row-collapsible row-collapsed row-with-desc row-hidden odd">
 <td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
-<p><a id="quarkus-rest-client-config_quarkus-rest-client-client-key-store"></a> <span class="property-path"><a href="#quarkus-rest-client-config_quarkus-rest-client-client-key-store"><code>quarkus.rest-client."client".key-store</code></a></span></p>
+<p><a id="quarkus-rest-client-config_quarkus-rest-client-client-key-store"></a> <span class="property-path"><a href="#quarkus-rest-client-config_quarkus-rest-client-client-key-store"><code>quarkus.rest-client."client".key-store</code></a></span>
+<button class="btn-copy fa fa-clipboard inline-btn-copy" data-clipboard-action="copy" data-clipboard-text='quarkus.rest-client."client".key-store' title="Copy to clipboard" do-not-collapse="true"></button></p>
 </div>
-<div id="conf-collapsible-desc-58" class="openblock description description-collapsed">
+<div id="conf-collapsible-desc-59" class="openblock description description-collapsed">
 <div class="content">
 <div class="paragraph">
 <p>The key store location. Can point to either a classpath resource or a file.</p>
 </div>
 <div class="paragraph">
-<p>Environment variable: <code id="env-var-7631">QUARKUS_REST_CLIENT__CLIENT__KEY_STORE</code><button class="btn-copy fa fa-clipboard inline-btn-copy" data-clipboard-action="copy" data-clipboard-target="#env-var-7631" title="Copy to clipboard" do-not-collapse="true"></button></p>
+<p>Environment variable: <code id="env-var-7819">QUARKUS_REST_CLIENT__CLIENT__KEY_STORE</code><button class="btn-copy fa fa-clipboard inline-btn-copy" data-clipboard-action="copy" data-clipboard-target="#env-var-7819" title="Copy to clipboard" do-not-collapse="true"></button></p>
 </div>
 </div>
 </div>
@@ -4485,17 +4714,18 @@ The possible values are:</p>
 <td class="tableblock halign-left valign-middle"><p class="tableblock">string</p></td>
 <td class="tableblock halign-left valign-middle"></td>
 </tr>
-<tr class="row-collapsible row-collapsed row-with-desc row-hidden odd">
+<tr class="row-collapsible row-collapsed row-with-desc row-hidden">
 <td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
-<p><a id="quarkus-rest-client-config_quarkus-rest-client-client-key-store-password"></a> <span class="property-path"><a href="#quarkus-rest-client-config_quarkus-rest-client-client-key-store-password"><code>quarkus.rest-client."client".key-store-password</code></a></span></p>
+<p><a id="quarkus-rest-client-config_quarkus-rest-client-client-key-store-password"></a> <span class="property-path"><a href="#quarkus-rest-client-config_quarkus-rest-client-client-key-store-password"><code>quarkus.rest-client."client".key-store-password</code></a></span>
+<button class="btn-copy fa fa-clipboard inline-btn-copy" data-clipboard-action="copy" data-clipboard-text='quarkus.rest-client."client".key-store-password' title="Copy to clipboard" do-not-collapse="true"></button></p>
 </div>
-<div id="conf-collapsible-desc-59" class="openblock description description-collapsed">
+<div id="conf-collapsible-desc-60" class="openblock description description-collapsed">
 <div class="content">
 <div class="paragraph">
 <p>The key store password.</p>
 </div>
 <div class="paragraph">
-<p>Environment variable: <code id="env-var-7632">QUARKUS_REST_CLIENT__CLIENT__KEY_STORE_PASSWORD</code><button class="btn-copy fa fa-clipboard inline-btn-copy" data-clipboard-action="copy" data-clipboard-target="#env-var-7632" title="Copy to clipboard" do-not-collapse="true"></button></p>
+<p>Environment variable: <code id="env-var-7820">QUARKUS_REST_CLIENT__CLIENT__KEY_STORE_PASSWORD</code><button class="btn-copy fa fa-clipboard inline-btn-copy" data-clipboard-action="copy" data-clipboard-target="#env-var-7820" title="Copy to clipboard" do-not-collapse="true"></button></p>
 </div>
 </div>
 </div>
@@ -4505,17 +4735,18 @@ The possible values are:</p>
 <td class="tableblock halign-left valign-middle"><p class="tableblock">string</p></td>
 <td class="tableblock halign-left valign-middle"></td>
 </tr>
-<tr class="row-collapsible row-collapsed row-with-desc row-hidden">
+<tr class="row-collapsible row-collapsed row-with-desc row-hidden odd">
 <td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
-<p><a id="quarkus-rest-client-config_quarkus-rest-client-client-key-store-type"></a> <span class="property-path"><a href="#quarkus-rest-client-config_quarkus-rest-client-client-key-store-type"><code>quarkus.rest-client."client".key-store-type</code></a></span></p>
+<p><a id="quarkus-rest-client-config_quarkus-rest-client-client-key-store-type"></a> <span class="property-path"><a href="#quarkus-rest-client-config_quarkus-rest-client-client-key-store-type"><code>quarkus.rest-client."client".key-store-type</code></a></span>
+<button class="btn-copy fa fa-clipboard inline-btn-copy" data-clipboard-action="copy" data-clipboard-text='quarkus.rest-client."client".key-store-type' title="Copy to clipboard" do-not-collapse="true"></button></p>
 </div>
-<div id="conf-collapsible-desc-60" class="openblock description description-collapsed">
+<div id="conf-collapsible-desc-61" class="openblock description description-collapsed">
 <div class="content">
 <div class="paragraph">
 <p>The type of the key store. Defaults to "JKS".</p>
 </div>
 <div class="paragraph">
-<p>Environment variable: <code id="env-var-7633">QUARKUS_REST_CLIENT__CLIENT__KEY_STORE_TYPE</code><button class="btn-copy fa fa-clipboard inline-btn-copy" data-clipboard-action="copy" data-clipboard-target="#env-var-7633" title="Copy to clipboard" do-not-collapse="true"></button></p>
+<p>Environment variable: <code id="env-var-7821">QUARKUS_REST_CLIENT__CLIENT__KEY_STORE_TYPE</code><button class="btn-copy fa fa-clipboard inline-btn-copy" data-clipboard-action="copy" data-clipboard-target="#env-var-7821" title="Copy to clipboard" do-not-collapse="true"></button></p>
 </div>
 </div>
 </div>
@@ -4525,17 +4756,18 @@ The possible values are:</p>
 <td class="tableblock halign-left valign-middle"><p class="tableblock">string</p></td>
 <td class="tableblock halign-left valign-middle"></td>
 </tr>
-<tr class="row-collapsible row-collapsed row-with-desc row-hidden odd">
+<tr class="row-collapsible row-collapsed row-with-desc row-hidden">
 <td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
-<p><a id="quarkus-rest-client-config_quarkus-rest-client-client-hostname-verifier"></a> <span class="property-path"><a href="#quarkus-rest-client-config_quarkus-rest-client-client-hostname-verifier"><code>quarkus.rest-client."client".hostname-verifier</code></a></span></p>
+<p><a id="quarkus-rest-client-config_quarkus-rest-client-client-hostname-verifier"></a> <span class="property-path"><a href="#quarkus-rest-client-config_quarkus-rest-client-client-hostname-verifier"><code>quarkus.rest-client."client".hostname-verifier</code></a></span>
+<button class="btn-copy fa fa-clipboard inline-btn-copy" data-clipboard-action="copy" data-clipboard-text='quarkus.rest-client."client".hostname-verifier' title="Copy to clipboard" do-not-collapse="true"></button></p>
 </div>
-<div id="conf-collapsible-desc-61" class="openblock description description-collapsed">
+<div id="conf-collapsible-desc-62" class="openblock description description-collapsed">
 <div class="content">
 <div class="paragraph">
 <p>The class name of the host name verifier. The class must have a public no-argument constructor.</p>
 </div>
 <div class="paragraph">
-<p>Environment variable: <code id="env-var-7634">QUARKUS_REST_CLIENT__CLIENT__HOSTNAME_VERIFIER</code><button class="btn-copy fa fa-clipboard inline-btn-copy" data-clipboard-action="copy" data-clipboard-target="#env-var-7634" title="Copy to clipboard" do-not-collapse="true"></button></p>
+<p>Environment variable: <code id="env-var-7822">QUARKUS_REST_CLIENT__CLIENT__HOSTNAME_VERIFIER</code><button class="btn-copy fa fa-clipboard inline-btn-copy" data-clipboard-action="copy" data-clipboard-target="#env-var-7822" title="Copy to clipboard" do-not-collapse="true"></button></p>
 </div>
 </div>
 </div>
@@ -4545,26 +4777,27 @@ The possible values are:</p>
 <td class="tableblock halign-left valign-middle"><p class="tableblock">string</p></td>
 <td class="tableblock halign-left valign-middle"></td>
 </tr>
-<tr class="row-collapsible row-collapsed row-with-desc row-hidden">
+<tr class="row-collapsible row-collapsed row-with-desc row-hidden odd">
 <td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
-<p><a id="quarkus-rest-client-config_quarkus-rest-client-client-tls-configuration-name"></a> <span class="property-path"><a href="#quarkus-rest-client-config_quarkus-rest-client-client-tls-configuration-name"><code>quarkus.rest-client."client".tls-configuration-name</code></a></span></p>
+<p><a id="quarkus-rest-client-config_quarkus-rest-client-client-tls-configuration-name"></a> <span class="property-path"><a href="#quarkus-rest-client-config_quarkus-rest-client-client-tls-configuration-name"><code>quarkus.rest-client."client".tls-configuration-name</code></a></span>
+<button class="btn-copy fa fa-clipboard inline-btn-copy" data-clipboard-action="copy" data-clipboard-text='quarkus.rest-client."client".tls-configuration-name' title="Copy to clipboard" do-not-collapse="true"></button></p>
 </div>
-<div id="conf-collapsible-desc-62" class="openblock description description-collapsed">
+<div id="conf-collapsible-desc-63" class="openblock description description-collapsed">
 <div class="content">
 <div class="paragraph">
 <p>The name of the TLS configuration to use.</p>
 </div>
 <div class="paragraph">
-<p>If not set and the default TLS configuration is configured (<code>quarkus.tls.*</code>) then that will be used. If a name is configured, it uses the configuration from <code>quarkus.tls.&lt;name&gt;.*</code> If a name is configured, but no TLS configuration is found with that name then an error will be thrown.</p>
+<p>If a name is configured, it uses the configuration from <code>quarkus.tls.&lt;name&gt;.*</code> If a name is configured, but no TLS configuration is found with that name then an error will be thrown. The default TLS configuration will be ignored.</p>
 </div>
 <div class="paragraph">
-<p>If no TLS configuration is set, then the keys-tore, trust-store, etc. properties will be used.</p>
+<p>If no named TLS configuration is set, then the key-store, trust-store, etc. properties will be used.</p>
 </div>
 <div class="paragraph">
 <p>This property is not applicable to the RESTEasy Client.</p>
 </div>
 <div class="paragraph">
-<p>Environment variable: <code id="env-var-7635">QUARKUS_REST_CLIENT__CLIENT__TLS_CONFIGURATION_NAME</code><button class="btn-copy fa fa-clipboard inline-btn-copy" data-clipboard-action="copy" data-clipboard-target="#env-var-7635" title="Copy to clipboard" do-not-collapse="true"></button></p>
+<p>Environment variable: <code id="env-var-7823">QUARKUS_REST_CLIENT__CLIENT__TLS_CONFIGURATION_NAME</code><button class="btn-copy fa fa-clipboard inline-btn-copy" data-clipboard-action="copy" data-clipboard-target="#env-var-7823" title="Copy to clipboard" do-not-collapse="true"></button></p>
 </div>
 </div>
 </div>
@@ -4574,37 +4807,18 @@ The possible values are:</p>
 <td class="tableblock halign-left valign-middle"><p class="tableblock">string</p></td>
 <td class="tableblock halign-left valign-middle"></td>
 </tr>
-<tr class="row-collapsible row-collapsed row-with-desc row-hidden odd">
+<tr class="row-collapsible row-collapsed row-with-desc row-hidden">
 <td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
-<p><a id="quarkus-rest-client-config_quarkus-rest-client-client-connection-ttl"></a> <span class="property-path"><a href="#quarkus-rest-client-config_quarkus-rest-client-client-connection-ttl"><code>quarkus.rest-client."client".connection-ttl</code></a></span></p>
+<p><a id="quarkus-rest-client-config_quarkus-rest-client-client-connection-ttl"></a> <span class="property-path"><a href="#quarkus-rest-client-config_quarkus-rest-client-client-connection-ttl"><code>quarkus.rest-client."client".connection-ttl</code></a></span>
+<button class="btn-copy fa fa-clipboard inline-btn-copy" data-clipboard-action="copy" data-clipboard-text='quarkus.rest-client."client".connection-ttl' title="Copy to clipboard" do-not-collapse="true"></button></p>
 </div>
-<div id="conf-collapsible-desc-63" class="openblock description description-collapsed">
+<div id="conf-collapsible-desc-64" class="openblock description description-collapsed">
 <div class="content">
 <div class="paragraph">
 <p>The time in ms for which a connection remains unused in the connection pool before being evicted and closed. A timeout of <code>0</code> means there is no timeout.</p>
 </div>
 <div class="paragraph">
-<p>Environment variable: <code id="env-var-7636">QUARKUS_REST_CLIENT__CLIENT__CONNECTION_TTL</code><button class="btn-copy fa fa-clipboard inline-btn-copy" data-clipboard-action="copy" data-clipboard-target="#env-var-7636" title="Copy to clipboard" do-not-collapse="true"></button></p>
-</div>
-</div>
-</div>
-<div class="paragraph description-decoration">
-<p><i class="fa fa-chevron-down"></i><span>Show more</span></p>
-</div></div></td>
-<td class="tableblock halign-left valign-middle"><p class="tableblock">int</p></td>
-<td class="tableblock halign-left valign-middle"></td>
-</tr>
-<tr class="row-collapsible row-collapsed row-with-desc row-hidden">
-<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
-<p><a id="quarkus-rest-client-config_quarkus-rest-client-client-connection-pool-size"></a> <span class="property-path"><a href="#quarkus-rest-client-config_quarkus-rest-client-client-connection-pool-size"><code>quarkus.rest-client."client".connection-pool-size</code></a></span></p>
-</div>
-<div id="conf-collapsible-desc-64" class="openblock description description-collapsed">
-<div class="content">
-<div class="paragraph">
-<p>The size of the connection pool for this client.</p>
-</div>
-<div class="paragraph">
-<p>Environment variable: <code id="env-var-7637">QUARKUS_REST_CLIENT__CLIENT__CONNECTION_POOL_SIZE</code><button class="btn-copy fa fa-clipboard inline-btn-copy" data-clipboard-action="copy" data-clipboard-target="#env-var-7637" title="Copy to clipboard" do-not-collapse="true"></button></p>
+<p>Environment variable: <code id="env-var-7824">QUARKUS_REST_CLIENT__CLIENT__CONNECTION_TTL</code><button class="btn-copy fa fa-clipboard inline-btn-copy" data-clipboard-action="copy" data-clipboard-target="#env-var-7824" title="Copy to clipboard" do-not-collapse="true"></button></p>
 </div>
 </div>
 </div>
@@ -4616,15 +4830,37 @@ The possible values are:</p>
 </tr>
 <tr class="row-collapsible row-collapsed row-with-desc row-hidden odd">
 <td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
-<p><a id="quarkus-rest-client-config_quarkus-rest-client-client-keep-alive-enabled"></a> <span class="property-path"><a href="#quarkus-rest-client-config_quarkus-rest-client-client-keep-alive-enabled"><code>quarkus.rest-client."client".keep-alive-enabled</code></a></span></p>
+<p><a id="quarkus-rest-client-config_quarkus-rest-client-client-connection-pool-size"></a> <span class="property-path"><a href="#quarkus-rest-client-config_quarkus-rest-client-client-connection-pool-size"><code>quarkus.rest-client."client".connection-pool-size</code></a></span>
+<button class="btn-copy fa fa-clipboard inline-btn-copy" data-clipboard-action="copy" data-clipboard-text='quarkus.rest-client."client".connection-pool-size' title="Copy to clipboard" do-not-collapse="true"></button></p>
 </div>
 <div id="conf-collapsible-desc-65" class="openblock description description-collapsed">
+<div class="content">
+<div class="paragraph">
+<p>The size of the connection pool for this client.</p>
+</div>
+<div class="paragraph">
+<p>Environment variable: <code id="env-var-7825">QUARKUS_REST_CLIENT__CLIENT__CONNECTION_POOL_SIZE</code><button class="btn-copy fa fa-clipboard inline-btn-copy" data-clipboard-action="copy" data-clipboard-target="#env-var-7825" title="Copy to clipboard" do-not-collapse="true"></button></p>
+</div>
+</div>
+</div>
+<div class="paragraph description-decoration">
+<p><i class="fa fa-chevron-down"></i><span>Show more</span></p>
+</div></div></td>
+<td class="tableblock halign-left valign-middle"><p class="tableblock">int</p></td>
+<td class="tableblock halign-left valign-middle"><p class="tableblock"><code>50</code></p></td>
+</tr>
+<tr class="row-collapsible row-collapsed row-with-desc row-hidden">
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p><a id="quarkus-rest-client-config_quarkus-rest-client-client-keep-alive-enabled"></a> <span class="property-path"><a href="#quarkus-rest-client-config_quarkus-rest-client-client-keep-alive-enabled"><code>quarkus.rest-client."client".keep-alive-enabled</code></a></span>
+<button class="btn-copy fa fa-clipboard inline-btn-copy" data-clipboard-action="copy" data-clipboard-text='quarkus.rest-client."client".keep-alive-enabled' title="Copy to clipboard" do-not-collapse="true"></button></p>
+</div>
+<div id="conf-collapsible-desc-66" class="openblock description description-collapsed">
 <div class="content">
 <div class="paragraph">
 <p>If set to false disables the keep alive completely.</p>
 </div>
 <div class="paragraph">
-<p>Environment variable: <code id="env-var-7638">QUARKUS_REST_CLIENT__CLIENT__KEEP_ALIVE_ENABLED</code><button class="btn-copy fa fa-clipboard inline-btn-copy" data-clipboard-action="copy" data-clipboard-target="#env-var-7638" title="Copy to clipboard" do-not-collapse="true"></button></p>
+<p>Environment variable: <code id="env-var-7826">QUARKUS_REST_CLIENT__CLIENT__KEEP_ALIVE_ENABLED</code><button class="btn-copy fa fa-clipboard inline-btn-copy" data-clipboard-action="copy" data-clipboard-target="#env-var-7826" title="Copy to clipboard" do-not-collapse="true"></button></p>
 </div>
 </div>
 </div>
@@ -4634,11 +4870,12 @@ The possible values are:</p>
 <td class="tableblock halign-left valign-middle"><p class="tableblock">boolean</p></td>
 <td class="tableblock halign-left valign-middle"></td>
 </tr>
-<tr class="row-collapsible row-collapsed row-with-desc row-hidden">
+<tr class="row-collapsible row-collapsed row-with-desc row-hidden odd">
 <td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
-<p><a id="quarkus-rest-client-config_quarkus-rest-client-client-max-redirects"></a> <span class="property-path"><a href="#quarkus-rest-client-config_quarkus-rest-client-client-max-redirects"><code>quarkus.rest-client."client".max-redirects</code></a></span></p>
+<p><a id="quarkus-rest-client-config_quarkus-rest-client-client-max-redirects"></a> <span class="property-path"><a href="#quarkus-rest-client-config_quarkus-rest-client-client-max-redirects"><code>quarkus.rest-client."client".max-redirects</code></a></span>
+<button class="btn-copy fa fa-clipboard inline-btn-copy" data-clipboard-action="copy" data-clipboard-text='quarkus.rest-client."client".max-redirects' title="Copy to clipboard" do-not-collapse="true"></button></p>
 </div>
-<div id="conf-collapsible-desc-66" class="openblock description description-collapsed">
+<div id="conf-collapsible-desc-67" class="openblock description description-collapsed">
 <div class="content">
 <div class="paragraph">
 <p>The maximum number of redirection a request can follow.</p>
@@ -4647,7 +4884,7 @@ The possible values are:</p>
 <p>This property is not applicable to the RESTEasy Client.</p>
 </div>
 <div class="paragraph">
-<p>Environment variable: <code id="env-var-7639">QUARKUS_REST_CLIENT__CLIENT__MAX_REDIRECTS</code><button class="btn-copy fa fa-clipboard inline-btn-copy" data-clipboard-action="copy" data-clipboard-target="#env-var-7639" title="Copy to clipboard" do-not-collapse="true"></button></p>
+<p>Environment variable: <code id="env-var-7827">QUARKUS_REST_CLIENT__CLIENT__MAX_REDIRECTS</code><button class="btn-copy fa fa-clipboard inline-btn-copy" data-clipboard-action="copy" data-clipboard-target="#env-var-7827" title="Copy to clipboard" do-not-collapse="true"></button></p>
 </div>
 </div>
 </div>
@@ -4657,11 +4894,12 @@ The possible values are:</p>
 <td class="tableblock halign-left valign-middle"><p class="tableblock">int</p></td>
 <td class="tableblock halign-left valign-middle"></td>
 </tr>
-<tr class="row-collapsible row-collapsed row-with-desc row-hidden odd">
+<tr class="row-collapsible row-collapsed row-with-desc row-hidden">
 <td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
-<p><a id="quarkus-rest-client-config_quarkus-rest-client-client-headers-header-name"></a> <span class="property-path"><a href="#quarkus-rest-client-config_quarkus-rest-client-client-headers-header-name"><code>quarkus.rest-client."client".headers."header-name"</code></a></span></p>
+<p><a id="quarkus-rest-client-config_quarkus-rest-client-client-headers-header-name"></a> <span class="property-path"><a href="#quarkus-rest-client-config_quarkus-rest-client-client-headers-header-name"><code>quarkus.rest-client."client".headers."header-name"</code></a></span>
+<button class="btn-copy fa fa-clipboard inline-btn-copy" data-clipboard-action="copy" data-clipboard-text='quarkus.rest-client."client".headers."header-name"' title="Copy to clipboard" do-not-collapse="true"></button></p>
 </div>
-<div id="conf-collapsible-desc-67" class="openblock description description-collapsed">
+<div id="conf-collapsible-desc-68" class="openblock description description-collapsed">
 <div class="content">
 <div class="paragraph">
 <p>The HTTP headers that should be applied to all requests of the rest client.</p>
@@ -4670,7 +4908,7 @@ The possible values are:</p>
 <p>This property is not applicable to the RESTEasy Client.</p>
 </div>
 <div class="paragraph">
-<p>Environment variable: <code id="env-var-7640">QUARKUS_REST_CLIENT__CLIENT__HEADERS__HEADER_NAME_</code><button class="btn-copy fa fa-clipboard inline-btn-copy" data-clipboard-action="copy" data-clipboard-target="#env-var-7640" title="Copy to clipboard" do-not-collapse="true"></button></p>
+<p>Environment variable: <code id="env-var-7828">QUARKUS_REST_CLIENT__CLIENT__HEADERS__HEADER_NAME_</code><button class="btn-copy fa fa-clipboard inline-btn-copy" data-clipboard-action="copy" data-clipboard-target="#env-var-7828" title="Copy to clipboard" do-not-collapse="true"></button></p>
 </div>
 </div>
 </div>
@@ -4680,11 +4918,12 @@ The possible values are:</p>
 <td class="tableblock halign-left valign-middle"><p class="tableblock">Map&lt;String,String&gt;</p></td>
 <td class="tableblock halign-left valign-middle"></td>
 </tr>
-<tr class="row-collapsible row-collapsed row-with-desc row-hidden">
+<tr class="row-collapsible row-collapsed row-with-desc row-hidden odd">
 <td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
-<p><a id="quarkus-rest-client-config_quarkus-rest-client-client-shared"></a> <span class="property-path"><a href="#quarkus-rest-client-config_quarkus-rest-client-client-shared"><code>quarkus.rest-client."client".shared</code></a></span></p>
+<p><a id="quarkus-rest-client-config_quarkus-rest-client-client-shared"></a> <span class="property-path"><a href="#quarkus-rest-client-config_quarkus-rest-client-client-shared"><code>quarkus.rest-client."client".shared</code></a></span>
+<button class="btn-copy fa fa-clipboard inline-btn-copy" data-clipboard-action="copy" data-clipboard-text='quarkus.rest-client."client".shared' title="Copy to clipboard" do-not-collapse="true"></button></p>
 </div>
-<div id="conf-collapsible-desc-68" class="openblock description description-collapsed">
+<div id="conf-collapsible-desc-69" class="openblock description description-collapsed">
 <div class="content">
 <div class="paragraph">
 <p>Set to true to share the HTTP client between REST clients. There can be multiple shared clients distinguished by <em>name</em>, when no specific name is set, the name <code>__vertx.DEFAULT</code> is used.</p>
@@ -4693,7 +4932,7 @@ The possible values are:</p>
 <p>This property is not applicable to the RESTEasy Client.</p>
 </div>
 <div class="paragraph">
-<p>Environment variable: <code id="env-var-7641">QUARKUS_REST_CLIENT__CLIENT__SHARED</code><button class="btn-copy fa fa-clipboard inline-btn-copy" data-clipboard-action="copy" data-clipboard-target="#env-var-7641" title="Copy to clipboard" do-not-collapse="true"></button></p>
+<p>Environment variable: <code id="env-var-7829">QUARKUS_REST_CLIENT__CLIENT__SHARED</code><button class="btn-copy fa fa-clipboard inline-btn-copy" data-clipboard-action="copy" data-clipboard-target="#env-var-7829" title="Copy to clipboard" do-not-collapse="true"></button></p>
 </div>
 </div>
 </div>
@@ -4703,11 +4942,12 @@ The possible values are:</p>
 <td class="tableblock halign-left valign-middle"><p class="tableblock">boolean</p></td>
 <td class="tableblock halign-left valign-middle"></td>
 </tr>
-<tr class="row-collapsible row-collapsed row-with-desc row-hidden odd">
+<tr class="row-collapsible row-collapsed row-with-desc row-hidden">
 <td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
-<p><a id="quarkus-rest-client-config_quarkus-rest-client-client-name"></a> <span class="property-path"><a href="#quarkus-rest-client-config_quarkus-rest-client-client-name"><code>quarkus.rest-client."client".name</code></a></span></p>
+<p><a id="quarkus-rest-client-config_quarkus-rest-client-client-name"></a> <span class="property-path"><a href="#quarkus-rest-client-config_quarkus-rest-client-client-name"><code>quarkus.rest-client."client".name</code></a></span>
+<button class="btn-copy fa fa-clipboard inline-btn-copy" data-clipboard-action="copy" data-clipboard-text='quarkus.rest-client."client".name' title="Copy to clipboard" do-not-collapse="true"></button></p>
 </div>
-<div id="conf-collapsible-desc-69" class="openblock description description-collapsed">
+<div id="conf-collapsible-desc-70" class="openblock description description-collapsed">
 <div class="content">
 <div class="paragraph">
 <p>Set the HTTP client name, used when the client is shared, otherwise ignored.</p>
@@ -4716,30 +4956,7 @@ The possible values are:</p>
 <p>This property is not applicable to the RESTEasy Client.</p>
 </div>
 <div class="paragraph">
-<p>Environment variable: <code id="env-var-7642">QUARKUS_REST_CLIENT__CLIENT__NAME</code><button class="btn-copy fa fa-clipboard inline-btn-copy" data-clipboard-action="copy" data-clipboard-target="#env-var-7642" title="Copy to clipboard" do-not-collapse="true"></button></p>
-</div>
-</div>
-</div>
-<div class="paragraph description-decoration">
-<p><i class="fa fa-chevron-down"></i><span>Show more</span></p>
-</div></div></td>
-<td class="tableblock halign-left valign-middle"><p class="tableblock">string</p></td>
-<td class="tableblock halign-left valign-middle"></td>
-</tr>
-<tr class="row-collapsible row-collapsed row-with-desc row-hidden">
-<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
-<p><a id="quarkus-rest-client-config_quarkus-rest-client-client-user-agent"></a> <span class="property-path"><a href="#quarkus-rest-client-config_quarkus-rest-client-client-user-agent"><code>quarkus.rest-client."client".user-agent</code></a></span></p>
-</div>
-<div id="conf-collapsible-desc-70" class="openblock description description-collapsed">
-<div class="content">
-<div class="paragraph">
-<p>Configure the HTTP user-agent header to use.</p>
-</div>
-<div class="paragraph">
-<p>This property is not applicable to the RESTEasy Client.</p>
-</div>
-<div class="paragraph">
-<p>Environment variable: <code id="env-var-7643">QUARKUS_REST_CLIENT__CLIENT__USER_AGENT</code><button class="btn-copy fa fa-clipboard inline-btn-copy" data-clipboard-action="copy" data-clipboard-target="#env-var-7643" title="Copy to clipboard" do-not-collapse="true"></button></p>
+<p>Environment variable: <code id="env-var-7830">QUARKUS_REST_CLIENT__CLIENT__NAME</code><button class="btn-copy fa fa-clipboard inline-btn-copy" data-clipboard-action="copy" data-clipboard-target="#env-var-7830" title="Copy to clipboard" do-not-collapse="true"></button></p>
 </div>
 </div>
 </div>
@@ -4751,15 +4968,40 @@ The possible values are:</p>
 </tr>
 <tr class="row-collapsible row-collapsed row-with-desc row-hidden odd">
 <td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
-<p><a id="quarkus-rest-client-config_quarkus-rest-client-client-http2"></a> <span class="property-path"><a href="#quarkus-rest-client-config_quarkus-rest-client-client-http2"><code>quarkus.rest-client."client".http2</code></a></span></p>
+<p><a id="quarkus-rest-client-config_quarkus-rest-client-client-user-agent"></a> <span class="property-path"><a href="#quarkus-rest-client-config_quarkus-rest-client-client-user-agent"><code>quarkus.rest-client."client".user-agent</code></a></span>
+<button class="btn-copy fa fa-clipboard inline-btn-copy" data-clipboard-action="copy" data-clipboard-text='quarkus.rest-client."client".user-agent' title="Copy to clipboard" do-not-collapse="true"></button></p>
 </div>
 <div id="conf-collapsible-desc-71" class="openblock description description-collapsed">
+<div class="content">
+<div class="paragraph">
+<p>Configure the HTTP user-agent header to use.</p>
+</div>
+<div class="paragraph">
+<p>This property is not applicable to the RESTEasy Client.</p>
+</div>
+<div class="paragraph">
+<p>Environment variable: <code id="env-var-7831">QUARKUS_REST_CLIENT__CLIENT__USER_AGENT</code><button class="btn-copy fa fa-clipboard inline-btn-copy" data-clipboard-action="copy" data-clipboard-target="#env-var-7831" title="Copy to clipboard" do-not-collapse="true"></button></p>
+</div>
+</div>
+</div>
+<div class="paragraph description-decoration">
+<p><i class="fa fa-chevron-down"></i><span>Show more</span></p>
+</div></div></td>
+<td class="tableblock halign-left valign-middle"><p class="tableblock">string</p></td>
+<td class="tableblock halign-left valign-middle"></td>
+</tr>
+<tr class="row-collapsible row-collapsed row-with-desc row-hidden">
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p><a id="quarkus-rest-client-config_quarkus-rest-client-client-http2"></a> <span class="property-path"><a href="#quarkus-rest-client-config_quarkus-rest-client-client-http2"><code>quarkus.rest-client."client".http2</code></a></span>
+<button class="btn-copy fa fa-clipboard inline-btn-copy" data-clipboard-action="copy" data-clipboard-text='quarkus.rest-client."client".http2' title="Copy to clipboard" do-not-collapse="true"></button></p>
+</div>
+<div id="conf-collapsible-desc-72" class="openblock description description-collapsed">
 <div class="content">
 <div class="paragraph">
 <p>If this is true then HTTP/2 will be enabled.</p>
 </div>
 <div class="paragraph">
-<p>Environment variable: <code id="env-var-7644">QUARKUS_REST_CLIENT__CLIENT__HTTP2</code><button class="btn-copy fa fa-clipboard inline-btn-copy" data-clipboard-action="copy" data-clipboard-target="#env-var-7644" title="Copy to clipboard" do-not-collapse="true"></button></p>
+<p>Environment variable: <code id="env-var-7832">QUARKUS_REST_CLIENT__CLIENT__HTTP2</code><button class="btn-copy fa fa-clipboard inline-btn-copy" data-clipboard-action="copy" data-clipboard-target="#env-var-7832" title="Copy to clipboard" do-not-collapse="true"></button></p>
 </div>
 </div>
 </div>
@@ -4769,20 +5011,31 @@ The possible values are:</p>
 <td class="tableblock halign-left valign-middle"><p class="tableblock">boolean</p></td>
 <td class="tableblock halign-left valign-middle"></td>
 </tr>
-<tr class="row-collapsible row-collapsed row-with-desc row-hidden">
+<tr class="row-collapsible row-collapsed row-with-desc row-hidden odd">
 <td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
-<p><a id="quarkus-rest-client-config_quarkus-rest-client-client-max-chunk-size"></a> <span class="property-path"><a href="#quarkus-rest-client-config_quarkus-rest-client-client-max-chunk-size"><code>quarkus.rest-client."client".max-chunk-size</code></a></span></p>
+<p><a id="quarkus-rest-client-config_quarkus-rest-client-client-max-chunk-size"></a> <span class="property-path"><a href="#quarkus-rest-client-config_quarkus-rest-client-client-max-chunk-size"><code>quarkus.rest-client."client".max-chunk-size</code></a></span>
+<button class="btn-copy fa fa-clipboard inline-btn-copy" data-clipboard-action="copy" data-clipboard-text='quarkus.rest-client."client".max-chunk-size' title="Copy to clipboard" do-not-collapse="true"></button></p>
 </div>
-<div id="conf-collapsible-desc-72" class="openblock description description-collapsed">
+<div id="conf-collapsible-desc-73" class="openblock description description-collapsed">
 <div class="content">
 <div class="paragraph">
-<p>The max HTTP ch unk size (8096 bytes by default).</p>
+<p>Configures two different things:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>The max HTTP chunk size, up to <code>Integer.MAX_VALUE</code> bytes.</p>
+</li>
+<li>
+<p>The size of the chunk to be read when an <code>InputStream</code> is being read and sent to the server</p>
+</li>
+</ul>
 </div>
 <div class="paragraph">
 <p>This property is not applicable to the RESTEasy Client.</p>
 </div>
 <div class="paragraph">
-<p>Environment variable: <code id="env-var-7645">QUARKUS_REST_CLIENT__CLIENT__MAX_CHUNK_SIZE</code><button class="btn-copy fa fa-clipboard inline-btn-copy" data-clipboard-action="copy" data-clipboard-target="#env-var-7645" title="Copy to clipboard" do-not-collapse="true"></button></p>
+<p>Environment variable: <code id="env-var-7833">QUARKUS_REST_CLIENT__CLIENT__MAX_CHUNK_SIZE</code><button class="btn-copy fa fa-clipboard inline-btn-copy" data-clipboard-action="copy" data-clipboard-target="#env-var-7833" title="Copy to clipboard" do-not-collapse="true"></button></p>
 </div>
 </div>
 </div>
@@ -4792,17 +5045,42 @@ The possible values are:</p>
 <td class="tableblock halign-left valign-middle"><p class="tableblock">MemorySize <a href="#memory-size-note-anchor-quarkus-rest-client-config_quarkus-rest-client"><span class="icon"><i class="fa fa-question-circle" title="More information about the MemorySize format"></i></span></a></p></td>
 <td class="tableblock halign-left valign-middle"><p class="tableblock"><code>8K</code></p></td>
 </tr>
+<tr class="row-collapsible row-collapsed row-with-desc row-hidden">
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p><a id="quarkus-rest-client-config_quarkus-rest-client-client-enable-compression"></a> <span class="property-path"><a href="#quarkus-rest-client-config_quarkus-rest-client-client-enable-compression"><code>quarkus.rest-client."client".enable-compression</code></a></span>
+<button class="btn-copy fa fa-clipboard inline-btn-copy" data-clipboard-action="copy" data-clipboard-text='quarkus.rest-client."client".enable-compression' title="Copy to clipboard" do-not-collapse="true"></button></p>
+</div>
+<div id="conf-collapsible-desc-74" class="openblock description description-collapsed">
+<div class="content">
+<div class="paragraph">
+<p>Supports receiving compressed messages using GZIP. When this feature is enabled and a server returns a response that includes the header <code>Content-Encoding: gzip</code>, REST Client will automatically decode the content and proceed with the message handling.</p>
+</div>
+<div class="paragraph">
+<p>This property is not applicable to the RESTEasy Client.</p>
+</div>
+<div class="paragraph">
+<p>Environment variable: <code id="env-var-7834">QUARKUS_REST_CLIENT__CLIENT__ENABLE_COMPRESSION</code><button class="btn-copy fa fa-clipboard inline-btn-copy" data-clipboard-action="copy" data-clipboard-target="#env-var-7834" title="Copy to clipboard" do-not-collapse="true"></button></p>
+</div>
+</div>
+</div>
+<div class="paragraph description-decoration">
+<p><i class="fa fa-chevron-down"></i><span>Show more</span></p>
+</div></div></td>
+<td class="tableblock halign-left valign-middle"><p class="tableblock">boolean</p></td>
+<td class="tableblock halign-left valign-middle"></td>
+</tr>
 <tr class="row-collapsible row-collapsed row-with-desc row-hidden odd">
 <td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
-<p><a id="quarkus-rest-client-config_quarkus-rest-client-client-alpn"></a> <span class="property-path"><a href="#quarkus-rest-client-config_quarkus-rest-client-client-alpn"><code>quarkus.rest-client."client".alpn</code></a></span></p>
+<p><a id="quarkus-rest-client-config_quarkus-rest-client-client-alpn"></a> <span class="property-path"><a href="#quarkus-rest-client-config_quarkus-rest-client-client-alpn"><code>quarkus.rest-client."client".alpn</code></a></span>
+<button class="btn-copy fa fa-clipboard inline-btn-copy" data-clipboard-action="copy" data-clipboard-text='quarkus.rest-client."client".alpn' title="Copy to clipboard" do-not-collapse="true"></button></p>
 </div>
-<div id="conf-collapsible-desc-73" class="openblock description description-collapsed">
+<div id="conf-collapsible-desc-75" class="openblock description description-collapsed">
 <div class="content">
 <div class="paragraph">
 <p>If the Application-Layer Protocol Negotiation is enabled, the client will negotiate which protocol to use over the protocols exposed by the server. By default, it will try to use HTTP/2 first and if it&#8217;s not enabled, it will use HTTP/1.1. When the property <code>http2</code> is enabled, this flag will be automatically enabled.</p>
 </div>
 <div class="paragraph">
-<p>Environment variable: <code id="env-var-7646">QUARKUS_REST_CLIENT__CLIENT__ALPN</code><button class="btn-copy fa fa-clipboard inline-btn-copy" data-clipboard-action="copy" data-clipboard-target="#env-var-7646" title="Copy to clipboard" do-not-collapse="true"></button></p>
+<p>Environment variable: <code id="env-var-7835">QUARKUS_REST_CLIENT__CLIENT__ALPN</code><button class="btn-copy fa fa-clipboard inline-btn-copy" data-clipboard-action="copy" data-clipboard-target="#env-var-7835" title="Copy to clipboard" do-not-collapse="true"></button></p>
 </div>
 </div>
 </div>
@@ -4814,15 +5092,16 @@ The possible values are:</p>
 </tr>
 <tr class="row-collapsible row-collapsed row-with-desc row-hidden">
 <td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
-<p><a id="quarkus-rest-client-config_quarkus-rest-client-client-capture-stacktrace"></a> <span class="property-path"><a href="#quarkus-rest-client-config_quarkus-rest-client-client-capture-stacktrace"><code>quarkus.rest-client."client".capture-stacktrace</code></a></span></p>
+<p><a id="quarkus-rest-client-config_quarkus-rest-client-client-capture-stacktrace"></a> <span class="property-path"><a href="#quarkus-rest-client-config_quarkus-rest-client-client-capture-stacktrace"><code>quarkus.rest-client."client".capture-stacktrace</code></a></span>
+<button class="btn-copy fa fa-clipboard inline-btn-copy" data-clipboard-action="copy" data-clipboard-text='quarkus.rest-client."client".capture-stacktrace' title="Copy to clipboard" do-not-collapse="true"></button></p>
 </div>
-<div id="conf-collapsible-desc-74" class="openblock description description-collapsed">
+<div id="conf-collapsible-desc-76" class="openblock description description-collapsed">
 <div class="content">
 <div class="paragraph">
 <p>If <code>true</code>, the stacktrace of the invocation of the REST Client method is captured. This stacktrace will be used if the invocation throws an exception</p>
 </div>
 <div class="paragraph">
-<p>Environment variable: <code id="env-var-7647">QUARKUS_REST_CLIENT__CLIENT__CAPTURE_STACKTRACE</code><button class="btn-copy fa fa-clipboard inline-btn-copy" data-clipboard-action="copy" data-clipboard-target="#env-var-7647" title="Copy to clipboard" do-not-collapse="true"></button></p>
+<p>Environment variable: <code id="env-var-7836">QUARKUS_REST_CLIENT__CLIENT__CAPTURE_STACKTRACE</code><button class="btn-copy fa fa-clipboard inline-btn-copy" data-clipboard-action="copy" data-clipboard-target="#env-var-7836" title="Copy to clipboard" do-not-collapse="true"></button></p>
 </div>
 </div>
 </div>
@@ -4831,6 +5110,93 @@ The possible values are:</p>
 </div></div></td>
 <td class="tableblock halign-left valign-middle"><p class="tableblock">boolean</p></td>
 <td class="tableblock halign-left valign-middle"></td>
+</tr>
+<tr class="row-collapsible row-collapsed row-with-desc row-hidden odd">
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p><a id="quarkus-rest-client-config_quarkus-rest-client-client-disable-default-mapper"></a> <span class="property-path"><a href="#quarkus-rest-client-config_quarkus-rest-client-client-disable-default-mapper"><code>quarkus.rest-client."client".disable-default-mapper</code></a></span>
+<button class="btn-copy fa fa-clipboard inline-btn-copy" data-clipboard-action="copy" data-clipboard-text='quarkus.rest-client."client".disable-default-mapper' title="Copy to clipboard" do-not-collapse="true"></button></p>
+</div>
+<div id="conf-collapsible-desc-77" class="openblock description description-collapsed">
+<div class="content">
+<div class="paragraph">
+<p>If set to <code>true</code>, then this REST Client will not the default exception mapper which always throws an exception if HTTP response code &gt;= 400. This property is not applicable to the RESTEasy Client.</p>
+</div>
+<div class="paragraph">
+<p>Environment variable: <code id="env-var-7837">QUARKUS_REST_CLIENT__CLIENT__DISABLE_DEFAULT_MAPPER</code><button class="btn-copy fa fa-clipboard inline-btn-copy" data-clipboard-action="copy" data-clipboard-target="#env-var-7837" title="Copy to clipboard" do-not-collapse="true"></button></p>
+</div>
+</div>
+</div>
+<div class="paragraph description-decoration">
+<p><i class="fa fa-chevron-down"></i><span>Show more</span></p>
+</div></div></td>
+<td class="tableblock halign-left valign-middle"><p class="tableblock">boolean</p></td>
+<td class="tableblock halign-left valign-middle"><p class="tableblock"><code>${microprofile.rest.client.disable.default.mapper:false}</code></p></td>
+</tr>
+<tr class="row-collapsible row-collapsed row-with-desc row-hidden">
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p><a id="quarkus-rest-client-config_quarkus-rest-client-client-logging-scope"></a> <span class="property-path"><a href="#quarkus-rest-client-config_quarkus-rest-client-client-logging-scope"><code>quarkus.rest-client."client".logging.scope</code></a></span>
+<button class="btn-copy fa fa-clipboard inline-btn-copy" data-clipboard-action="copy" data-clipboard-text='quarkus.rest-client."client".logging.scope' title="Copy to clipboard" do-not-collapse="true"></button></p>
+</div>
+<div id="conf-collapsible-desc-78" class="openblock description description-collapsed">
+<div class="content">
+<div class="paragraph">
+<p>Scope of logging for the client. <br>
+WARNING: beware of logging sensitive data <br>
+The possible values are:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p><code>request-response</code> - enables logging request and responses, including redirect responses</p>
+</li>
+<li>
+<p><code>all</code> - enables logging requests and responses and lower-level logging</p>
+</li>
+<li>
+<p><code>none</code> - no additional logging</p>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<p>This property is applicable to reactive REST clients only.</p>
+</div>
+<div class="paragraph">
+<p>Environment variable: <code id="env-var-7838">QUARKUS_REST_CLIENT__CLIENT__LOGGING_SCOPE</code><button class="btn-copy fa fa-clipboard inline-btn-copy" data-clipboard-action="copy" data-clipboard-target="#env-var-7838" title="Copy to clipboard" do-not-collapse="true"></button></p>
+</div>
+</div>
+</div>
+<div class="paragraph description-decoration">
+<p><i class="fa fa-chevron-down"></i><span>Show more</span></p>
+</div></div></td>
+<td class="tableblock halign-left valign-middle"><p class="tableblock">string</p></td>
+<td class="tableblock halign-left valign-middle"></td>
+</tr>
+<tr class="row-collapsible row-collapsed row-with-desc row-hidden odd">
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p><a id="quarkus-rest-client-config_quarkus-rest-client-client-logging-body-limit"></a> <span class="property-path"><a href="#quarkus-rest-client-config_quarkus-rest-client-client-logging-body-limit"><code>quarkus.rest-client."client".logging.body-limit</code></a></span>
+<button class="btn-copy fa fa-clipboard inline-btn-copy" data-clipboard-action="copy" data-clipboard-text='quarkus.rest-client."client".logging.body-limit' title="Copy to clipboard" do-not-collapse="true"></button></p>
+</div>
+<div id="conf-collapsible-desc-79" class="openblock description description-collapsed">
+<div class="content">
+<div class="paragraph">
+<p>How many characters of the body should be logged. Message body can be large and can easily pollute the logs.</p>
+</div>
+<div class="paragraph">
+<p>By default, set to 100.</p>
+</div>
+<div class="paragraph">
+<p>This property is applicable to reactive REST clients only.</p>
+</div>
+<div class="paragraph">
+<p>Environment variable: <code id="env-var-7839">QUARKUS_REST_CLIENT__CLIENT__LOGGING_BODY_LIMIT</code><button class="btn-copy fa fa-clipboard inline-btn-copy" data-clipboard-action="copy" data-clipboard-target="#env-var-7839" title="Copy to clipboard" do-not-collapse="true"></button></p>
+</div>
+</div>
+</div>
+<div class="paragraph description-decoration">
+<p><i class="fa fa-chevron-down"></i><span>Show more</span></p>
+</div></div></td>
+<td class="tableblock halign-left valign-middle"><p class="tableblock">int</p></td>
+<td class="tableblock halign-left valign-middle"><p class="tableblock"><code>100</code></p></td>
 </tr>
 </tbody>
 </table>
@@ -4866,6 +5232,7 @@ The possible values are:</p>
 <li><a href="#query-parameters">Query Parameters</a></li>
 <li><a href="#form-parameters">Form Parameters</a></li>
 <li><a href="#path-parameters">Path Parameters</a></li>
+<li><a href="#dynamic-base-urls">Dynamic base URLs</a></li>
 <li><a href="#sending-large-payloads">Sending large payloads</a></li>
 <li><a href="#getting-other-response-properties">Getting other response properties</a></li>
 </ul>
@@ -4873,7 +5240,7 @@ The possible values are:</p>
 <li><a href="#create-the-jakarta-rest-resource">Create the Jakarta REST resource</a></li>
 <li><a href="#create-the-configuration">Create the configuration</a>
 <ul class="sectlevel2">
-<li><a href="#disabling-hostname-verification">Disabling Hostname Verification</a></li>
+<li><a href="#trusting-all-certificates-and-disabling-ssl-hostname-verification">Trusting all certificates and Disabling SSL hostname verification</a></li>
 <li><a href="#http2-support">HTTP/2 Support</a></li>
 </ul>
 </li>
@@ -4901,6 +5268,7 @@ The possible values are:</p>
 <ul class="sectlevel2">
 <li><a href="#using-clientexceptionmapper">Using @ClientExceptionMapper</a></li>
 <li><a href="#using-blocking-annotation-in-exception-mappers">Using @Blocking annotation in exception mappers</a></li>
+<li><a href="#disabling-the-default-mapper">Disabling the default mapper</a></li>
 </ul>
 </li>
 <li><a href="#multipart">Multipart Form support</a>
@@ -5023,6 +5391,10 @@ The possible values are:</p>
           
           
             <li><a href="/newsletter" target="_blank">Newsletter</a></li>
+          
+          
+          
+            <li><a href="/userstories" target="_blank">User Stories</a></li>
           
           
           

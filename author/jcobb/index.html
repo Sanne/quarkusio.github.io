@@ -12,7 +12,7 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <meta http-equiv="Content-Security-Policy" content="
-  connect-src 'self' https://dpm.demdex.net https://adobedc.demdex.net https://route-default-test-mscherer-matamo.apps.ospo-osci.z3b1.p1.openshiftapps.com/ https://search.quarkus.io https://smetrics.redhat.com; 
+  connect-src 'self' https://dpm.demdex.net https://adobedc.demdex.net https://analytics.ossupstream.org/ https://search.quarkus.io https://smetrics.redhat.com; 
   script-src 'self' 'unsafe-inline' 'unsafe-eval'
       
       https://assets.adobedtm.com
@@ -27,13 +27,13 @@
       http://www.googleadservices.com
       https://googleads.g.doubleclick.net
       https://giscus.app
-      https://route-default-test-mscherer-matamo.apps.ospo-osci.z3b1.p1.openshiftapps.com/
+      https://analytics.ossupstream.org/
       https://app.mailjet.com;
 
   style-src 'self' https://fonts.googleapis.com https://use.fontawesome.com; 
   img-src 'self' * data:; 
   media-src 'self'; 
-  frame-src https://redhat.demdex.net https://www.youtube.com https://embed.restream.io https://app.mailjet.com http://xy0p2.mjt.lu https://mj.quarkus.io https://giscus.app; 
+  frame-src https://redhat.demdex.net https://www.youtube.com https://player.restream.io https://app.mailjet.com http://xy0p2.mjt.lu https://mj.quarkus.io https://giscus.app; 
   base-uri 'none'; 
   object-src 'none'; 
   form-action 'none'; 
@@ -100,13 +100,12 @@
         <span href="/about/">Why<i class="fas fa-chevron-down"></i></span>
         <ul class="submenu">
           <li><a href="/about" class="">WHAT IS QUARKUS?</a></li>
-          <li><a href="/container-first" class="">CONTAINER FIRST</a></li>
-          <li><a href="/continuum" class="">VERSATILITY</a></li>
-          <li><a href="/standards" class="">STANDARDS</a></li>
-          <li><a href="/kubernetes-native" class="">KUBERNETES NATIVE</a></li>
-          <li><a href="/performance" class="">PERFORMANCE</a></li>
           <li><a href="/developer-joy" class="">DEVELOPER JOY</a></li>
-          
+          <li><a href="/performance" class="">PERFORMANCE</a></li>
+          <li><a href="/kubernetes-native" class="">KUBERNETES NATIVE</a></li>
+          <li><a href="/standards" class="">STANDARDS</a></li>
+          <li><a href="/versatility" class="">VERSATILITY</a></li>
+          <li><a href="/container-first" class="">CONTAINER FIRST</a></li>          
         </ul>
       </li>
       <li class="dropdown">
@@ -114,6 +113,7 @@
         <ul class="submenu">
           <li><a href="/get-started" class="">GET STARTED</a></li>
           <li><a href="/guides" class="">DOCUMENTATION</a></li>
+          <li><a href="/userstories/" class="">USER STORIES</a></li>  
           <li><a href="/qtips" class="">"Q" TIP VIDEOS</a></li>          
           <li><a href="/books" class="">BOOKS</a></li>
           </ul>
@@ -205,6 +205,279 @@
 
     
     <h2 class="title">Posts</h2>
+    
+      
+      <div class="blog-list-item grid-wrapper">
+        <div class="grid__item width-12-12">
+          <div class="post-title">
+            <a href="/blog/quarkus-newsletter-57/">Quarkus Newsletter #57 - June</a>
+          </div>
+          <div class="post-date small">
+            June 12, 2025
+            
+              <span class="tags">tags:<a href="/blog/tag/newsletter">#newsletter</a></span>
+            
+          </div>
+        </div>
+        <div class="grid__item width-12-12">
+          
+            <p>The June edition of the Quarkus Newsletter; curated online stories, articles, and videos about Quarkus.</p>
+          
+        </div>
+        <div class="grid__item width-8-12 read-more small"><a href="/blog/quarkus-newsletter-57/">Read More &rsaquo;</a></div>
+        <div class="grid__item width-4-12 width-12-12-m share-post"><div class="share-page">
+  <a class="share-linkedin" href="https://www.linkedin.com/shareArticle?mini=true&url=https://quarkus.io/blog/quarkus-newsletter-57/&title=Quarkus Newsletter #57 - June" rel="nofollow" target="_blank" title="Share on LinkedIn">
+    <i class="fa-brands fa-linkedin fa-xl"></i>
+  </a>
+  <a class="share-x" href="https://x.com/intent/tweet?text=Quarkus Newsletter #57 - June&url=https://quarkus.io/blog/quarkus-newsletter-57/&via=quarkusio&related=quarkusio" rel="nofollow" target="_blank" title="Share on X">
+    <i class="fa-brands fa-square-x-twitter fa-xl"></i>
+  </a>
+  <a class="share-facebook" href="https://facebook.com/sharer.php?u=https://quarkus.io/blog/quarkus-newsletter-57/" rel="nofollow" target="_blank" title="Share on Facebook">
+    <i class="fa-brands fa-square-facebook fa-xl"></i>
+  </a>
+  <a class="share-reddit" href="http://www.reddit.com/submit?url=https://quarkus.io/blog/quarkus-newsletter-57/" onclick="window.open(this.href, 'pop-up', 'left=20,top=20,width=900,height=500,toolbar=1,resizable=0'); return false;" title="Share on Reddit" >
+    <i class="fa-brands fa-square-reddit fa-xl"></i>
+  </a>
+  <a class="share-email" href="mailto:?subject=Quarkus Newsletter #57 - June&amp;body=Quarkus Newsletter #57 - June https://quarkus.io/blog/quarkus-newsletter-57/" title="Share via Email" >
+    <i class="fa-solid fa-envelope fa-xl"></i>
+  </a>
+</div>
+</div>
+      </div>
+    
+      
+      <div class="blog-list-item grid-wrapper">
+        <div class="grid__item width-12-12">
+          <div class="post-title">
+            <a href="/blog/quarkus-newsletter-56/">Quarkus Newsletter #56 - May</a>
+          </div>
+          <div class="post-date small">
+            May 13, 2025
+            
+              <span class="tags">tags:<a href="/blog/tag/newsletter">#newsletter</a></span>
+            
+          </div>
+        </div>
+        <div class="grid__item width-12-12">
+          
+            <p>The May edition of the Quarkus Newsletter; curated online stories, articles, and videos about Quarkus.</p>
+          
+        </div>
+        <div class="grid__item width-8-12 read-more small"><a href="/blog/quarkus-newsletter-56/">Read More &rsaquo;</a></div>
+        <div class="grid__item width-4-12 width-12-12-m share-post"><div class="share-page">
+  <a class="share-linkedin" href="https://www.linkedin.com/shareArticle?mini=true&url=https://quarkus.io/blog/quarkus-newsletter-56/&title=Quarkus Newsletter #56 - May" rel="nofollow" target="_blank" title="Share on LinkedIn">
+    <i class="fa-brands fa-linkedin fa-xl"></i>
+  </a>
+  <a class="share-x" href="https://x.com/intent/tweet?text=Quarkus Newsletter #56 - May&url=https://quarkus.io/blog/quarkus-newsletter-56/&via=quarkusio&related=quarkusio" rel="nofollow" target="_blank" title="Share on X">
+    <i class="fa-brands fa-square-x-twitter fa-xl"></i>
+  </a>
+  <a class="share-facebook" href="https://facebook.com/sharer.php?u=https://quarkus.io/blog/quarkus-newsletter-56/" rel="nofollow" target="_blank" title="Share on Facebook">
+    <i class="fa-brands fa-square-facebook fa-xl"></i>
+  </a>
+  <a class="share-reddit" href="http://www.reddit.com/submit?url=https://quarkus.io/blog/quarkus-newsletter-56/" onclick="window.open(this.href, 'pop-up', 'left=20,top=20,width=900,height=500,toolbar=1,resizable=0'); return false;" title="Share on Reddit" >
+    <i class="fa-brands fa-square-reddit fa-xl"></i>
+  </a>
+  <a class="share-email" href="mailto:?subject=Quarkus Newsletter #56 - May&amp;body=Quarkus Newsletter #56 - May https://quarkus.io/blog/quarkus-newsletter-56/" title="Share via Email" >
+    <i class="fa-solid fa-envelope fa-xl"></i>
+  </a>
+</div>
+</div>
+      </div>
+    
+      
+      <div class="blog-list-item grid-wrapper">
+        <div class="grid__item width-12-12">
+          <div class="post-title">
+            <a href="/blog/quarkus-newsletter-55/">Quarkus Newsletter #55 - April</a>
+          </div>
+          <div class="post-date small">
+            April 11, 2025
+            
+              <span class="tags">tags:<a href="/blog/tag/newsletter">#newsletter</a></span>
+            
+          </div>
+        </div>
+        <div class="grid__item width-12-12">
+          
+            <p>The April edition of the Quarkus Newsletter; curated online stories, articles, and videos about Quarkus.</p>
+          
+        </div>
+        <div class="grid__item width-8-12 read-more small"><a href="/blog/quarkus-newsletter-55/">Read More &rsaquo;</a></div>
+        <div class="grid__item width-4-12 width-12-12-m share-post"><div class="share-page">
+  <a class="share-linkedin" href="https://www.linkedin.com/shareArticle?mini=true&url=https://quarkus.io/blog/quarkus-newsletter-55/&title=Quarkus Newsletter #55 - April" rel="nofollow" target="_blank" title="Share on LinkedIn">
+    <i class="fa-brands fa-linkedin fa-xl"></i>
+  </a>
+  <a class="share-x" href="https://x.com/intent/tweet?text=Quarkus Newsletter #55 - April&url=https://quarkus.io/blog/quarkus-newsletter-55/&via=quarkusio&related=quarkusio" rel="nofollow" target="_blank" title="Share on X">
+    <i class="fa-brands fa-square-x-twitter fa-xl"></i>
+  </a>
+  <a class="share-facebook" href="https://facebook.com/sharer.php?u=https://quarkus.io/blog/quarkus-newsletter-55/" rel="nofollow" target="_blank" title="Share on Facebook">
+    <i class="fa-brands fa-square-facebook fa-xl"></i>
+  </a>
+  <a class="share-reddit" href="http://www.reddit.com/submit?url=https://quarkus.io/blog/quarkus-newsletter-55/" onclick="window.open(this.href, 'pop-up', 'left=20,top=20,width=900,height=500,toolbar=1,resizable=0'); return false;" title="Share on Reddit" >
+    <i class="fa-brands fa-square-reddit fa-xl"></i>
+  </a>
+  <a class="share-email" href="mailto:?subject=Quarkus Newsletter #55 - April&amp;body=Quarkus Newsletter #55 - April https://quarkus.io/blog/quarkus-newsletter-55/" title="Share via Email" >
+    <i class="fa-solid fa-envelope fa-xl"></i>
+  </a>
+</div>
+</div>
+      </div>
+    
+      
+      <div class="blog-list-item grid-wrapper">
+        <div class="grid__item width-12-12">
+          <div class="post-title">
+            <a href="/blog/quarkus-newsletter-54/">Quarkus Newsletter #54 - March</a>
+          </div>
+          <div class="post-date small">
+            March 12, 2025
+            
+              <span class="tags">tags:<a href="/blog/tag/newsletter">#newsletter</a></span>
+            
+          </div>
+        </div>
+        <div class="grid__item width-12-12">
+          
+            <p>The March edition of the Quarkus Newsletter; curated online stories, articles, and videos about Quarkus.</p>
+          
+        </div>
+        <div class="grid__item width-8-12 read-more small"><a href="/blog/quarkus-newsletter-54/">Read More &rsaquo;</a></div>
+        <div class="grid__item width-4-12 width-12-12-m share-post"><div class="share-page">
+  <a class="share-linkedin" href="https://www.linkedin.com/shareArticle?mini=true&url=https://quarkus.io/blog/quarkus-newsletter-54/&title=Quarkus Newsletter #54 - March" rel="nofollow" target="_blank" title="Share on LinkedIn">
+    <i class="fa-brands fa-linkedin fa-xl"></i>
+  </a>
+  <a class="share-x" href="https://x.com/intent/tweet?text=Quarkus Newsletter #54 - March&url=https://quarkus.io/blog/quarkus-newsletter-54/&via=quarkusio&related=quarkusio" rel="nofollow" target="_blank" title="Share on X">
+    <i class="fa-brands fa-square-x-twitter fa-xl"></i>
+  </a>
+  <a class="share-facebook" href="https://facebook.com/sharer.php?u=https://quarkus.io/blog/quarkus-newsletter-54/" rel="nofollow" target="_blank" title="Share on Facebook">
+    <i class="fa-brands fa-square-facebook fa-xl"></i>
+  </a>
+  <a class="share-reddit" href="http://www.reddit.com/submit?url=https://quarkus.io/blog/quarkus-newsletter-54/" onclick="window.open(this.href, 'pop-up', 'left=20,top=20,width=900,height=500,toolbar=1,resizable=0'); return false;" title="Share on Reddit" >
+    <i class="fa-brands fa-square-reddit fa-xl"></i>
+  </a>
+  <a class="share-email" href="mailto:?subject=Quarkus Newsletter #54 - March&amp;body=Quarkus Newsletter #54 - March https://quarkus.io/blog/quarkus-newsletter-54/" title="Share via Email" >
+    <i class="fa-solid fa-envelope fa-xl"></i>
+  </a>
+</div>
+</div>
+      </div>
+    
+      
+      <div class="blog-list-item grid-wrapper">
+        <div class="grid__item width-12-12">
+          <div class="post-title">
+            <a href="/blog/quarkus-newsletter-53/">Quarkus Newsletter #53 - February</a>
+          </div>
+          <div class="post-date small">
+            February 11, 2025
+            
+              <span class="tags">tags:<a href="/blog/tag/newsletter">#newsletter</a></span>
+            
+          </div>
+        </div>
+        <div class="grid__item width-12-12">
+          
+            <p>The February edition of the Quarkus Newsletter; curated online stories, articles, and videos about Quarkus.</p>
+          
+        </div>
+        <div class="grid__item width-8-12 read-more small"><a href="/blog/quarkus-newsletter-53/">Read More &rsaquo;</a></div>
+        <div class="grid__item width-4-12 width-12-12-m share-post"><div class="share-page">
+  <a class="share-linkedin" href="https://www.linkedin.com/shareArticle?mini=true&url=https://quarkus.io/blog/quarkus-newsletter-53/&title=Quarkus Newsletter #53 - February" rel="nofollow" target="_blank" title="Share on LinkedIn">
+    <i class="fa-brands fa-linkedin fa-xl"></i>
+  </a>
+  <a class="share-x" href="https://x.com/intent/tweet?text=Quarkus Newsletter #53 - February&url=https://quarkus.io/blog/quarkus-newsletter-53/&via=quarkusio&related=quarkusio" rel="nofollow" target="_blank" title="Share on X">
+    <i class="fa-brands fa-square-x-twitter fa-xl"></i>
+  </a>
+  <a class="share-facebook" href="https://facebook.com/sharer.php?u=https://quarkus.io/blog/quarkus-newsletter-53/" rel="nofollow" target="_blank" title="Share on Facebook">
+    <i class="fa-brands fa-square-facebook fa-xl"></i>
+  </a>
+  <a class="share-reddit" href="http://www.reddit.com/submit?url=https://quarkus.io/blog/quarkus-newsletter-53/" onclick="window.open(this.href, 'pop-up', 'left=20,top=20,width=900,height=500,toolbar=1,resizable=0'); return false;" title="Share on Reddit" >
+    <i class="fa-brands fa-square-reddit fa-xl"></i>
+  </a>
+  <a class="share-email" href="mailto:?subject=Quarkus Newsletter #53 - February&amp;body=Quarkus Newsletter #53 - February https://quarkus.io/blog/quarkus-newsletter-53/" title="Share via Email" >
+    <i class="fa-solid fa-envelope fa-xl"></i>
+  </a>
+</div>
+</div>
+      </div>
+    
+      
+      <div class="blog-list-item grid-wrapper">
+        <div class="grid__item width-12-12">
+          <div class="post-title">
+            <a href="/blog/quarkus-newsletter-52/">Quarkus Newsletter #52 - January</a>
+          </div>
+          <div class="post-date small">
+            January 14, 2025
+            
+              <span class="tags">tags:<a href="/blog/tag/newsletter">#newsletter</a></span>
+            
+          </div>
+        </div>
+        <div class="grid__item width-12-12">
+          
+            <p>The January edition of the Quarkus Newsletter; curated online stories, articles, and videos about Quarkus.</p>
+          
+        </div>
+        <div class="grid__item width-8-12 read-more small"><a href="/blog/quarkus-newsletter-52/">Read More &rsaquo;</a></div>
+        <div class="grid__item width-4-12 width-12-12-m share-post"><div class="share-page">
+  <a class="share-linkedin" href="https://www.linkedin.com/shareArticle?mini=true&url=https://quarkus.io/blog/quarkus-newsletter-52/&title=Quarkus Newsletter #52 - January" rel="nofollow" target="_blank" title="Share on LinkedIn">
+    <i class="fa-brands fa-linkedin fa-xl"></i>
+  </a>
+  <a class="share-x" href="https://x.com/intent/tweet?text=Quarkus Newsletter #52 - January&url=https://quarkus.io/blog/quarkus-newsletter-52/&via=quarkusio&related=quarkusio" rel="nofollow" target="_blank" title="Share on X">
+    <i class="fa-brands fa-square-x-twitter fa-xl"></i>
+  </a>
+  <a class="share-facebook" href="https://facebook.com/sharer.php?u=https://quarkus.io/blog/quarkus-newsletter-52/" rel="nofollow" target="_blank" title="Share on Facebook">
+    <i class="fa-brands fa-square-facebook fa-xl"></i>
+  </a>
+  <a class="share-reddit" href="http://www.reddit.com/submit?url=https://quarkus.io/blog/quarkus-newsletter-52/" onclick="window.open(this.href, 'pop-up', 'left=20,top=20,width=900,height=500,toolbar=1,resizable=0'); return false;" title="Share on Reddit" >
+    <i class="fa-brands fa-square-reddit fa-xl"></i>
+  </a>
+  <a class="share-email" href="mailto:?subject=Quarkus Newsletter #52 - January&amp;body=Quarkus Newsletter #52 - January https://quarkus.io/blog/quarkus-newsletter-52/" title="Share via Email" >
+    <i class="fa-solid fa-envelope fa-xl"></i>
+  </a>
+</div>
+</div>
+      </div>
+    
+      
+      <div class="blog-list-item grid-wrapper">
+        <div class="grid__item width-12-12">
+          <div class="post-title">
+            <a href="/blog/quarkus-newsletter-51/">Quarkus Newsletter #51 - December</a>
+          </div>
+          <div class="post-date small">
+            December 12, 2024
+            
+              <span class="tags">tags:<a href="/blog/tag/newsletter">#newsletter</a></span>
+            
+          </div>
+        </div>
+        <div class="grid__item width-12-12">
+          
+            <p>The December edition of the Quarkus Newsletter; curated online stories, articles, and videos about Quarkus.</p>
+          
+        </div>
+        <div class="grid__item width-8-12 read-more small"><a href="/blog/quarkus-newsletter-51/">Read More &rsaquo;</a></div>
+        <div class="grid__item width-4-12 width-12-12-m share-post"><div class="share-page">
+  <a class="share-linkedin" href="https://www.linkedin.com/shareArticle?mini=true&url=https://quarkus.io/blog/quarkus-newsletter-51/&title=Quarkus Newsletter #51 - December" rel="nofollow" target="_blank" title="Share on LinkedIn">
+    <i class="fa-brands fa-linkedin fa-xl"></i>
+  </a>
+  <a class="share-x" href="https://x.com/intent/tweet?text=Quarkus Newsletter #51 - December&url=https://quarkus.io/blog/quarkus-newsletter-51/&via=quarkusio&related=quarkusio" rel="nofollow" target="_blank" title="Share on X">
+    <i class="fa-brands fa-square-x-twitter fa-xl"></i>
+  </a>
+  <a class="share-facebook" href="https://facebook.com/sharer.php?u=https://quarkus.io/blog/quarkus-newsletter-51/" rel="nofollow" target="_blank" title="Share on Facebook">
+    <i class="fa-brands fa-square-facebook fa-xl"></i>
+  </a>
+  <a class="share-reddit" href="http://www.reddit.com/submit?url=https://quarkus.io/blog/quarkus-newsletter-51/" onclick="window.open(this.href, 'pop-up', 'left=20,top=20,width=900,height=500,toolbar=1,resizable=0'); return false;" title="Share on Reddit" >
+    <i class="fa-brands fa-square-reddit fa-xl"></i>
+  </a>
+  <a class="share-email" href="mailto:?subject=Quarkus Newsletter #51 - December&amp;body=Quarkus Newsletter #51 - December https://quarkus.io/blog/quarkus-newsletter-51/" title="Share via Email" >
+    <i class="fa-solid fa-envelope fa-xl"></i>
+  </a>
+</div>
+</div>
+      </div>
     
       
       <div class="blog-list-item grid-wrapper">
@@ -323,279 +596,6 @@
 </div>
       </div>
     
-      
-      <div class="blog-list-item grid-wrapper">
-        <div class="grid__item width-12-12">
-          <div class="post-title">
-            <a href="/blog/quarkus-newsletter-47/">Quarkus Newsletter #47 - August</a>
-          </div>
-          <div class="post-date small">
-            August 12, 2024
-            
-              <span class="tags">tags:<a href="/blog/tag/newsletter">#newsletter</a></span>
-            
-          </div>
-        </div>
-        <div class="grid__item width-12-12">
-          
-            <p>The August edition of the Quarkus Newsletter; curated online stories, articles, and videos about Quarkus.</p>
-          
-        </div>
-        <div class="grid__item width-8-12 read-more small"><a href="/blog/quarkus-newsletter-47/">Read More &rsaquo;</a></div>
-        <div class="grid__item width-4-12 width-12-12-m share-post"><div class="share-page">
-  <a class="share-linkedin" href="https://www.linkedin.com/shareArticle?mini=true&url=https://quarkus.io/blog/quarkus-newsletter-47/&title=Quarkus Newsletter #47 - August" rel="nofollow" target="_blank" title="Share on LinkedIn">
-    <i class="fa-brands fa-linkedin fa-xl"></i>
-  </a>
-  <a class="share-x" href="https://x.com/intent/tweet?text=Quarkus Newsletter #47 - August&url=https://quarkus.io/blog/quarkus-newsletter-47/&via=quarkusio&related=quarkusio" rel="nofollow" target="_blank" title="Share on X">
-    <i class="fa-brands fa-square-x-twitter fa-xl"></i>
-  </a>
-  <a class="share-facebook" href="https://facebook.com/sharer.php?u=https://quarkus.io/blog/quarkus-newsletter-47/" rel="nofollow" target="_blank" title="Share on Facebook">
-    <i class="fa-brands fa-square-facebook fa-xl"></i>
-  </a>
-  <a class="share-reddit" href="http://www.reddit.com/submit?url=https://quarkus.io/blog/quarkus-newsletter-47/" onclick="window.open(this.href, 'pop-up', 'left=20,top=20,width=900,height=500,toolbar=1,resizable=0'); return false;" title="Share on Reddit" >
-    <i class="fa-brands fa-square-reddit fa-xl"></i>
-  </a>
-  <a class="share-email" href="mailto:?subject=Quarkus Newsletter #47 - August&amp;body=Quarkus Newsletter #47 - August https://quarkus.io/blog/quarkus-newsletter-47/" title="Share via Email" >
-    <i class="fa-solid fa-envelope fa-xl"></i>
-  </a>
-</div>
-</div>
-      </div>
-    
-      
-      <div class="blog-list-item grid-wrapper">
-        <div class="grid__item width-12-12">
-          <div class="post-title">
-            <a href="/blog/quarkus-newsletter-46/">Quarkus Newsletter #46 - July</a>
-          </div>
-          <div class="post-date small">
-            July 12, 2024
-            
-              <span class="tags">tags:<a href="/blog/tag/newsletter">#newsletter</a></span>
-            
-          </div>
-        </div>
-        <div class="grid__item width-12-12">
-          
-            <p>The July edition of the Quarkus Newsletter; curated online stories, articles, and videos about Quarkus.</p>
-          
-        </div>
-        <div class="grid__item width-8-12 read-more small"><a href="/blog/quarkus-newsletter-46/">Read More &rsaquo;</a></div>
-        <div class="grid__item width-4-12 width-12-12-m share-post"><div class="share-page">
-  <a class="share-linkedin" href="https://www.linkedin.com/shareArticle?mini=true&url=https://quarkus.io/blog/quarkus-newsletter-46/&title=Quarkus Newsletter #46 - July" rel="nofollow" target="_blank" title="Share on LinkedIn">
-    <i class="fa-brands fa-linkedin fa-xl"></i>
-  </a>
-  <a class="share-x" href="https://x.com/intent/tweet?text=Quarkus Newsletter #46 - July&url=https://quarkus.io/blog/quarkus-newsletter-46/&via=quarkusio&related=quarkusio" rel="nofollow" target="_blank" title="Share on X">
-    <i class="fa-brands fa-square-x-twitter fa-xl"></i>
-  </a>
-  <a class="share-facebook" href="https://facebook.com/sharer.php?u=https://quarkus.io/blog/quarkus-newsletter-46/" rel="nofollow" target="_blank" title="Share on Facebook">
-    <i class="fa-brands fa-square-facebook fa-xl"></i>
-  </a>
-  <a class="share-reddit" href="http://www.reddit.com/submit?url=https://quarkus.io/blog/quarkus-newsletter-46/" onclick="window.open(this.href, 'pop-up', 'left=20,top=20,width=900,height=500,toolbar=1,resizable=0'); return false;" title="Share on Reddit" >
-    <i class="fa-brands fa-square-reddit fa-xl"></i>
-  </a>
-  <a class="share-email" href="mailto:?subject=Quarkus Newsletter #46 - July&amp;body=Quarkus Newsletter #46 - July https://quarkus.io/blog/quarkus-newsletter-46/" title="Share via Email" >
-    <i class="fa-solid fa-envelope fa-xl"></i>
-  </a>
-</div>
-</div>
-      </div>
-    
-      
-      <div class="blog-list-item grid-wrapper">
-        <div class="grid__item width-12-12">
-          <div class="post-title">
-            <a href="/blog/quarkus-newsletter-45/">Quarkus Newsletter #45 - June</a>
-          </div>
-          <div class="post-date small">
-            June 12, 2024
-            
-              <span class="tags">tags:<a href="/blog/tag/newsletter">#newsletter</a></span>
-            
-          </div>
-        </div>
-        <div class="grid__item width-12-12">
-          
-            <p>The June edition of the Quarkus Newsletter; curated online stories, articles, and videos about Quarkus.</p>
-          
-        </div>
-        <div class="grid__item width-8-12 read-more small"><a href="/blog/quarkus-newsletter-45/">Read More &rsaquo;</a></div>
-        <div class="grid__item width-4-12 width-12-12-m share-post"><div class="share-page">
-  <a class="share-linkedin" href="https://www.linkedin.com/shareArticle?mini=true&url=https://quarkus.io/blog/quarkus-newsletter-45/&title=Quarkus Newsletter #45 - June" rel="nofollow" target="_blank" title="Share on LinkedIn">
-    <i class="fa-brands fa-linkedin fa-xl"></i>
-  </a>
-  <a class="share-x" href="https://x.com/intent/tweet?text=Quarkus Newsletter #45 - June&url=https://quarkus.io/blog/quarkus-newsletter-45/&via=quarkusio&related=quarkusio" rel="nofollow" target="_blank" title="Share on X">
-    <i class="fa-brands fa-square-x-twitter fa-xl"></i>
-  </a>
-  <a class="share-facebook" href="https://facebook.com/sharer.php?u=https://quarkus.io/blog/quarkus-newsletter-45/" rel="nofollow" target="_blank" title="Share on Facebook">
-    <i class="fa-brands fa-square-facebook fa-xl"></i>
-  </a>
-  <a class="share-reddit" href="http://www.reddit.com/submit?url=https://quarkus.io/blog/quarkus-newsletter-45/" onclick="window.open(this.href, 'pop-up', 'left=20,top=20,width=900,height=500,toolbar=1,resizable=0'); return false;" title="Share on Reddit" >
-    <i class="fa-brands fa-square-reddit fa-xl"></i>
-  </a>
-  <a class="share-email" href="mailto:?subject=Quarkus Newsletter #45 - June&amp;body=Quarkus Newsletter #45 - June https://quarkus.io/blog/quarkus-newsletter-45/" title="Share via Email" >
-    <i class="fa-solid fa-envelope fa-xl"></i>
-  </a>
-</div>
-</div>
-      </div>
-    
-      
-      <div class="blog-list-item grid-wrapper">
-        <div class="grid__item width-12-12">
-          <div class="post-title">
-            <a href="/blog/quarkus-newsletter-44/">Quarkus Newsletter #44 - May</a>
-          </div>
-          <div class="post-date small">
-            May 15, 2024
-            
-              <span class="tags">tags:<a href="/blog/tag/newsletter">#newsletter</a></span>
-            
-          </div>
-        </div>
-        <div class="grid__item width-12-12">
-          
-            <p>The May edition of the Quarkus Newsletter; curated online stories, articles, and videos about Quarkus.</p>
-          
-        </div>
-        <div class="grid__item width-8-12 read-more small"><a href="/blog/quarkus-newsletter-44/">Read More &rsaquo;</a></div>
-        <div class="grid__item width-4-12 width-12-12-m share-post"><div class="share-page">
-  <a class="share-linkedin" href="https://www.linkedin.com/shareArticle?mini=true&url=https://quarkus.io/blog/quarkus-newsletter-44/&title=Quarkus Newsletter #44 - May" rel="nofollow" target="_blank" title="Share on LinkedIn">
-    <i class="fa-brands fa-linkedin fa-xl"></i>
-  </a>
-  <a class="share-x" href="https://x.com/intent/tweet?text=Quarkus Newsletter #44 - May&url=https://quarkus.io/blog/quarkus-newsletter-44/&via=quarkusio&related=quarkusio" rel="nofollow" target="_blank" title="Share on X">
-    <i class="fa-brands fa-square-x-twitter fa-xl"></i>
-  </a>
-  <a class="share-facebook" href="https://facebook.com/sharer.php?u=https://quarkus.io/blog/quarkus-newsletter-44/" rel="nofollow" target="_blank" title="Share on Facebook">
-    <i class="fa-brands fa-square-facebook fa-xl"></i>
-  </a>
-  <a class="share-reddit" href="http://www.reddit.com/submit?url=https://quarkus.io/blog/quarkus-newsletter-44/" onclick="window.open(this.href, 'pop-up', 'left=20,top=20,width=900,height=500,toolbar=1,resizable=0'); return false;" title="Share on Reddit" >
-    <i class="fa-brands fa-square-reddit fa-xl"></i>
-  </a>
-  <a class="share-email" href="mailto:?subject=Quarkus Newsletter #44 - May&amp;body=Quarkus Newsletter #44 - May https://quarkus.io/blog/quarkus-newsletter-44/" title="Share via Email" >
-    <i class="fa-solid fa-envelope fa-xl"></i>
-  </a>
-</div>
-</div>
-      </div>
-    
-      
-      <div class="blog-list-item grid-wrapper">
-        <div class="grid__item width-12-12">
-          <div class="post-title">
-            <a href="/blog/quarkus-newsletter-43/">Quarkus Newsletter #43 - April</a>
-          </div>
-          <div class="post-date small">
-            April 16, 2024
-            
-              <span class="tags">tags:<a href="/blog/tag/newsletter">#newsletter</a></span>
-            
-          </div>
-        </div>
-        <div class="grid__item width-12-12">
-          
-            <p>The April edition of the Quarkus Newsletter; curated online stories, articles, and videos about Quarkus.</p>
-          
-        </div>
-        <div class="grid__item width-8-12 read-more small"><a href="/blog/quarkus-newsletter-43/">Read More &rsaquo;</a></div>
-        <div class="grid__item width-4-12 width-12-12-m share-post"><div class="share-page">
-  <a class="share-linkedin" href="https://www.linkedin.com/shareArticle?mini=true&url=https://quarkus.io/blog/quarkus-newsletter-43/&title=Quarkus Newsletter #43 - April" rel="nofollow" target="_blank" title="Share on LinkedIn">
-    <i class="fa-brands fa-linkedin fa-xl"></i>
-  </a>
-  <a class="share-x" href="https://x.com/intent/tweet?text=Quarkus Newsletter #43 - April&url=https://quarkus.io/blog/quarkus-newsletter-43/&via=quarkusio&related=quarkusio" rel="nofollow" target="_blank" title="Share on X">
-    <i class="fa-brands fa-square-x-twitter fa-xl"></i>
-  </a>
-  <a class="share-facebook" href="https://facebook.com/sharer.php?u=https://quarkus.io/blog/quarkus-newsletter-43/" rel="nofollow" target="_blank" title="Share on Facebook">
-    <i class="fa-brands fa-square-facebook fa-xl"></i>
-  </a>
-  <a class="share-reddit" href="http://www.reddit.com/submit?url=https://quarkus.io/blog/quarkus-newsletter-43/" onclick="window.open(this.href, 'pop-up', 'left=20,top=20,width=900,height=500,toolbar=1,resizable=0'); return false;" title="Share on Reddit" >
-    <i class="fa-brands fa-square-reddit fa-xl"></i>
-  </a>
-  <a class="share-email" href="mailto:?subject=Quarkus Newsletter #43 - April&amp;body=Quarkus Newsletter #43 - April https://quarkus.io/blog/quarkus-newsletter-43/" title="Share via Email" >
-    <i class="fa-solid fa-envelope fa-xl"></i>
-  </a>
-</div>
-</div>
-      </div>
-    
-      
-      <div class="blog-list-item grid-wrapper">
-        <div class="grid__item width-12-12">
-          <div class="post-title">
-            <a href="/blog/quarkus-newsletter-42/">Quarkus Newsletter #42 - March</a>
-          </div>
-          <div class="post-date small">
-            March 13, 2024
-            
-              <span class="tags">tags:<a href="/blog/tag/newsletter">#newsletter</a></span>
-            
-          </div>
-        </div>
-        <div class="grid__item width-12-12">
-          
-            <p>The March edition of the Quarkus Newsletter; curated online stories, articles, and videos about Quarkus.</p>
-          
-        </div>
-        <div class="grid__item width-8-12 read-more small"><a href="/blog/quarkus-newsletter-42/">Read More &rsaquo;</a></div>
-        <div class="grid__item width-4-12 width-12-12-m share-post"><div class="share-page">
-  <a class="share-linkedin" href="https://www.linkedin.com/shareArticle?mini=true&url=https://quarkus.io/blog/quarkus-newsletter-42/&title=Quarkus Newsletter #42 - March" rel="nofollow" target="_blank" title="Share on LinkedIn">
-    <i class="fa-brands fa-linkedin fa-xl"></i>
-  </a>
-  <a class="share-x" href="https://x.com/intent/tweet?text=Quarkus Newsletter #42 - March&url=https://quarkus.io/blog/quarkus-newsletter-42/&via=quarkusio&related=quarkusio" rel="nofollow" target="_blank" title="Share on X">
-    <i class="fa-brands fa-square-x-twitter fa-xl"></i>
-  </a>
-  <a class="share-facebook" href="https://facebook.com/sharer.php?u=https://quarkus.io/blog/quarkus-newsletter-42/" rel="nofollow" target="_blank" title="Share on Facebook">
-    <i class="fa-brands fa-square-facebook fa-xl"></i>
-  </a>
-  <a class="share-reddit" href="http://www.reddit.com/submit?url=https://quarkus.io/blog/quarkus-newsletter-42/" onclick="window.open(this.href, 'pop-up', 'left=20,top=20,width=900,height=500,toolbar=1,resizable=0'); return false;" title="Share on Reddit" >
-    <i class="fa-brands fa-square-reddit fa-xl"></i>
-  </a>
-  <a class="share-email" href="mailto:?subject=Quarkus Newsletter #42 - March&amp;body=Quarkus Newsletter #42 - March https://quarkus.io/blog/quarkus-newsletter-42/" title="Share via Email" >
-    <i class="fa-solid fa-envelope fa-xl"></i>
-  </a>
-</div>
-</div>
-      </div>
-    
-      
-      <div class="blog-list-item grid-wrapper">
-        <div class="grid__item width-12-12">
-          <div class="post-title">
-            <a href="/blog/quarkus-newsletter-41/">Quarkus Newsletter #41 - February</a>
-          </div>
-          <div class="post-date small">
-            February 13, 2024
-            
-              <span class="tags">tags:<a href="/blog/tag/newsletter">#newsletter</a></span>
-            
-          </div>
-        </div>
-        <div class="grid__item width-12-12">
-          
-            <p>The February edition of the Quarkus Newsletter; curated online stories, articles, and videos about Quarkus.</p>
-          
-        </div>
-        <div class="grid__item width-8-12 read-more small"><a href="/blog/quarkus-newsletter-41/">Read More &rsaquo;</a></div>
-        <div class="grid__item width-4-12 width-12-12-m share-post"><div class="share-page">
-  <a class="share-linkedin" href="https://www.linkedin.com/shareArticle?mini=true&url=https://quarkus.io/blog/quarkus-newsletter-41/&title=Quarkus Newsletter #41 - February" rel="nofollow" target="_blank" title="Share on LinkedIn">
-    <i class="fa-brands fa-linkedin fa-xl"></i>
-  </a>
-  <a class="share-x" href="https://x.com/intent/tweet?text=Quarkus Newsletter #41 - February&url=https://quarkus.io/blog/quarkus-newsletter-41/&via=quarkusio&related=quarkusio" rel="nofollow" target="_blank" title="Share on X">
-    <i class="fa-brands fa-square-x-twitter fa-xl"></i>
-  </a>
-  <a class="share-facebook" href="https://facebook.com/sharer.php?u=https://quarkus.io/blog/quarkus-newsletter-41/" rel="nofollow" target="_blank" title="Share on Facebook">
-    <i class="fa-brands fa-square-facebook fa-xl"></i>
-  </a>
-  <a class="share-reddit" href="http://www.reddit.com/submit?url=https://quarkus.io/blog/quarkus-newsletter-41/" onclick="window.open(this.href, 'pop-up', 'left=20,top=20,width=900,height=500,toolbar=1,resizable=0'); return false;" title="Share on Reddit" >
-    <i class="fa-brands fa-square-reddit fa-xl"></i>
-  </a>
-  <a class="share-email" href="mailto:?subject=Quarkus Newsletter #41 - February&amp;body=Quarkus Newsletter #41 - February https://quarkus.io/blog/quarkus-newsletter-41/" title="Share via Email" >
-    <i class="fa-solid fa-envelope fa-xl"></i>
-  </a>
-</div>
-</div>
-      </div>
-    
     
       <div class="paginator-btns">
         
@@ -647,6 +647,10 @@
           
           
             <li><a href="/newsletter" target="_blank">Newsletter</a></li>
+          
+          
+          
+            <li><a href="/userstories" target="_blank">User Stories</a></li>
           
           
           

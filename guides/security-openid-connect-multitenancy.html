@@ -12,7 +12,7 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <meta http-equiv="Content-Security-Policy" content="
-  connect-src 'self' https://dpm.demdex.net https://adobedc.demdex.net https://route-default-test-mscherer-matamo.apps.ospo-osci.z3b1.p1.openshiftapps.com/ https://search.quarkus.io https://smetrics.redhat.com; 
+  connect-src 'self' https://dpm.demdex.net https://adobedc.demdex.net https://analytics.ossupstream.org/ https://search.quarkus.io https://smetrics.redhat.com; 
   script-src 'self' 'unsafe-inline' 'unsafe-eval'
       
       https://assets.adobedtm.com
@@ -27,13 +27,13 @@
       http://www.googleadservices.com
       https://googleads.g.doubleclick.net
       https://giscus.app
-      https://route-default-test-mscherer-matamo.apps.ospo-osci.z3b1.p1.openshiftapps.com/
+      https://analytics.ossupstream.org/
       https://app.mailjet.com;
 
   style-src 'self' https://fonts.googleapis.com https://use.fontawesome.com; 
   img-src 'self' * data:; 
   media-src 'self'; 
-  frame-src https://redhat.demdex.net https://www.youtube.com https://embed.restream.io https://app.mailjet.com http://xy0p2.mjt.lu https://mj.quarkus.io https://giscus.app; 
+  frame-src https://redhat.demdex.net https://www.youtube.com https://player.restream.io https://app.mailjet.com http://xy0p2.mjt.lu https://mj.quarkus.io https://giscus.app; 
   base-uri 'none'; 
   object-src 'none'; 
   form-action 'none'; 
@@ -100,13 +100,12 @@
         <span href="/about/">Why<i class="fas fa-chevron-down"></i></span>
         <ul class="submenu">
           <li><a href="/about" class="">WHAT IS QUARKUS?</a></li>
-          <li><a href="/container-first" class="">CONTAINER FIRST</a></li>
-          <li><a href="/continuum" class="">VERSATILITY</a></li>
-          <li><a href="/standards" class="">STANDARDS</a></li>
-          <li><a href="/kubernetes-native" class="">KUBERNETES NATIVE</a></li>
-          <li><a href="/performance" class="">PERFORMANCE</a></li>
           <li><a href="/developer-joy" class="">DEVELOPER JOY</a></li>
-          
+          <li><a href="/performance" class="">PERFORMANCE</a></li>
+          <li><a href="/kubernetes-native" class="">KUBERNETES NATIVE</a></li>
+          <li><a href="/standards" class="">STANDARDS</a></li>
+          <li><a href="/versatility" class="">VERSATILITY</a></li>
+          <li><a href="/container-first" class="">CONTAINER FIRST</a></li>          
         </ul>
       </li>
       <li class="dropdown">
@@ -114,6 +113,7 @@
         <ul class="submenu">
           <li><a href="/get-started" class="">GET STARTED</a></li>
           <li><a href="/guides" class="active">DOCUMENTATION</a></li>
+          <li><a href="/userstories/" class="">USER STORIES</a></li>  
           <li><a href="/qtips" class="">"Q" TIP VIDEOS</a></li>          
           <li><a href="/books" class="">BOOKS</a></li>
           </ul>
@@ -189,7 +189,11 @@
         
         
         
-        <option value="latest" selected>3.17.0 - Latest</option>
+        <option value="latest" selected>3.23.4 - Latest</option>
+        
+        
+        
+        <option value="3.20" >3.20</option>
         
         
         
@@ -352,7 +356,7 @@ cd security-openid-connect-multi-tenancy-quickstart</code></pre>
 <div class="title">Maven</div>
 <div class="listingblock">
 <div class="content">
-<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">mvn io.quarkus.platform:quarkus-maven-plugin:3.17.0:create \
+<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">mvn io.quarkus.platform:quarkus-maven-plugin:3.23.4:create \
     -DprojectGroupId=org.acme \
     -DprojectArtifactId=security-openid-connect-multi-tenancy-quickstart \
     -Dextensions='oidc,rest-jackson' \
@@ -524,12 +528,13 @@ public class CustomTenantResolver implements TenantConfigResolver {
         if (path.startsWith("/tenant-a")) {
            String keycloakUrl = ConfigProvider.getConfig().getValue("keycloak.url", String.class);
 
-            OidcTenantConfig config = new OidcTenantConfig();
-            config.setTenantId("tenant-a");
-            config.setAuthServerUrl(keycloakUrl + "/realms/tenant-a");
-            config.setClientId("multi-tenant-client");
-            config.getCredentials().setSecret("secret");
-            config.setApplicationType(ApplicationType.HYBRID);
+            OidcTenantConfig config = OidcTenantConfig
+                    .authServerUrl(keycloakUrl + "/realms/tenant-a")
+                    .tenantId("tenant-a")
+                    .clientId("multi-tenant-client")
+                    .credentials("secret")
+                    .applicationType(ApplicationType.HYBRID)
+                    .build();
             return Uni.createFrom().item(config);
         } else {
             // resolve to default tenant config
@@ -698,22 +703,18 @@ public class CustomTenantResolver implements TenantResolver {
 </td>
 <td class="content">
 <div class="paragraph">
-<p>If you also use <a href="hibernate-orm#multitenancy">Hibernate ORM multitenancy</a> or <a href="mongodb-panache#multitenancy">MongoDB with Panache multitenancy</a> and both tenant ids are the same
-and must be extracted from the Vert.x <code>RoutingContext</code>, you can pass the tenant id from the OIDC Tenant Resolver to the Hibernate ORM Tenant Resolver or MongoDB with Panache Mongo Database Resolver
-as a <code>RoutingContext</code> attribute, for example:</p>
+<p>If you also use Hibernate ORM multitenancy or MongoDB with Panache multitenancy and both tenant ids are the same,
+you can get the tenant id from the <code>RoutingContext</code> attribute with <code>tenant-id</code>. You can find more information here:</p>
 </div>
-<div class="listingblock">
-<div class="content">
-<pre class="highlightjs highlight"><code class="language-java hljs" data-lang="java">public class CustomTenantResolver implements TenantResolver {
-
-    @Override
-    public String resolve(RoutingContext context) {
-        String tenantId = extractTenantId(context);
-        context.put("tenantId", tenantId);
-        return tenantId;
-    }
-}</code></pre>
-</div>
+<div class="ulist">
+<ul>
+<li>
+<p><a href="hibernate-orm#multitenancy">Hibernate ORM multitenancy</a></p>
+</li>
+<li>
+<p><a href="mongodb-panache#multitenancy">MongoDB with Panache multitenancy</a></p>
+</li>
+</ul>
 </div>
 </td>
 </tr>
@@ -729,11 +730,11 @@ as a <code>RoutingContext</code> attribute, for example:</p>
 </div>
 <div class="listingblock">
 <div class="content">
-<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">docker run --name keycloak -e KEYCLOAK_ADMIN=admin -e KEYCLOAK_ADMIN_PASSWORD=admin -p 8180:8080 quay.io/keycloak/keycloak:{keycloak.version} start-dev</code></pre>
+<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">docker run --name keycloak -e KC_BOOTSTRAP_ADMIN_USERNAME=admin -e KC_BOOTSTRAP_ADMIN_PASSWORD=admin -p 8180:8080 quay.io/keycloak/keycloak:{keycloak.version} start-dev</code></pre>
 </div>
 </div>
 <div class="paragraph">
-<p>where <code>keycloak.version</code> is set to <code>25.0.6</code> or higher.</p>
+<p>where <code>keycloak.version</code> is set to <code>26.0.7</code> or higher.</p>
 </div>
 <div class="paragraph">
 <p>Access your Keycloak server at <a href="http://localhost:8180">localhost:8180</a>.</p>
@@ -968,9 +969,9 @@ public class CodeFlowTest {
             loginForm.getInputByName("username").setValueAttribute("alice");
             loginForm.getInputByName("password").setValueAttribute("alice");
 
-            page = loginForm.getInputByName("login").click();
+            page = loginForm.getButtonByName("login").click();
 
-            assertTrue(page.asText().contains("tenant"));
+            assertTrue(page.asNormalizedText().contains("tenant"));
         }
     }
 
@@ -986,9 +987,9 @@ public class CodeFlowTest {
             loginForm.getInputByName("username").setValueAttribute("alice");
             loginForm.getInputByName("password").setValueAttribute("alice");
 
-            page = loginForm.getInputByName("login").click();
+            page = loginForm.getButtonByName("login").click();
 
-            assertTrue(page.asText().contains("alice@tenant-a.org"));
+            assertTrue(page.asNormalizedText().contains("alice@tenant-a.org"));
         }
     }
 
@@ -1215,6 +1216,22 @@ quarkus.http.auth.permission.authenticated.applies-to=JAXRS <i class="conum" dat
 </tr>
 </table>
 </div>
+<div class="admonitionblock note">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-note" title="Note"></i>
+</td>
+<td class="content">
+<div class="paragraph">
+<p>The <code>io.quarkus.oidc.Tenant</code> annotation can be used to select tenant for a WebSockets Next server endpoint.
+The annotation must be placed on the endpoint class, because the <code>SecurityIdentity</code> is created before the HTTP connection is upgraded to a WebSocket connection.
+For more information about the HTTP upgrade security, see the <a href="websockets-next-reference#secure-http-upgrade">Secure HTTP upgrade</a> section of the Quarkus "WebSockets Next reference" guide.</p>
+</div>
+</td>
+</tr>
+</table>
+</div>
 </div>
 <div class="sect2">
 <h3 id="tenant-config-resolver"><a class="anchor" href="#tenant-config-resolver"></a>Dynamic tenant configuration resolution</h3>
@@ -1262,16 +1279,12 @@ public class CustomTenantConfigResolver implements TenantConfigResolver {
     }
 
     private Supplier&lt;OidcTenantConfig&gt; createTenantConfig() {
-        final OidcTenantConfig config = new OidcTenantConfig();
-
-        config.setTenantId("tenant-c");
-        config.setAuthServerUrl("http://localhost:8180/realms/tenant-c");
-        config.setClientId("multi-tenant-client");
-        OidcTenantConfig.Credentials credentials = new OidcTenantConfig.Credentials();
-
-        credentials.setSecret("my-secret");
-
-        config.setCredentials(credentials);
+        final OidcTenantConfig config = OidcTenantConfig
+                .authServerUrl("http://localhost:8180/realms/tenant-c")
+                .tenantId("tenant-c")
+                .clientId("multi-tenant-client")
+                .credentials("my-secret")
+                .build();
 
         // Any other setting supported by the quarkus-oidc extension
 
@@ -1564,12 +1577,13 @@ public class CustomTenantConfigResolver implements TenantConfigResolver {
     }
 
     private OidcTenantConfig createTenantConfig(String tenantId, String clientId, String secret) {
-        final OidcTenantConfig config = new OidcTenantConfig();
-        config.setTenantId(tenantId);
-        config.setAuthServerUrl("http://localhost:8180/realms/"  + tenantId);
-        config.setClientId(clientId);
-        config.getCredentials().setSecret(secret);
-        config.setApplicationType(ApplicationType.WEB_APP);
+        final OidcTenantConfig config = OidcTenantConfig
+                .authServerUrl("http://localhost:8180/realms/"  + tenantId)
+                .tenantId(tenantId)
+                .clientId(clientId)
+                .credentials(secret)
+                .applicationType(ApplicationType.WEB_APP)
+                .build();
         return config;
     }
 }</code></pre>
@@ -1642,13 +1656,14 @@ public class CustomTenantConfigResolver implements TenantConfigResolver {
     }
 
     private OidcTenantConfig createTenantConfig(String tenantId, String cookiePath, String clientId, String secret) {
-        final OidcTenantConfig config = new OidcTenantConfig();
-        config.setTenantId(tenantId);
-        config.setAuthServerUrl("http://localhost:8180/realms/"  + tenantId);
-        config.setClientId(clientId);
-        config.getCredentials().setSecret(secret);
-        config.setApplicationType(ApplicationType.WEB_APP);
-        config.getAuthentication().setCookiePath(cookiePath); <i class="conum" data-value="3"></i><b>(3)</b>
+        final OidcTenantConfig config = OidcTenantConfig
+                .authServerUrl("http://localhost:8180/realms/" + tenantId)
+                .tenantId(tenantId)
+                .clientId(clientId)
+                .credentials(secret)
+                .applicationType(ApplicationType.WEB_APP)
+                .authentication().cookiePath(cookiePath).end()  <i class="conum" data-value="3"></i><b>(3)</b>
+                .build();
         return config;
     }
 }</code></pre>
@@ -1736,12 +1751,13 @@ public class CustomTenantConfigResolver implements TenantConfigResolver {
     }
 
     private OidcTenantConfig createTenantConfig(String tenantId, String clientId, String secret) {
-        final OidcTenantConfig config = new OidcTenantConfig();
-        config.setTenantId(tenantId);
-        config.setAuthServerUrl("http://localhost:8180/realms/"  + tenantId);
-        config.setClientId(clientId);
-        config.getCredentials().setSecret(secret);
-        config.setApplicationType(ApplicationType.WEB_APP);
+        final OidcTenantConfig config = OidcTenantConfig
+            .authServerUrl("http://localhost:8180/realms/"  + tenantId)
+            .tenantId(tenantId)
+            .clientId(clientId)
+            .credentials(secret)
+            .applicationType(ApplicationType.WEB_APP)
+            .build();
         return config;
     }
 }</code></pre>
@@ -1806,6 +1822,57 @@ public class CustomTenantConfigResolver implements TenantConfigResolver {
 </div>
 </div>
 <div class="sect1">
+<h2 id="programmatic-startup"><a class="anchor" href="#programmatic-startup"></a>Programmatic OIDC start-up for multiple tenants</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>Static OIDC tenants can be created programmatically like in the example below:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-java hljs" data-lang="java">package io.quarkus.it.oidc;
+
+import io.quarkus.oidc.Oidc;
+import io.quarkus.oidc.OidcTenantConfig;
+import jakarta.enterprise.event.Observes;
+
+public class OidcStartup {
+
+    void observe(@Observes Oidc oidc) { <i class="conum" data-value="1"></i><b>(1)</b>
+        oidc.create(OidcTenantConfig.authServerUrl("http://localhost:8180/realms/tenant-one").tenantId("tenant-one").build()); <i class="conum" data-value="2"></i><b>(2)</b>
+        oidc.create(OidcTenantConfig.authServerUrl("http://localhost:8180/realms/tenant-two").tenantId("tenant-two").build()); <i class="conum" data-value="3"></i><b>(3)</b>
+    }
+
+}</code></pre>
+</div>
+</div>
+<div class="colist arabic">
+<table>
+<tr>
+<td><i class="conum" data-value="1"></i><b>1</b></td>
+<td>Observe OIDC event.</td>
+</tr>
+<tr>
+<td><i class="conum" data-value="2"></i><b>2</b></td>
+<td>Create OIDC tenant 'tenant-one'.</td>
+</tr>
+<tr>
+<td><i class="conum" data-value="3"></i><b>3</b></td>
+<td>Create OIDC tenant 'tenant-two'.</td>
+</tr>
+</table>
+</div>
+<div class="paragraph">
+<p>The code above is a programmatic equivalent to the following configuration in the <code>application.properties</code> file:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-properties hljs" data-lang="properties">quarkus.oidc.tenant-one.auth-server-url=http://localhost:8180/realms/tenant-one
+quarkus.oidc.tenant-two.auth-server-url=http://localhost:8180/realms/tenant-two</code></pre>
+</div>
+</div>
+</div>
+</div>
+<div class="sect1">
 <h2 id="references"><a class="anchor" href="#references"></a>References</h2>
 <div class="sectionbody">
 <div class="ulist">
@@ -1865,6 +1932,7 @@ public class CustomTenantConfigResolver implements TenantConfigResolver {
 </ul>
 </li>
 <li><a href="#disable-tenant">Disabling tenant configurations</a></li>
+<li><a href="#programmatic-startup">Programmatic OIDC start-up for multiple tenants</a></li>
 <li><a href="#references">References</a></li>
 </ul></div>
     </div>
@@ -1947,7 +2015,7 @@ public class CustomTenantConfigResolver implements TenantConfigResolver {
         <li class="concepts"><a href="/guides/security-basic-authentication">Basic authentication</a></li>
       
         
-        <li class="guide"><a href="/guides/security-jwt-build">Build, Sign and Encrypt JSON Web Tokens</a></li>
+        <li class="guide"><a href="/guides/security-jwt-build">Build, sign, and encrypt JSON Web Tokens</a></li>
       
         
         <li class="guide"><a href="/guides/security-csrf-prevention">Cross-Site Request Forgery Prevention</a></li>
@@ -1956,7 +2024,7 @@ public class CustomTenantConfigResolver implements TenantConfigResolver {
         <li class="howto"><a href="/guides/security-basic-authentication-howto">Enable Basic authentication</a></li>
       
         
-        <li class="tutorial"><a href="/guides/security-getting-started-tutorial">Getting started with Security by using Basic authentication and Jakarta Persistence</a></li>
+        <li class="tutorial"><a href="/guides/security-getting-started-tutorial">Getting started with security by using Basic authentication and Jakarta Persistence</a></li>
       
         
         <li class="concepts"><a href="/guides/security-identity-providers">Identity providers</a></li>
@@ -2006,6 +2074,10 @@ public class CustomTenantConfigResolver implements TenantConfigResolver {
           
           
             <li><a href="/newsletter" target="_blank">Newsletter</a></li>
+          
+          
+          
+            <li><a href="/userstories" target="_blank">User Stories</a></li>
           
           
           
